@@ -1,0 +1,14 @@
+.add-another-link, .add-another-link-edu, .add-another-link-edu2{
+  clear: both;
+  font-weight: bold;
+  cursor: pointer;
+  width:175px;
+}
+
+
+.remove-another-link, .remove-another-link-edu, .remove-another-link-edu2{
+  font-weight: bold;
+  cursor: pointer;
+  float: right;
+  width:175px;
+}

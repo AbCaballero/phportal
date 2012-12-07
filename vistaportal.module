@@ -1,0 +1,310 @@
+<?php
+include_once('vistaportal.fields.inc');
+/**
+ * Implements hook_init().
+ */
+function vistaportal_init(){
+	global $user;
+	date_default_timezone_set('America/Los_Angeles');
+	$path = drupal_get_path('module', 'vistaportal');
+	drupal_add_js($path . '/js/vistaportal.js', 'file');
+	drupal_add_js($path . '/js/jquery.autotab-1.1b.js', 'file');
+	drupal_add_js($path . '/js/jquery.ba-untils.min.js');
+	drupal_add_css($path .'/css/forms.css');
+	//This allows jQuery update module to function properly.
+	variable_set('jquery_update_replace', TRUE);
+} 
+/**
+ * Implements hook_menu().
+ */
+function vistaportal_menu() {
+	$path = drupal_get_path('module', 'vistaportal');
+	$items = array();
+  $items['register'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_form'),
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+		
+  $items['preapp/identity'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_identity_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_identity.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	 /* $items['apply'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('physician_pre_application_wizard'),
+		'access arguments' => array('access content'),
+		'file' => 'physician_pre_application_wizard.forms.inc',
+		'type' => MENU_CALLBACK,
+	);*/
+	
+	$items['preapp/premed'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_premed_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_premed.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['preapp/medschool'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_medschool_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_medschool.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['preapp/internship'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_internship_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_internship.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['preapp/residency'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_residency_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_residency.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+
+	$items['preapp/affiliations'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_affiliations_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_affiliations.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['preapp/certifications'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_certifications_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_certifications.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+
+	$items['preapp/licensure'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_licensure_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_licensure.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['preapp/disciplinary'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_disciplinary_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_disciplinary.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['preapp/references'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_references_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_references.forms.inc',
+		'type' => MENU_CALLBACK,
+	);									
+	
+	$items['release'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_release_authorization_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_release.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['insurance'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_malpractice_insurance_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_malpractice.forms.inc',
+		'type' => MENU_CALLBACK,
+	);
+	
+	$items['vistaportal/autosave'] = array(
+	  'title' => 'Vistaportal Autosave',
+    'page callback' => 'vistaportal_autosave',
+    'access arguments' => array('access content'),
+    'file' => 'vistaportal.module',
+    'type' => MENU_CALLBACK,
+  );	
+  return $items;
+}
+/*
+ * Form callback for the registration form.
+ */
+function vistaportal_form($form, &$form_state){
+	include_once('vistaportal.fields.inc');	
+	$form = array();
+	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
+	//New users	
+	$form['registration'] = array(
+		'#type'=> 'fieldset',
+		'#title' => t('New Account'),
+		'#collapsible' => FALSE,
+	);
+	$form['registration']['personal'] = array(
+		'#markup' => '<em>Personal Information</em><br />',
+	);
+	$form['registration']['fname'] = textfield('First Name', 30);
+	$form['registration']['initial'] = textfield('Middle Initial', 1);
+	$form['registration']['initial']['#required'] = FALSE; 
+	$form['registration']['lname'] = textfield('Last Name', 30);
+	$form['registration']['email'] = email('Email');
+	$form['registration']['email_conf'] = email('Email Confirmation');
+		$form['registration']['contact'] = array(
+		'#markup' => '<em>Contact Information</em>',
+	);
+	$form['registration']['home_phone'] = phone('Home Phone');
+	$form['registration']['home_phone']['#required'] = FALSE; 	
+	$form['registration']['cell_phone'] = phone('Cell Phone');
+	$form['registration']['cell_phone']['#required'] = FALSE;
+	$form['registration']['specialty'] = array(
+		'#markup' => '<em>Specialty</em><br />',
+	); 
+	$form['registration']['medical_specialty_1'] = array(
+		'#type' => 'textfield',
+		'#title' => 'Speciality',
+		'#required' => TRUE,
+	);
+	$form['registration']['medical_specialty_2'] = array(
+		'#type' => 'textfield',
+		'#title' => 'Secondary Speciality',
+		'#required' => FALSE,
+	);
+	$form['registration']['state_licence'] = state('Active State Licence');
+	$form['registration']['interest'] =radios_yesno('Are you interested in receiveing a call from our recruiters?');
+	$form['registration']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Request Access'),
+  );
+	$form['#after_build'] = 'vistaportal_form_after_build';
+	return $form;	
+}
+
+/*
+ * Form submission callback for the registration form.
+ */
+function vistaportal_form_submit($form, &$form_state){
+	$edit = array(
+		'first_name' => $form_state['values']['fname'],
+		'intial' => $form_state['values']['initial'],
+		'last_name' => $form_state['values']['lname'],
+		'email' => $form_state['values']['email'],
+		'home_phone' => $form_state['values']['home_phone'],
+		'cell_phone' => $form_state['values']['cell_phone'],
+		'medical_specialty' => $form_state['values']['medical_specialty'],
+		'state_licence' => $form_state['values']['state_licence'],
+		'interest' => $form_state['values']['interest'],
+		'password' => user_password(),
+		'status' => 1,
+		'access' => REQUEST_TIME,
+		);
+	user_save(drupal_anonymous_user(), $edit);	
+	$to = $form_state['values']['email'];
+	$subject = "A new Vista Staffing Solutions acoount has been created";
+	$headers = 'From: andrew.browning@anergroup.com';
+	$body = 'A new user account has been created for you at <a href="http://something.org/">Something.org</a>.<br /> Your login details are as follows:<br />Username: <b>'.$form_state['values']['email'].'</b><br /> Password: <b>'.$form_state['values']['password'].'</b> <br /><br /> Please login to <a href="http://something.org/">Something.org</a> and change your password.<br />';
+  mail($to,$subject,$body,$headers); 
+}
+/*
+ * Form afterbuild for the registration form to provide email check
+ */
+function vistaportal_form_after_build($form, &$form_state){
+	if((!filter_var($form_state['values']['registration']['email'], FILTER_VALIDATE_EMAIL))||
+		(!filter_Var($form_state['values']['registration']['email_conf'], FILTER_VALIDATE_EMAIL))){
+			drupal_set_message('Please enter a valid email address.');
+	}
+	if($form_state['values']['registration']['email'] != $form_state['values']['registration']['email_conf']){
+		drupal_set_message('Please make sure your email addresses match.');
+	}
+}
+
+/*
+ * This is where we retrieve the autosaved form. This has been modified from
+ * the previous version to accomodate the Drupal 7 database API.
+ */
+function vistaportal_get_autosaved_form($form_id, $path, $uid){
+	$result = db_query("SELECT form_id, serialized, timestamp FROM {autosaved_forms} 
+		WHERE form_id = :form_id AND path = :path AND uid = :uid", 
+		array(':form_id' => $form_id, ':path' => $path, ':uid' => $uid));
+  	foreach($result AS $data){
+  		$form['serialized'] = $data->serialized;
+    	$form['timestamp'] = $data->timestamp;
+		}
+	return $form; 
+}
+
+//This is the drupal 6 version
+/*function oa_portal_get_autosaved_form($form_id, $path, $uid) {
+		if(($path != 'portal/p1/checklist')&&(!preg_match('/^portal\/p1\/checklist\/edit\/[0-9]{3}/',$path, $matches))){
+  		$result = db_query("SELECT form_id, serialized, timestamp FROM {autosaved_forms} WHERE form_id = '%s' AND path = '%s' AND uid = %d", $form_id, $path, $uid);
+  		while ($data = db_fetch_object($result)) {
+    		$form['serialized'] = $data->serialized;
+    		$form['timestamp'] = $data->timestamp;  
+  		}
+  	}	
+		else{
+			continue;
+		}
+  return $form;
+}*/
+
+
+/*
+ * Page callback for forms autosaving
+ */
+function vistaportal_autosave(){  
+  global $user;
+  // Bad request
+  // return drupal_json(array('status' => 400));
+
+  // Unauthorized
+  // return drupal_json(array('status' => 401));
+
+  // Server error
+  // return drupal_json(array('status' => 500));
+  $path = $_POST['q'];
+  $form_id = $_POST['form_id'];
+	unset($_POST['q'], $_POST['op'], $_POST['form_build_id'], $_POST['form_token']);
+	$serialized = serialize($_POST);
+	
+	// Currently, each user can have only one autosave form at a particular path.
+	db_query("DELETE FROM {autosaved_forms} WHERE form_id = '%s' AND path = '%s' AND uid = %d", $form_id, $path, $user->uid);
+  db_query("INSERT INTO {autosaved_forms} (form_id, path, uid, timestamp, serialized) VALUES ('%s', '%s', %d, %d, '%s')", $form_id, $path, $user->uid, time(), $serialized);
+	
+exit();	
+}
+
+/*
+ * Implements the hook_form_alter().
+ */  
+/*function vistaportal_form_alter(&$form, &$form_state, $form_id){
+	global $user;
+	$account = user_load($user -> uid);
+	$path = drupal_get_path('module', 'vistaportal');
+	//drupal_add_js($jquery_plugin, array('weight' => JS_LIBRARY));
+	drupal_add_library('system', 'drupal.ajax');
+	drupal_add_js($path . '/js/jquery.field.js');
+	drupal_add_js($path . '/js/jquery.autotab-1.1b.js');
+	
+	$settings['autosave']['url'] = url('vistaportal/autosave');
+	$settings['autosave']['q'] = $_GET['q'];
+	$settings['autosave']['form_id'] = $form_id;
+	$settings['autosave']['form_id_id'] = $form['#id'];
+	if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
+		$settings['autosave'] = array_merge($settings['autosave'], array('serialized' => unserialize($autosaved_form['serialized']), 'saved_date' => format_date($autosaved_form['timestamp'], 'medium'), ));
+	}
+	drupal_add_js($settings, 'setting');
+	drupal_add_js($path . '/js/autosave.js');
+
+}*/ 

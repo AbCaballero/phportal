@@ -1,0 +1,6 @@
+; $Id$
+name = vistaportal
+description = This is the main Vista module
+core = 7.x
+package = Vista Modules
+files[] = vistaportal.module
