@@ -37,8 +37,14 @@ function vistaportal_premed_form($form, &$form_state){
 		$form['premed'][$i]['city'] = textfield('City');
 		$form['premed'][$i]['state'] = state('State');
 		$form['premed'][$i]['country'] = country('Country');
-		$form['premed'][$i]['date_from'] = date_popup('Start Date');
-		$form['premed'][$i]['date_to'] = date_popup('End Date');
+		/*$form['premed'][$i]['date_from'] = date_popup('Start Date');
+		$form['premed'][$i]['date_to'] = date_popup('End Date');*/
+		$form['premed'][$i]['month_from'] = month('Month From');
+		$form['premed'][$i]['day_from'] = day('Day From');
+		$form['premed'][$i]['year_from'] = year('Year From');
+		$form['premed'][$i]['month_to'] = month('Month To');
+		$form['premed'][$i]['day_to'] = day('Day To');
+		$form['premed'][$i]['year_to'] = year('Year To');
 	}
 	
 	//Only allow 3 schools for the premed form
@@ -94,8 +100,9 @@ function vistaportal_premed_form_submit($form, &$form_state){
 	//$html_string;
 	//make_pdf;
 	//make_tiff;
-
-	$html_string = getpremed_html(
+	
+	
+/*	$html_string = getpremed_html(
 		$form_state['values']['premed'][0]['school'],
 		$form_state['values']['premed'][0]['degree'], 
 		$form_state['values']['premed'][0]['city'],
@@ -103,10 +110,10 @@ function vistaportal_premed_form_submit($form, &$form_state){
 		$form_state['values']['premed'][0]['country'],
 		$form_state['values']['premed'][0]['date_from'], 
 		$form_state['values']['premed'][0]['date_to']
-	);
+	);*/
 	
-	$filename = make_pdf_1($html_string,'Pre-med form');
-	pdf_to_tiff();
+	/*$filename = make_pdf_1($html_string,'Pre-med form');
+	pdf_to_tiff();*/
  
 /* Save the form values to the premed table in 
  * the database and set the flag in the drupal_flags 
@@ -131,8 +138,17 @@ function vistaportal_premed_form_submit($form, &$form_state){
  * and also to the db_query.
  */		
 	$premed = new stdClass();
-	$premed->uid = $user->uid;
 	foreach($form_state['values']['premed'] AS $key => $value){
+		$form_state['values']['premed'][$key]['date_from'] = 
+			$form_state['values']['premed'][$key]['year_from'] . '-' .
+			$form_state['values']['premed'][$key]['month_from'] . '-' .
+			$form_state['values']['premed'][$key]['day_from'];
+		$form_state['values']  ['premed'][$key]['date_to'] = 
+			$form_state['values']['premed'][$key]['year_to'] . '-' .
+			$form_state['values']['premed'][$key]['month_to'] . '-' .
+			$form_state['values']['premed'][$key]['day_to'];		
+		$premed->uid = $user->uid;
+		$premed->formtype = 1001;
 		$premed->school = $form_state['values']['premed'][$key]['school'];
 		$premed->degree = $form_state['values']['premed'][$key]['degree'];
 		$premed->city = $form_state['values']['premed'][$key]['city'];
@@ -144,6 +160,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
 	db_insert('premed')
 		->fields(array(
 			'uid' => $premed->uid,
+			'formtype' => $premed->formtype,
 			'school' => $premed->school,
 			'degree' => $premed->degree,
 			'city' => $premed->city,
@@ -158,7 +175,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
  * Update the drupal_flags table by setting the premed 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags	')
+	db_update('drupal_flags')
 		->fields(array(
 			'premed'=>1,
 	))

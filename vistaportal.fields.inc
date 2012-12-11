@@ -339,4 +339,168 @@ function marital_status($title) {
   return $element;
 }
 
- 
+/*
+ * Month field function
+ */
+function month($title) {
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('01', '02', '03', '04', '05', '06', 
+    	'07', '08', '09', '10', '11', '12')),
+    '#attributes' => array('class' => 'select-month'),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+} 
+
+/*
+ * Year field function
+ */
+function year($title) {
+  $startdate = 1971;
+  $enddate = date("Y");
+  $years = range ($startdate,$enddate);
+
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc($years),	 
+    '#attributes' => array('class' => 'select-year'),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Day field function
+ */
+function Day($title) {
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('01', '02', '03', '04', '05', '06', '07', '08', '09', 
+    	'10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
+			'23', '24', '25', '26', '27', '28', '29', '30', '31')),
+    '#attributes' => array('class' => 'select-month'),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Challenge question field fuinction
+ */
+function challenge($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('What was your highschool mascot?', 
+    'What was the name of your elementary school?', 
+    'What is the name of your first pet?', 
+    "What is your mother's maiden name?", 
+    'In what city were you born?', 
+    'What is the name of your favorite school teacher?', 
+    "What is your maternal grandfather's first name?", 
+    'What was the model of your first car?', 
+    'In what city were you married?', 
+    'What is the name of your first employer?')),
+    '#attributes' => array('class' => 'select-challenge'),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Challenge question field fuinction
+ */
+function medical_specialty($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('Ambulatory Care', 
+    'Allergy', 
+    'Anesthesiology', 
+    'Child & Adolescent Psychiatry', 
+    'Cardiac Anesthesiology', 
+    'Cardiology', 
+    'Critical Care', 
+    'Certified Registered Nurse Anesthetist', 
+    'Cardiothoracic Surgery',
+    'Cardiovascular Surgery',
+    'Dermatology', 
+    'Emergency Medicine',
+    'Endocrinology',
+    'Otolaryngology',
+    'Family Medicine',
+    'FP/Obstetrics',
+    'FP Hospitailist',
+    'Geriatrics',
+    'Gastroenterology',
+    'General Surgery',
+    'General Surgery Pediatrics',
+    'Gynecology',
+    'Hematology Oncology',
+    'Hyperbaric Medicine',
+    'Infectious Disease',
+    'Internal Medicine',
+    'IM Hospitalist',
+    'IMPED',
+    'Interventional Cardiology',
+    'Invasive Cardiology',
+    'Maternal Fetal Medicine',
+    'Medical Oncology',
+    'Neonatology',
+    'Nephrology',
+    'Neurology',
+    'N.P Adult Only',
+    'N.P or A.P Specializing In Diabetes',
+    'N.P Family Medicine',
+    'N.P Specializing In Gerontology ',
+    'N.P Acute Care and/or Hospital Based',
+    'N.P Oncology',
+    'N.P Pediatric Nurse Practitioner ',
+    'N.P Psychiatric Nurse Practitioner',
+    'School based Nurse Practitioner',
+    'Neurosurgery',
+    'Obstetrics and Gynecology',
+    'Occupational Medicine',
+    'Orthopedic Surgery',
+    'Pain Management',
+    'P.A Adult Only',
+    'P.A Family Medicine',
+    'P.A Specializing in Gerontology',
+    'P.A Acute Care and/or Hospital Based',
+    'Palliative Care',
+    'P.A Oncology',
+    'P.A Pediatric Nurse Practitioner',
+    'P.A Psychiatric Nurse Practitioner ',
+    'P.A School Based',
+    'Pathology',
+    'Pediatric Cardiology',
+    'P.A or A.D Specializing in Diabetes',
+    'PED Hospitalist',
+    'Pediatrics',
+    'PedCC',
+    'Physical Medicine & Rehabilitation',
+    'Plastic And Reconstructive Surgery',
+    'Psychiatry',
+    'Pulmonology',
+    'Radiology',
+    'Rheumatology',
+    'Radiation Oncology',
+    'Surgical Critical Care',
+    'Thoracic Surgery',
+    'Trauma Surgery',
+    'Urology',
+    'Vascular Surgery')),
+    '#attributes' => array('class' => 'select-specialty'),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}

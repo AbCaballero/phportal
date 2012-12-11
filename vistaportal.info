@@ -1,5 +1,5 @@
 ; $Id$
-name = vistaportal
+name = Vistaportal Module
 description = This is the main Vista module
 core = 7.x
 package = Vista Modules

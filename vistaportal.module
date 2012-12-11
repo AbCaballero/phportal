@@ -1,5 +1,17 @@
 <?php
+/**
+ * Author: Andrew Browning
+ * Company: Aner Group
+ * Client: Vista Staffing Solutions
+ * Date: November 19th, 2012
+ * Notes: This file contains the hook_init(), 
+ * the hook_menu(), the callback for the 
+ * registration form, the submission callback
+ * for the registration form and the hook_cron().
+ */
+
 include_once('vistaportal.fields.inc');
+include_once('vistaportal_functions.inc');
 /**
  * Implements hook_init().
  */
@@ -24,6 +36,14 @@ function vistaportal_menu() {
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_form'),
 		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+	);
+
+  $items['confirm'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_confirmation_form'),
+		'access arguments' => array('access content'),
+		'file' => 'vistaportal_confirmation.forms.inc',
 		'type' => MENU_CALLBACK,
 	);
 		
@@ -148,46 +168,70 @@ function vistaportal_form($form, &$form_state){
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
 	//New users	
 	$form['registration'] = array(
+		'#title' => t('New Applicants'),
 		'#type'=> 'fieldset',
 		'#title' => t('New Account'),
 		'#collapsible' => FALSE,
 	);
 	$form['registration']['personal'] = array(
-		'#markup' => '<em>Personal Information</em><br />',
+		'#markup' => '<em>PERSONAL INFORMATION</em><br />',
 	);
-	$form['registration']['fname'] = textfield('First Name', 30);
-	$form['registration']['initial'] = textfield('Middle Initial', 1);
-	$form['registration']['initial']['#required'] = FALSE; 
+	$form['registration']['fname'] = textfield('First Name', 30); 
 	$form['registration']['lname'] = textfield('Last Name', 30);
-	$form['registration']['email'] = email('Email');
-	$form['registration']['email_conf'] = email('Email Confirmation');
-		$form['registration']['contact'] = array(
-		'#markup' => '<em>Contact Information</em>',
+	$form['registration']['phone'] = phone('Phone Number');
+	$form['registration']['phone']['#required'] = FALSE; 
+	$form['registration']['email'] = email('Email Address (This will be your username)');
+	$form['registration']['pwd'] = array(
+		'#markup' => '<em>PASSWORD</em>',
+	);	
+	$form['registration']['password'] = array(
+		'#type' => 'password_confirm',
 	);
-	$form['registration']['home_phone'] = phone('Home Phone');
-	$form['registration']['home_phone']['#required'] = FALSE; 	
-	$form['registration']['cell_phone'] = phone('Cell Phone');
-	$form['registration']['cell_phone']['#required'] = FALSE;
+	$form['registration']['question'] = challenge('Challenge Question');
+	$form['registration']['answer'] = textfield('Challenge Question Answer');
 	$form['registration']['specialty'] = array(
-		'#markup' => '<em>Specialty</em><br />',
+		'#markup' => '<em>SPECIALTY</em><br />',
 	); 
-	$form['registration']['medical_specialty_1'] = array(
-		'#type' => 'textfield',
-		'#title' => 'Speciality',
-		'#required' => TRUE,
-	);
-	$form['registration']['medical_specialty_2'] = array(
-		'#type' => 'textfield',
-		'#title' => 'Secondary Speciality',
-		'#required' => FALSE,
-	);
-	$form['registration']['state_licence'] = state('Active State Licence');
-	$form['registration']['interest'] =radios_yesno('Are you interested in receiveing a call from our recruiters?');
+	$form['registration']['primary'] = medical_specialty('Primary');
+	$form['registration']['secondary'] = medical_specialty('Secondary - Optional');
+	//$form['registration']['secondary']['#required'] = FALSE;
+	$form['registration']['interests'] = array(
+		'#markup' => '<em>INTERESTS</em><br />',
+	); 
+	$form['registration']['locum_us'] = checkbox('Locum US Locum Tenens');
+	$form['registration']['locum_us']['#required'] = FALSE;
+	$form['registration']['locum_int'] = checkbox('International Locum Tenens');
+	$form['registration']['locum_int']['#required'] = FALSE;
+	$form['registration']['permanent_placement'] = checkbox('Permanent_Placement');
+	$form['registration']['permanent_placement']['#required'] = FALSE;
+	$form['registration']['gov_op'] = checkbox('Government Oportunities');
+	$form['registration']['gov_op']['#required'] = FALSE;
 	$form['registration']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Request Access'),
+    '#value' => t('Submit>'),
   );
-	$form['#after_build'] = 'vistaportal_form_after_build';
+	
+/*	$result = db_select('profile_data', 'p')
+	  ->fields('p')
+		->condition('entity_id', '', '!=')
+		->condition('new_user_flag', 1, '!=')
+		->execute()
+		->fetchAssoc();
+		
+	foreach($result AS $key => $value){
+		$fields = array(
+			'name' => $result['email'],
+			'pass' => $result['password'],
+			'mail' => $result['email'],
+			'status' => 1,
+			'init' => $result['email'],
+			'roles' => array(
+				DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+			),
+		);
+		$account = user_save('', $fields);
+	}*/
+	//dsm($fields, 'here');
 	return $form;	
 }
 
@@ -195,116 +239,76 @@ function vistaportal_form($form, &$form_state){
  * Form submission callback for the registration form.
  */
 function vistaportal_form_submit($form, &$form_state){
-	$edit = array(
-		'first_name' => $form_state['values']['fname'],
-		'intial' => $form_state['values']['initial'],
-		'last_name' => $form_state['values']['lname'],
-		'email' => $form_state['values']['email'],
-		'home_phone' => $form_state['values']['home_phone'],
-		'cell_phone' => $form_state['values']['cell_phone'],
-		'medical_specialty' => $form_state['values']['medical_specialty'],
-		'state_licence' => $form_state['values']['state_licence'],
-		'interest' => $form_state['values']['interest'],
-		'password' => user_password(),
-		'status' => 1,
-		'access' => REQUEST_TIME,
-		);
-	user_save(drupal_anonymous_user(), $edit);	
-	$to = $form_state['values']['email'];
-	$subject = "A new Vista Staffing Solutions acoount has been created";
-	$headers = 'From: andrew.browning@anergroup.com';
-	$body = 'A new user account has been created for you at <a href="http://something.org/">Something.org</a>.<br /> Your login details are as follows:<br />Username: <b>'.$form_state['values']['email'].'</b><br /> Password: <b>'.$form_state['values']['password'].'</b> <br /><br /> Please login to <a href="http://something.org/">Something.org</a> and change your password.<br />';
-  mail($to,$subject,$body,$headers); 
-}
-/*
- * Form afterbuild for the registration form to provide email check
- */
-function vistaportal_form_after_build($form, &$form_state){
-	if((!filter_var($form_state['values']['registration']['email'], FILTER_VALIDATE_EMAIL))||
-		(!filter_Var($form_state['values']['registration']['email_conf'], FILTER_VALIDATE_EMAIL))){
-			drupal_set_message('Please enter a valid email address.');
-	}
-	if($form_state['values']['registration']['email'] != $form_state['values']['registration']['email_conf']){
-		drupal_set_message('Please make sure your email addresses match.');
-	}
-}
-
-/*
- * This is where we retrieve the autosaved form. This has been modified from
- * the previous version to accomodate the Drupal 7 database API.
- */
-function vistaportal_get_autosaved_form($form_id, $path, $uid){
-	$result = db_query("SELECT form_id, serialized, timestamp FROM {autosaved_forms} 
-		WHERE form_id = :form_id AND path = :path AND uid = :uid", 
-		array(':form_id' => $form_id, ':path' => $path, ':uid' => $uid));
-  	foreach($result AS $data){
-  		$form['serialized'] = $data->serialized;
-    	$form['timestamp'] = $data->timestamp;
-		}
-	return $form; 
-}
-
-//This is the drupal 6 version
-/*function oa_portal_get_autosaved_form($form_id, $path, $uid) {
-		if(($path != 'portal/p1/checklist')&&(!preg_match('/^portal\/p1\/checklist\/edit\/[0-9]{3}/',$path, $matches))){
-  		$result = db_query("SELECT form_id, serialized, timestamp FROM {autosaved_forms} WHERE form_id = '%s' AND path = '%s' AND uid = %d", $form_id, $path, $uid);
-  		while ($data = db_fetch_object($result)) {
-    		$form['serialized'] = $data->serialized;
-    		$form['timestamp'] = $data->timestamp;  
-  		}
-  	}	
-		else{
-			continue;
-		}
-  return $form;
-}*/
-
-
-/*
- * Page callback for forms autosaving
- */
-function vistaportal_autosave(){  
-  global $user;
-  // Bad request
-  // return drupal_json(array('status' => 400));
-
-  // Unauthorized
-  // return drupal_json(array('status' => 401));
-
-  // Server error
-  // return drupal_json(array('status' => 500));
-  $path = $_POST['q'];
-  $form_id = $_POST['form_id'];
-	unset($_POST['q'], $_POST['op'], $_POST['form_build_id'], $_POST['form_token']);
-	$serialized = serialize($_POST);
-	
-	// Currently, each user can have only one autosave form at a particular path.
-	db_query("DELETE FROM {autosaved_forms} WHERE form_id = '%s' AND path = '%s' AND uid = %d", $form_id, $path, $user->uid);
-  db_query("INSERT INTO {autosaved_forms} (form_id, path, uid, timestamp, serialized) VALUES ('%s', '%s', %d, %d, '%s')", $form_id, $path, $user->uid, time(), $serialized);
-	
-exit();	
-}
-
-/*
- * Implements the hook_form_alter().
- */  
-/*function vistaportal_form_alter(&$form, &$form_state, $form_id){
 	global $user;
-	$account = user_load($user -> uid);
-	$path = drupal_get_path('module', 'vistaportal');
-	//drupal_add_js($jquery_plugin, array('weight' => JS_LIBRARY));
-	drupal_add_library('system', 'drupal.ajax');
-	drupal_add_js($path . '/js/jquery.field.js');
-	drupal_add_js($path . '/js/jquery.autotab-1.1b.js');
-	
-	$settings['autosave']['url'] = url('vistaportal/autosave');
-	$settings['autosave']['q'] = $_GET['q'];
-	$settings['autosave']['form_id'] = $form_id;
-	$settings['autosave']['form_id_id'] = $form['#id'];
-	if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
-		$settings['autosave'] = array_merge($settings['autosave'], array('serialized' => unserialize($autosaved_form['serialized']), 'saved_date' => format_date($autosaved_form['timestamp'], 'medium'), ));
-	}
-	drupal_add_js($settings, 'setting');
-	drupal_add_js($path . '/js/autosave.js');
+	//$account = user_load($user->uid);
+			
+			$fields = array(
+			'name' => $form_state['values']['email'],
+			'pass' => $form_state['values']['password'],
+			'mail' => $form_state['values']['email'],
+			'status' => 1,
+			'init' => $form_state['values']['email'],
+			'roles' => array(
+				DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+			),
+		);
+	$account = user_save('', $fields);
+										
+	$register = new stdClass();
+	$register->uid = db_select('users')
+		->fields('uid')
+		->condition('name',$form_state['values']['email'])
+		->execute()
+		->fetchAssoc();
+	$register->fname = $form_state['values']['fname'];
+	$register->lname = $form_state['values']['lname'];
+	$register->phone = $form_state['values']['phone'];
+	$register->email = $form_state['values']['email'];
+	$register->password = $form_state['values']['password'];
+	$register->question = $form_state['values']['question'];
+	$register->answer = $form_state['values']['answer'];
+	$register->primary_specialty = $form_state['values']['primary'];
+	$register->secondary_specialty = $form_state['values']['secondary'];
+	$register->locum_us = $form_state['values']['locum_us'];
+	$register->locum_int = $form_state['values']['locum_int'];
+	$register->perm = $form_state['values']['permanent_placement'];
+	$register->gov = $form_state['values']['gov_op'];
 
-}*/ 
+	
+	db_insert('profile_data')
+		->fields(array(
+			'uid' => $register->uid,
+			'first_name' => $register->fname,
+			'last_name' => $register->lname,
+			'phone' => $register->phone,
+			'email' => $register->email,
+			'password' => $register->password,
+			'question' => $register->question,
+			'answer' => $register-> answer,
+			'primary_specialty' => $register->primary_specialty,
+			'secondary_specialty' => $register->secondary_specialty,
+			'locum_us' => $register->locum_us,
+			'locum_int'=> $register->locum_int,
+			'perm' => $register->perm,
+			'gov_op' => $register->gov,
+		))
+		->execute();	
+	
+	$user = user_load($form_state['uid']);
+	drupal_goto('confirm' . $user->uid);
+	
+ 
+}
+
+
+/**
+ * Implements hook_cron().
+ */
+function vistaportal_cron() {
+	
+_create_new_account();
+
+}
+ 		
+	
+
