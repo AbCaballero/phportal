@@ -4,7 +4,7 @@
  * Company: Aner Group
  * Client: Vista Staffing Solutions
  * Date: November 19th, 2012
- * Notes: This file contains the pre-med section of the 
+ * Notes: This file contains the education section of the 
  * physicians pre-application form.
  */
 
@@ -17,10 +17,11 @@ function vistaportal_premed_form($form, &$form_state){
 	//Set this to tree so we can access all dynamic form values
 	$form['#tree'] = TRUE;
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
-	
+
+	//This is the pre-med education form	
 	$form['premed'] = array(
 		'#type'=>'fieldset',
-		'#title' => t('Pre-Medical Education'),
+		'#title' => t('PRE-MEDICAL EDUCATION (OPTIONAL)'),
 		'#collapsible' => FALSE,
 		'#prefix' => '<div id="premed-fieldset-wrapper">',
 		'#suffix' => '</div>',
@@ -30,21 +31,17 @@ function vistaportal_premed_form($form, &$form_state){
 	if(empty($form_state['num_schools'])){
 		$form_state['num_schools'] = 1;
 	}
-	
+
 	for($i = 0; $i < $form_state['num_schools']; $i++){
-		$form['premed'][$i]['school'] = textfield('School');
-		$form['premed'][$i]['degree'] = edu('Degree Earned');
+		$form['premed'][$i]['school'] = textfield('School of Graduation');
 		$form['premed'][$i]['city'] = textfield('City');
 		$form['premed'][$i]['state'] = state('State');
 		$form['premed'][$i]['country'] = country('Country');
-		/*$form['premed'][$i]['date_from'] = date_popup('Start Date');
-		$form['premed'][$i]['date_to'] = date_popup('End Date');*/
 		$form['premed'][$i]['month_from'] = month('Month From');
-		$form['premed'][$i]['day_from'] = day('Day From');
 		$form['premed'][$i]['year_from'] = year('Year From');
 		$form['premed'][$i]['month_to'] = month('Month To');
-		$form['premed'][$i]['day_to'] = day('Day To');
 		$form['premed'][$i]['year_to'] = year('Year To');
+		$form['premed'][$i]['degree'] = edu('Degree');
 	}
 	
 	//Only allow 3 schools for the premed form
@@ -52,7 +49,7 @@ function vistaportal_premed_form($form, &$form_state){
 		$form['premed']['add_another'] = array(
    		'#type' => 'submit',
    		'#value' => t('Add another school'),
-   		'#submit' => array('vistaportal_premed_form_add_school'),
+   		'#submit' => array('vistaportal_form_add'),
    		'#limit_validation_errors' => array(),
    		'#ajax' => array(
      		'callback' => 'vistaportal_premed_form_add_school_callback',
@@ -67,7 +64,7 @@ function vistaportal_premed_form($form, &$form_state){
 		$form['premed']['remove_school'] = array(
 		  '#type' => 'submit',
    		'#value' => t('Remove a school'),
-   		'#submit' => array('vistaportal_premed_form_remove_school'),
+   		'#submit' => array('vistaportal_form_remove'),
    		'#limit_validation_errors' => array(),
    		'#ajax' => array(
      		'callback' => 'vistaportal_premed_form_add_school_callback',
@@ -75,7 +72,63 @@ function vistaportal_premed_form($form, &$form_state){
    		),
   	);
 	}
+
+//This is the medical school form	
+	$form['med'] = array(
+		'#type'=>'fieldset',
+		'#title' => t('MEDICAL EDUCATION'),
+		'#collapsible' => FALSE,
+		'#prefix' => '<div id="med-fieldset-wrapper">',
+		'#suffix' => '</div>',
+	);
 	
+	//This counter will be used to determine how many education sections to add
+	if(empty($form_state['num_schools'])){
+		$form_state['num_schools'] = 1;
+	}
+	
+	for($i = 0; $i < $form_state['num_schools']; $i++){
+		$form['med'][$i]['school'] = textfield('School of Graduation');
+		$form['med'][$i]['city'] = textfield('City');
+		$form['med'][$i]['state'] = state('State');
+		$form['med'][$i]['country'] = country('Country');
+		$form['med'][$i]['month_from'] = month('Month From');
+		$form['med'][$i]['year_from'] = year('Year From');
+		$form['med'][$i]['month_to'] = month('Month To');
+		$form['med'][$i]['year_to'] = year('Year To');
+		$form['med'][$i]['degree'] = edu('Degree');
+		$form['med']['ecfmg'] = textfield('ECFMG CERTIFICATE #');
+	}
+	
+	//Only allow 3 schools for the med form
+	if($form_state['num_schools'] < 3 ){
+		$form['med']['add_another'] = array(
+   		'#type' => 'submit',
+   		'#value' => t('Add another school'),
+   		'#submit' => array('vistaportal_form_add'),
+   		'#limit_validation_errors' => array(),
+   		'#ajax' => array(
+     		'callback' => 'vistaportal_med_form_add_school_callback',
+     		'wrapper' => 'med-fieldset-wrapper',
+     		'method' => 'replaceWith',
+			),
+  	);
+	}
+	
+	//First school is mandatory
+	if($form_state['num_schools'] > 1 ){
+		$form['med']['remove_school'] = array(
+		  '#type' => 'submit',
+   		'#value' => t('Remove a school'),
+   		'#submit' => array('vistaportal_form_remove'),
+   		'#limit_validation_errors' => array(),
+   		'#ajax' => array(
+     		'callback' => 'vistaportal_med_form_add_school_callback',
+     		'wrapper' => 'med-fieldset-wrapper',
+   		),
+  	);
+	}
+
 	$form['submit'] = array(
 		'#type' => 'submit',
 		'#value' => t('Save & Continue'),
@@ -91,30 +144,9 @@ return $form;
  */
 			
 function vistaportal_premed_form_submit($form, &$form_state){
-	include_once('pdf_html_strings/premed_html.inc');
-	include_once('mPDF.inc');
 	global $user;
 	$account = user_load($user -> uid);
-	dsm($form_state['values']['premed'], 'here');
-	//$user_name;
-	//$html_string;
-	//make_pdf;
-	//make_tiff;
-	
-	
-/*	$html_string = getpremed_html(
-		$form_state['values']['premed'][0]['school'],
-		$form_state['values']['premed'][0]['degree'], 
-		$form_state['values']['premed'][0]['city'],
-		$form_state['values']['premed'][0]['state'], 
-		$form_state['values']['premed'][0]['country'],
-		$form_state['values']['premed'][0]['date_from'], 
-		$form_state['values']['premed'][0]['date_to']
-	);*/
-	
-	/*$filename = make_pdf_1($html_string,'Pre-med form');
-	pdf_to_tiff();*/
- 
+
 /* Save the form values to the premed table in 
  * the database and set the flag in the drupal_flags 
  * table. If the user refills this form, we need to 
@@ -141,12 +173,10 @@ function vistaportal_premed_form_submit($form, &$form_state){
 	foreach($form_state['values']['premed'] AS $key => $value){
 		$form_state['values']['premed'][$key]['date_from'] = 
 			$form_state['values']['premed'][$key]['year_from'] . '-' .
-			$form_state['values']['premed'][$key]['month_from'] . '-' .
-			$form_state['values']['premed'][$key]['day_from'];
+			$form_state['values']['premed'][$key]['month_from'];
 		$form_state['values']  ['premed'][$key]['date_to'] = 
 			$form_state['values']['premed'][$key]['year_to'] . '-' .
-			$form_state['values']['premed'][$key]['month_to'] . '-' .
-			$form_state['values']['premed'][$key]['day_to'];		
+			$form_state['values']['premed'][$key]['month_to'];		
 		$premed->uid = $user->uid;
 		$premed->formtype = 1001;
 		$premed->school = $form_state['values']['premed'][$key]['school'];
@@ -181,9 +211,79 @@ function vistaportal_premed_form_submit($form, &$form_state){
 	))
 		->condition('uid', $user->uid)
 		->execute();			
+
+/*%&%&%&&%%&%&%&%&%&%&&%&%&%&%&%&%&&%&%&%&%&%&%&%&%&%&%&%&%%&%&%&*/
+
+/* Save the form values to the med table in 
+ * the database and set the flag in the drupal_flags 
+ * table. If the user refills this form, we need to 
+ * unset and then reset the premed status flag in 
+ * the drupal_flags table.	
+ */
+	db_update('drupal_flags')
+		->fields(array(
+			'med'=>0,
+	))
+		->condition('uid', $user->uid)
+		->execute();
+
+/*Overwrite any existing values in the med table.*/
+	db_delete('medschool')
+		->condition('uid', $user->uid)
+		->execute();		
+
+/*Insert the form_state values into the med table.
+ * @TODO remember to add the dynamic fields to the form
+ * and also to the db_query.
+ */		
+	$premed = new stdClass();
+	foreach($form_state['values']['med'] AS $key => $value){
+		$form_state['values']['med'][$key]['date_from'] = 
+			$form_state['values']['med'][$key]['year_from'] . '-' .
+			$form_state['values']['med'][$key]['month_from'];
+		$form_state['values']  ['med'][$key]['date_to'] = 
+			$form_state['values']['med'][$key]['year_to'] . '-' .
+			$form_state['values']['med'][$key]['month_to'];
+				
+		$med->uid = $user->uid;
+		$med->formtype = 1001;
+		$med->school = $form_state['values']['premed'][$key]['school'];
+		$med->degree = $form_state['values']['premed'][$key]['degree'];
+		$med->city = $form_state['values']['premed'][$key]['city'];
+		$med->state = $form_state['values']['premed'][$key]['state'];
+		$med->country = $form_state['values']['premed'][$key]['country'];
+		$med->date_from = $form_state['values']['premed'][$key]['date_from'];
+		$med->date_to = $form_state['values']['premed'][$key]['date_to'];
+		$med->ecfmg = $form_state['values']['ecfmg'];
+
+	db_insert('medschool')
+		->fields(array(
+			'uid' => $med->uid,
+			'formtype' => $med->formtype,
+			'school' => $med->school,
+			'degree' => $med->degree,
+			'city' => $med->city,
+			'state' => $med->state,
+			'country' => $med->country,
+			'date_from' => $med->date_from,
+			'date_to' => $med->date_to,
+			'ecfmg'=> $med->ecfmg,
+		))
+		->execute();	
+	}		
+/*
+ * Update the drupal_flags table by setting the premed 
+ * status flag, letting us know that the form has been filled out.
+ */		
+	db_update('drupal_flags')
+		->fields(array(
+			'med'=>1,
+	))
+		->condition('uid', $user->uid)
+		->execute();
 			
 	$user = user_load($form_state['uid']);
-	drupal_goto('preapp/medschool' . $user->uid);	
+	drupal_goto('preapp/internship' . $user->uid);	
 	
 /*
  * @TODO add error checking
@@ -199,9 +299,16 @@ function vistaportal_premed_form_add_school_callback($form, $form_state){
 }
 
 /*
+ * Ajax callback for the med form
+ */
+function vistaportal_med_form_add_school_callback($form, $form_state){
+	return $form['med'];
+}
+
+/*
  * Increment the counter when the button is pressed
  */
-function vistaportal_premed_form_add_school($form, &$form_state){
+function vistaportal_form_add($form, &$form_state){
 	$form_state['num_schools']++;
   $form_state['rebuild'] = TRUE;		
 }
@@ -209,7 +316,7 @@ function vistaportal_premed_form_add_school($form, &$form_state){
 /*
  * Decrement the counter when the button is pressed
  */	
-function vistaportal_premed_form_remove_school($form, &$form_state){
+function vistaportal_form_remove($form, &$form_state){
 	if ($form_state['num_schools'] > 1) {
   	$form_state['num_schools']--;
   }

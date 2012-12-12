@@ -21,15 +21,6 @@ function vistaportal_medschool_form($form, &$form_state){
 		'#title' => t('Medical Education'),
 		'#collapsible' => FALSE,
 	);
-	/*$med_fields['school'] = textfield('School');
-	$med_fields['degree'] = edu('Degree Earned');
-	$med_fields['city'] = textfield('City');
-	$med_fields['state'] = state('State');
-	$med_fields['country'] = country('Country');
-	$med_fields['date_from'] = date_popup('Start Date');
-	$med_fields['date_to'] = date_popup('End Date');
-	$med_fields['ecfmg'] = textfield('ECFMG CERTIFICATE #');
-	$med_fields['ecfmg']['valid'] = date_popup('Expiration Date');*/
 	$form['med']['school'] = textfield('School');
 	$form['med']['degree'] = edu('Degree Earned');
 	$form['med']['city'] = textfield('City');

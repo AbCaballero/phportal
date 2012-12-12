@@ -49,7 +49,7 @@ function state($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY')),
-    '#attributes' => array('class' => 'select_state'),
+    '#attributes' => array('class' => array('select_state')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -103,7 +103,7 @@ function country($title) {
 			'United States','United States Minor Outlying Islands','Uruguay','Uzbekistan','Vanuatu',
 			'Venezuela','Viet Nam','Virgin Islands, British','Virgin Islands, U.S.','Wallis And Futuna',
 			'Western Sahara','Yemen','Zambia','Zimbabwe')),
-    '#attributes' => array('class' => 'select_country'),
+    '#attributes' => array('class' => array('select_country')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -224,7 +224,7 @@ function lic($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('USMLE', 'NBME/NBOME', 'FLEX', 'COMLEX', 'Other')),
-    //'#attributes' => array('class' => 'select-licence'),
+    '#attributes' => array('class' => array('select-licence')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -303,7 +303,7 @@ function edu($title) {
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('High School diploma', 
     	'Associates degree', 'Bachelors degree', 'Master degree', 'Ph.D')),
-    '#attributes' => array('class' => 'select_education'),
+    '#attributes' => array('class' => array('select_education')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -318,7 +318,7 @@ function children($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'other')),
-    '#attributes' => array('class' => 'select_children'),
+    '#attributes' => array('class' => array('select_children')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -333,7 +333,7 @@ function marital_status($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('-Select-','Single', 'Married', 'Divorced', 'Widowed')),
-    '#attributes' => array('class' => 'select_state'),
+    '#attributes' => array('class' => array('select_state')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -349,7 +349,7 @@ function month($title) {
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('01', '02', '03', '04', '05', '06', 
     	'07', '08', '09', '10', '11', '12')),
-    '#attributes' => array('class' => 'select-month'),
+    '#attributes' => array('class' => array('select-month')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -368,7 +368,7 @@ function year($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc($years),	 
-    '#attributes' => array('class' => 'select-year'),
+    '#attributes' => array('class' => array('select-year')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -385,7 +385,7 @@ function Day($title) {
     '#options' => drupal_map_assoc(array('01', '02', '03', '04', '05', '06', '07', '08', '09', 
     	'10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22',
 			'23', '24', '25', '26', '27', '28', '29', '30', '31')),
-    '#attributes' => array('class' => 'select-month'),
+    '#attributes' => array('class' => array('select-month')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -409,7 +409,7 @@ function challenge($title){
     'What was the model of your first car?', 
     'In what city were you married?', 
     'What is the name of your first employer?')),
-    '#attributes' => array('class' => 'select-challenge'),
+    '#attributes' => array('class' => array('select-challenge')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -499,7 +499,7 @@ function medical_specialty($title){
     'Trauma Surgery',
     'Urology',
     'Vascular Surgery')),
-    '#attributes' => array('class' => 'select-specialty'),
+    '#attributes' => array('class' => array('select-specialty')),
     '#rules' => array('not_none'),
   );
   return $element;

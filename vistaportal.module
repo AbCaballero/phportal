@@ -52,30 +52,17 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_identity_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_identity.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Identity'
 	);
-	 /* $items['apply'] = array(
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('physician_pre_application_wizard'),
-		'access arguments' => array('access content'),
-		'file' => 'physician_pre_application_wizard.forms.inc',
-		'type' => MENU_CALLBACK,
-	);*/
 	
-	$items['preapp/premed'] = array(
+	$items['preapp/education'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_premed_form'),
 		'access arguments' => array('access content'),
-		'file' => 'vistaportal_premed.forms.inc',
-		'type' => MENU_CALLBACK,
-	);
-	
-	$items['preapp/medschool'] = array(
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('vistaportal_medschool_form'),
-		'access arguments' => array('access content'),
-		'file' => 'vistaportal_medschool.forms.inc',
-		'type' => MENU_CALLBACK,
+		'file' => 'vistaportal_education.forms.inc',
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Education'
 	);
 	
 	$items['preapp/internship'] = array(
@@ -83,7 +70,8 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_internship_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_internship.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Internship'
 	);
 	
 	$items['preapp/residency'] = array(
@@ -91,7 +79,8 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_residency_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_residency.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Residency'
 	);
 
 	$items['preapp/affiliations'] = array(
@@ -99,7 +88,8 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_affiliations_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_affiliations.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Affiliations'
 	);
 	
 	$items['preapp/certifications'] = array(
@@ -107,7 +97,8 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_certifications_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_certifications.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Certifications'
 	);
 
 	$items['preapp/licensure'] = array(
@@ -115,7 +106,8 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_licensure_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_licensure.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Licensure'
 	);
 	
 	$items['preapp/disciplinary'] = array(
@@ -123,7 +115,8 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_disciplinary_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_disciplinary.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Disciplinary Actions'
 	);
 	
 	$items['preapp/references'] = array(
@@ -131,7 +124,8 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_references_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_references.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'References'
 	);									
 	
 	$items['release'] = array(
@@ -139,24 +133,10 @@ function vistaportal_menu() {
 		'page arguments' => array('vistaportal_release_authorization_form'),
 		'access arguments' => array('access content'),
 		'file' => 'vistaportal_release.forms.inc',
-		'type' => MENU_CALLBACK,
+		'type' => MENU_NORMAL_ITEM,
+		'title' => 'Release & Authorization'
 	);
 	
-	$items['insurance'] = array(
-		'page callback' => 'drupal_get_form',
-		'page arguments' => array('vistaportal_malpractice_insurance_form'),
-		'access arguments' => array('access content'),
-		'file' => 'vistaportal_malpractice.forms.inc',
-		'type' => MENU_CALLBACK,
-	);
-	
-	$items['vistaportal/autosave'] = array(
-	  'title' => 'Vistaportal Autosave',
-    'page callback' => 'vistaportal_autosave',
-    'access arguments' => array('access content'),
-    'file' => 'vistaportal.module',
-    'type' => MENU_CALLBACK,
-  );	
   return $items;
 }
 /*
@@ -194,7 +174,7 @@ function vistaportal_form($form, &$form_state){
 	); 
 	$form['registration']['primary'] = medical_specialty('Primary');
 	$form['registration']['secondary'] = medical_specialty('Secondary - Optional');
-	//$form['registration']['secondary']['#required'] = FALSE;
+	$form['registration']['secondary']['#required'] = FALSE;
 	$form['registration']['interests'] = array(
 		'#markup' => '<em>INTERESTS</em><br />',
 	); 
@@ -210,28 +190,6 @@ function vistaportal_form($form, &$form_state){
     '#type' => 'submit',
     '#value' => t('Submit>'),
   );
-	
-/*	$result = db_select('profile_data', 'p')
-	  ->fields('p')
-		->condition('entity_id', '', '!=')
-		->condition('new_user_flag', 1, '!=')
-		->execute()
-		->fetchAssoc();
-		
-	foreach($result AS $key => $value){
-		$fields = array(
-			'name' => $result['email'],
-			'pass' => $result['password'],
-			'mail' => $result['email'],
-			'status' => 1,
-			'init' => $result['email'],
-			'roles' => array(
-				DRUPAL_AUTHENTICATED_RID => 'authenticated user',
-			),
-		);
-		$account = user_save('', $fields);
-	}*/
-	//dsm($fields, 'here');
 	return $form;	
 }
 
@@ -249,12 +207,15 @@ function vistaportal_form_submit($form, &$form_state){
 			'status' => 1,
 			'init' => $form_state['values']['email'],
 			'roles' => array(
-				DRUPAL_AUTHENTICATED_RID => 'authenticated user',
+			/*	DRUPAL_AUTHENTICATED_RID => 'authenticated user',*/
+				array(logintoboggan_validating_id() => TRUE),
 			),
 		);
-	$account = user_save('', $fields);
+	$account = user_save(NULL, $fields);
+	$mail = _user_mail_notify('register_no_approval_required', $account);
+	watchdog('This is the mail value', $mail);
 										
-	$register = new stdClass();
+/*	$register = new stdClass();
 	$register->uid = db_select('users')
 		->fields('uid')
 		->condition('name',$form_state['values']['email'])
@@ -292,7 +253,7 @@ function vistaportal_form_submit($form, &$form_state){
 			'perm' => $register->perm,
 			'gov_op' => $register->gov,
 		))
-		->execute();	
+		->execute();	*/
 	
 	$user = user_load($form_state['uid']);
 	drupal_goto('confirm' . $user->uid);

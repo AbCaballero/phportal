@@ -24,20 +24,20 @@ function vistaportal_identity_form($form, &$form_state){
 	$form['identity']['lname'] = textfield('Last Name', 15);
 	$form['identity']['fname'] = textfield('First Name', 15);
 	$form['identity']['initial'] = textfield('Middle', 15);
-	$form['identity']['home_address'] = textfield('Home Address', 40);
-	$form['identity']['city'] = textfield('City', 20);
-	$form['identity']['state'] = state('State');
-	$form['identity']['zip'] = zip('Zip Code');
 	$form['identity']['work_phone'] = phone('Work Phone');
 	$form['identity']['home_phone'] = phone('Home Phone');
 	$form['identity']['cell_phone'] = phone('Cell Phone');
 	$form['identity']['email'] = email('E-mail address');
-	$form['identity']['social_security'] = textfield('Social Security Number', 13);
-	$form['identity']['social_security']['#maxlength'] = 11;
+	$form['identity']['home_address'] = textfield('Home Address', 40);
+	$form['identity']['city'] = textfield('City', 20);
+	$form['identity']['state'] = state('State');
+	$form['identity']['zip'] = zip('Zip Code');
 	$form['identity']['dob'] = date_popup('Date of Birth');
 	$form['identity']['birth_city'] = textfield('City of Birth');
 	$form['identity']['birth_state'] = state('State of Birth');
 	$form['identity']['birth_country'] = country('Country of Birth');
+	$form['identity']['social_security'] = textfield('Social Security Number', 13);
+	$form['identity']['social_security']['#maxlength'] = 11;
 	$form['identity']['npi'] = textfield('National Physician Identifier');
 	$form['identity']['verification'] = radios_yesno('Can you provide proof of 
 		legal eligibility to work in the USA?');
