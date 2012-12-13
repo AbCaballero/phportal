@@ -25,7 +25,21 @@ function vistaportal_init(){
 	drupal_add_css($path .'/css/forms.css');
 	//This allows jQuery update module to function properly.
 	variable_set('jquery_update_replace', TRUE);
-} 
+}
+
+/**
+ * Implements hook_perm().
+ */ 
+ function vistaportal_permission() {
+  return array(
+		'authenticated user access' => array(
+			'title' => t('Access to vistaportal forms'),
+			'description' => t('This allows only authenticated users to access the
+				vistaportal forms'),
+		),
+	);
+}
+ 
 /**
  * Implements hook_menu().
  */
@@ -50,16 +64,16 @@ function vistaportal_menu() {
   $items['preapp/identity'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_identity_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_identity.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
-		'title' => 'Identity'
+		'title' => 'Personal Information'
 	);
 	
 	$items['preapp/education'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_premed_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_education.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Education'
@@ -68,7 +82,7 @@ function vistaportal_menu() {
 	$items['preapp/internship'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_internship_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_internship.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Internship'
@@ -77,7 +91,7 @@ function vistaportal_menu() {
 	$items['preapp/residency'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_residency_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_residency.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Residency'
@@ -86,7 +100,7 @@ function vistaportal_menu() {
 	$items['preapp/affiliations'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_affiliations_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_affiliations.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Affiliations'
@@ -95,7 +109,7 @@ function vistaportal_menu() {
 	$items['preapp/certifications'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_certifications_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_certifications.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Certifications'
@@ -104,7 +118,7 @@ function vistaportal_menu() {
 	$items['preapp/licensure'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_licensure_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_licensure.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Licensure'
@@ -113,7 +127,7 @@ function vistaportal_menu() {
 	$items['preapp/disciplinary'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_disciplinary_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_disciplinary.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Disciplinary Actions'
@@ -122,7 +136,7 @@ function vistaportal_menu() {
 	$items['preapp/references'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_references_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_references.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'References'
@@ -131,7 +145,7 @@ function vistaportal_menu() {
 	$items['release'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_release_authorization_form'),
-		'access arguments' => array('access content'),
+		'access arguments' => array('authenticated user access'),
 		'file' => 'vistaportal_release.forms.inc',
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Release & Authorization'
@@ -198,67 +212,63 @@ function vistaportal_form($form, &$form_state){
  */
 function vistaportal_form_submit($form, &$form_state){
 	global $user;
-	//$account = user_load($user->uid);
 			
-			$fields = array(
-			'name' => $form_state['values']['email'],
-			'pass' => $form_state['values']['password'],
-			'mail' => $form_state['values']['email'],
-			'status' => 1,
-			'init' => $form_state['values']['email'],
-			'roles' => array(
-			/*	DRUPAL_AUTHENTICATED_RID => 'authenticated user',*/
-				array(logintoboggan_validating_id() => TRUE),
-			),
-		);
+	$fields = array(
+		'name' => $form_state['values']['email'],
+		'pass' => $form_state['values']['password'],
+		'mail' => $form_state['values']['email'],
+		'status' => 1,
+		'init' => $form_state['values']['email'],
+		'roles' => array(
+			array(logintoboggan_validating_id() => TRUE),
+		),
+	);
 	$account = user_save(NULL, $fields);
-	$mail = _user_mail_notify('register_no_approval_required', $account);
-	watchdog('This is the mail value', $mail);
-										
-/*	$register = new stdClass();
-	$register->uid = db_select('users')
-		->fields('uid')
-		->condition('name',$form_state['values']['email'])
-		->execute()
-		->fetchAssoc();
-	$register->fname = $form_state['values']['fname'];
-	$register->lname = $form_state['values']['lname'];
-	$register->phone = $form_state['values']['phone'];
-	$register->email = $form_state['values']['email'];
-	$register->password = $form_state['values']['password'];
-	$register->question = $form_state['values']['question'];
-	$register->answer = $form_state['values']['answer'];
-	$register->primary_specialty = $form_state['values']['primary'];
-	$register->secondary_specialty = $form_state['values']['secondary'];
-	$register->locum_us = $form_state['values']['locum_us'];
-	$register->locum_int = $form_state['values']['locum_int'];
-	$register->perm = $form_state['values']['permanent_placement'];
-	$register->gov = $form_state['values']['gov_op'];
+	//This line of code will have to go into the cron job
+	if($mail = _user_mail_notify('register_no_approval_required', $account)){
+		$error = FALSE;
+		$account = user_load($user->uid);									
+		$register = new stdClass();
+		$register->uid = $user->uid;
+		$register->fname = $form_state['values']['fname'];
+		$register->lname = $form_state['values']['lname'];
+		$register->phone = $form_state['values']['phone'];
+		$register->email = $form_state['values']['email'];
+		$register->question = $form_state['values']['question'];
+		$register->answer = $form_state['values']['answer'];
+		$register->primary_specialty = $form_state['values']['primary'];
+		$register->secondary_specialty = $form_state['values']['secondary'];
+		$register->locum_us = $form_state['values']['locum_us'];
+		$register->locum_int = $form_state['values']['locum_int'];
+		$register->perm = $form_state['values']['permanent_placement'];
+		$register->gov = $form_state['values']['gov_op'];
 
 	
-	db_insert('profile_data')
-		->fields(array(
-			'uid' => $register->uid,
-			'first_name' => $register->fname,
-			'last_name' => $register->lname,
-			'phone' => $register->phone,
-			'email' => $register->email,
-			'password' => $register->password,
-			'question' => $register->question,
-			'answer' => $register-> answer,
-			'primary_specialty' => $register->primary_specialty,
-			'secondary_specialty' => $register->secondary_specialty,
-			'locum_us' => $register->locum_us,
-			'locum_int'=> $register->locum_int,
-			'perm' => $register->perm,
-			'gov_op' => $register->gov,
-		))
-		->execute();	*/
+		db_insert('profile_data')
+			->fields(array(
+				'uid' => $register->uid,
+				'first_name' => $register->fname,
+				'last_name' => $register->lname,
+				'phone' => $register->phone,
+				'email' => $register->email,
+				'question' => $register->question,
+				'answer' => $register-> answer,
+				'primary_specialty' => $register->primary_specialty,
+				'secondary_specialty' => $register->secondary_specialty,
+				'locum_us' => $register->locum_us,
+				'locum_int'=> $register->locum_int,
+				'perm' => $register->perm,
+				'gov_op' => $register->gov,
+			))
+			->execute();	
 	
-	$user = user_load($form_state['uid']);
-	drupal_goto('confirm' . $user->uid);
-	
- 
+		$user = user_load($form_state['uid']);
+		drupal_goto('confirm' . $user->uid);
+	}
+	else{
+		$error = TRUE;
+		form_set_error('Your registration could not be completed, please try again later');
+	} 
 }
 
 
