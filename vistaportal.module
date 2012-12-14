@@ -15,7 +15,7 @@ include_once('vistaportal_functions.inc');
 /**
  * Implements hook_init().
  */
-function vistaportal_init(){
+/*function vistaportal_init(){
 	global $user;
 	date_default_timezone_set('America/Los_Angeles');
 	$path = drupal_get_path('module', 'vistaportal');
@@ -25,7 +25,7 @@ function vistaportal_init(){
 	drupal_add_css($path .'/css/forms.css');
 	//This allows jQuery update module to function properly.
 	variable_set('jquery_update_replace', TRUE);
-}
+}*/
 
 /**
  * Implements hook_perm().
@@ -150,6 +150,15 @@ function vistaportal_menu() {
 		'type' => MENU_NORMAL_ITEM,
 		'title' => 'Release & Authorization'
 	);
+	
+  $items['autosave'] = array(
+    'title' => 'Vista Portal Autosave',
+    'page callback' => 'drupal_get_form', 
+    'page arguments' => array('vistaportal_autosave'),
+    'access arguments' => array('access content'),
+    //'file' => 'vistaportal.module',
+    'type' => MENU_CALLBACK,
+  );
 	
   return $items;
 }
@@ -284,7 +293,35 @@ function vistaportal_form_submit($form, &$form_state){
 	} 
 }
 
-
+/**
+ * Implements the hook_form_alter()
+ */
+function vistaportal_form_alter(&$form, &$form_state, $form_id) {
+	global $user;
+  $form['#attributes'] = array('class' => array('vistaportal'));
+  //$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);
+  $path = drupal_get_path('module', 'vistaportal');
+  drupal_add_js($path . '/js/jquery.field.js');
+  drupal_add_js($path . '/js/autosave.js');
+  //dsm($form_id);
+  $settings['autosave']['url'] = url('autosave');
+  $settings['autosave']['q'] = $_GET['q'];
+  $settings['autosave']['form_id'] = $form_id;
+  $settings['autosave']['form_id_id'] = $form['#id'];
+      
+      
+   // If an autosaved version of the form exists, make it available via javascript.
+   if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user->uid)) {
+   	$settings['autosave'] = array_merge($settings['autosave'], array(
+    	'serialized' => unserialize($autosaved_form['serialized']),
+    	'saved_date' => format_date($autosaved_form['timestamp'], 'medium'),
+    ));
+   }
+      
+      
+    drupal_add_js($settings, 'setting');
+}
+ 
 /**
  * Implements hook_cron().
  */
@@ -293,6 +330,63 @@ function vistaportal_cron() {
 _create_new_account();
 
 }
- 		
-	
 
+/**
+ * Implements get_autosaved_form
+ */ 		
+function vistaportal_get_autosaved_form($form_id, $path, $uid){
+	$result = db_query("SELECT form_id, serialized, timestamp FROM {autosaved_forms} WHERE form_id = :form_id AND path = :path AND uid = :uid", array(':form_id' =>$form_id, ':path' => $path, ':uid' => $uid));
+	foreach($result as $data) {
+		$form['serialized'] = $data->serialized;
+		$form['timestamp'] = $data->timestamp;
+	}
+	return $form;
+}	
+
+/**
+ * Implements vistaportal_autosave_form
+ */
+function vistaportal_autosave() {
+  global $user;
+  // Bad request
+  // return drupal_json(array('status' => 400));
+
+  // Unauthorized
+  // return drupal_json(array('status' => 401));
+
+  // Server error
+  // return drupal_json(array('status' => 500));
+
+
+  $path = $_POST['q'];
+  $form_id = $_POST['form_id'];
+
+  unset($_POST['q'], $_POST['op'], $_POST['form_build_id'], $_POST['form_token']);
+  $serialized = serialize($_POST);
+  
+
+  db_delete('autosaved_forms')
+->condition('form_id',$form_id)
+->condition('path', $path)
+->condition('uid',$user->uid)
+->execute();
+
+
+db_insert('autosaved_forms')
+->fields(array(
+'form_id' => $form_id,
+'path' => $path,
+'uid' => $user->uid,
+'timestamp' => REQUEST_TIME,
+'serialized' => $serialized,
+))
+->execute();
+
+
+  // Currently, each user can have only one autosave form at a particular path.
+  //db_query("DELETE FROM {autosaved_forms} WHERE form_id = '%s' AND path = '%s' AND uid = %d", $form_id, $path, $user->uid);
+  //db_query("INSERT INTO {autosaved_forms} (form_id, path, uid, timestamp, serialized) VALUES ('%s', '%s', %d, %d, '%s')", $form_id, $path, $user->uid, time(), $serialized);
+  // watchdog('rpoa', 'Autosave captured from '. $_POST['q'] .'Post: <pre>'. print_r($_POST, TRUE) .'</pre>');
+  
+  exit();
+} 
