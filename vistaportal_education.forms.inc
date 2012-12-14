@@ -14,6 +14,8 @@
 function vistaportal_premed_form($form, &$form_state){
 	include_once('vistaportal.fields.inc');
 	include_once('vistaportal_functions.inc');
+	drupal_add_library('system', 'drupal.ajax');
+  drupal_add_library('system', 'jquery.form');
 	//Set this to tree so we can access all dynamic form values
 	$form['#tree'] = TRUE;
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
@@ -55,6 +57,7 @@ function vistaportal_premed_form($form, &$form_state){
      		'callback' => 'vistaportal_premed_form_add_school_callback',
      		'wrapper' => 'premed-fieldset-wrapper',
      		'method' => 'replaceWith',
+     		'speed' => 'fast',
 			),
   	);
 	}

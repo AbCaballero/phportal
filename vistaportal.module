@@ -204,6 +204,19 @@ function vistaportal_form($form, &$form_state){
     '#type' => 'submit',
     '#value' => t('Submit>'),
   );
+	
+	$query = db_select('users', 'u');
+	$query->innerjoin('profile_data', 'p', 'u.uid = p.uid');
+	$query->condition ('p.entity_id', null); 
+	$query->condition('p.new_user_flag', 0, '=');	
+	$query->fields('u', array('uid', 'name', 'mail'))
+		->fields('p', array('entity_id', 'new_user_flag'))
+		->orderBy('uid');
+	$result = $query->execute();
+	
+	foreach($result AS $record){
+  dsm($record, 'this is record');
+	}	
 	return $form;	
 }
 

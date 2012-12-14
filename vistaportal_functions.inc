@@ -16,46 +16,25 @@
  */  
 
  function _create_new_account(){
-	$result = db_select('profile_data', 'p')
-	  ->fields('p')
-		->condition('entity_id', '', '!=')
-		->condition('new_user_flag', 1, '!=')
-		->execute()
-		->fetchAssoc();
-		
-		
-	foreach($result AS $key => $value){
-		$fields = array(
-			'name' => $result['email'],
-			'pass' => $result['password'],
-			'mail' => $result['mail'],
-			'status' => 1,
-			'init' => $result['email'],
-			'roles' => array(
-				DRUPAL_AUTHENTICATED_RID => 'authenticated user',
-			),
-		);
-		$account = user_save('', $fields);		
-		$to = $result[$key];
-		$from = "andrew.browning@anergroup.com";
-		$link = user_pass_reset_url($entity_created);
-		dsm($link, 'here');
-		$params['new_user_link'] = $link; //This will be a link for the user to click
-		$sent = drupal_mail('vistaportal_email', 'key', $to, language_default(), $params, $from, TRUE);
-		
-		if(!$sent){
-			//Write a message to the error log
-		}
-		else{
+	$query = db_select('users', 'u');
+	$query->innerjoin('profile_data', 'p', 'u.uid = p.uid');
+	$query->condition ('p.entity_id', null, '!='); 
+	$query->condition('p.new_user_flag', 0, '=');	
+	$query->fields('u', array('uid', 'name', 'mail'))
+		->fields('p', array('entity_id', 'new_user_flag'))
+		->orderBy('uid');
+	$result = $query->execute();
+	
+	foreach($result AS $account){
+		$mail = _user_mail_notify('register_no_approval_required', $account);
 		db_update('profile_data')
 			->fields(array(
-				'new_user_flag' => 1
+			'new_user_flag' => 1
 		))
 		->condition('email', $result)
 		->execute();
-		}
 	}
-}
+ }
 
 /*
  * Load user account based upon entity_id
