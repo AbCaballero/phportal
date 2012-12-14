@@ -57,9 +57,9 @@ function vistaportal_medschool_form_submit($form, &$form_state){
 	//save record
 
 /* If the user refills this form, we need to unset the
- * medschool status flag in the drupal_flags table.	
+ * medschool status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'medschool'=>0,
 	))
@@ -67,7 +67,7 @@ function vistaportal_medschool_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the medschool table.*/
-	db_delete('medschool')
+	db_delete('vss_medschool')
 		->condition('uid', $user->uid)
 		->execute();		
 		
@@ -84,7 +84,7 @@ function vistaportal_medschool_form_submit($form, &$form_state){
 	$medschool->date_to = $form_state['values']['date_to'];
 	$medschool->ecfmg = $form_state['values']['ecfmg'];
 	
-	db_insert('medschool')
+	db_insert('vss_medschool')
 		->fields(array(
 			'uid' => $medschool->uid,
 			'school' => $medschool->school,
@@ -98,10 +98,10 @@ function vistaportal_medschool_form_submit($form, &$form_state){
 		->execute();
 		
 /*
- * Update the drupal_flags table by setting the medschool 
+ * Update the vss_drupal_flags table by setting the medschool 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'medschool'=>1,
 	))

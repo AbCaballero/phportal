@@ -63,9 +63,9 @@ function vistaportal_licensure_form_submit($form, &$form_state){
 	//save record
 	
 	/* If the user refills this form, we need to unset the
- * licensure status flag in the drupal_flags table.	
+ * licensure status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'licensure'=>0,
 	))
@@ -73,7 +73,7 @@ function vistaportal_licensure_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the licensure table.*/
-	db_delete('licensure')
+	db_delete('vss_licensure')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -98,7 +98,7 @@ function vistaportal_licensure_form_submit($form, &$form_state){
 	$licensure->other_proof = $form_state['values']['other_prof'];
 	$licensure->language_spoken = $form_state['values']['language_spoken'];
 	
-	db_insert('licensure')
+	db_insert('vss_licensure')
 		->fields(array(
 	'uid' => $licensure->uid,
 	'exam_steps' => $licensure->exam_steps, 
@@ -122,10 +122,10 @@ function vistaportal_licensure_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Update the drupal_flags table by setting the licensure 
+ * Update the vss_drupal_flags table by setting the licensure 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'licensure'=>1,
 	))

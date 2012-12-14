@@ -17,7 +17,7 @@
 
  function _create_new_account(){
 	$query = db_select('users', 'u');
-	$query->innerjoin('profile_data', 'p', 'u.uid = p.uid');
+	$query->innerjoin('vss_profile_data', 'p', 'u.uid = p.uid');
 	$query->condition ('p.entity_id', null, '!='); 
 	$query->condition('p.new_user_flag', 0, '=');	
 	$query->fields('u', array('uid', 'name', 'mail'))
@@ -27,7 +27,7 @@
 	
 	foreach($result AS $account){
 		$mail = _user_mail_notify('register_no_approval_required', $account);
-		db_update('profile_data')
+		db_update('vss_profile_data')
 			->fields(array(
 			'new_user_flag' => 1
 		))
@@ -40,7 +40,7 @@
  * Load user account based upon entity_id
  */
 function _account_load($entity_id, $uid){
-	$record = db_select('profile_data','p')
+	$record = db_select('vss_profile_data','p')
 		->fields('c')
 		->execute()
 		->fetchAssoc();	

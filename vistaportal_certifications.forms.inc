@@ -61,9 +61,9 @@ function vistaportal_certifications_form_submit($form, &$form_state){
 	//save record
 
 /* If the user refills this form, we need to unset the
- * certifications status flag in the drupal_flags table.	
+ * certifications status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'certifications'=>0,
 	))
@@ -71,7 +71,7 @@ function vistaportal_certifications_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the certifications table.*/
-	db_delete('certifications')
+	db_delete('vss_certifications')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -97,7 +97,7 @@ function vistaportal_certifications_form_submit($form, &$form_state){
 	$certifications->mqsa = $form_state['values']['mqsa'];
 	$certifications->mqsa_exp_date = $form_state['values']['mqsa_exp'];
 	
-	db_insert('certifications')
+	db_insert('vss_certifications')
 		->fields(array(
 			'uid' => $certifications->uid,
 			'board_status' => $certifications->board_status,
@@ -122,10 +122,10 @@ function vistaportal_certifications_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Update the drupal_flags table by setting the certifications 
+ * Update the vss_drupal_flags table by setting the certifications 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'certifications'=>1,
 	))

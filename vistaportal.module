@@ -214,8 +214,8 @@ function vistaportal_form($form, &$form_state){
     '#value' => t('Submit>'),
   );
 	
-	$query = db_select('users', 'u');
-	$query->innerjoin('profile_data', 'p', 'u.uid = p.uid');
+/*	$query = db_select('users', 'u');
+	$query->innerjoin('vss_profile_data', 'p', 'u.uid = p.uid');
 	$query->condition ('p.entity_id', null); 
 	$query->condition('p.new_user_flag', 0, '=');	
 	$query->fields('u', array('uid', 'name', 'mail'))
@@ -225,7 +225,7 @@ function vistaportal_form($form, &$form_state){
 	
 	foreach($result AS $record){
   dsm($record, 'this is record');
-	}	
+	}	*/
 	return $form;	
 }
 
@@ -266,7 +266,7 @@ function vistaportal_form_submit($form, &$form_state){
 		$register->gov = $form_state['values']['gov_op'];
 
 	
-		db_insert('profile_data')
+		db_insert('vss_profile_data')
 			->fields(array(
 				'uid' => $register->uid,
 				'first_name' => $register->fname,

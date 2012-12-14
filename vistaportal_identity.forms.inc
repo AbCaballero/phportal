@@ -72,9 +72,9 @@ function vistaportal_identity_form_submit($form, &$form_state){
 	//save record
 /*
  * If the user refills this form, we need to unset the
- * identity status flag in the drupal_flags table.	
+ * identity status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'identity'=>0,
 	))
@@ -82,7 +82,7 @@ function vistaportal_identity_form_submit($form, &$form_state){
 		->execute();
 		 
 /*Overwrite any existing values in the identity table.*/
-	db_delete('identity')
+	db_delete('vss_identity')
 		->condition('uid', $user->uid)
 		->execute();
 		
@@ -111,7 +111,7 @@ function vistaportal_identity_form_submit($form, &$form_state){
 	$identity->spouse = $form_state['values']['spouse'];
 	$identity->number_children = $form_state['values']['number_of_children'];
   
-  db_insert('identity')
+  db_insert('vss_identity')
 		->fields(array(
 			'uid' => $identity->uid, 
 			'last_name' => $identity->last_name, 
@@ -138,10 +138,10 @@ function vistaportal_identity_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Insert the user_id into the drupal_flags table and set the identity bit,
+ * Insert the user_id into the vss_drupal_flags table and set the identity bit,
  * letting us know that the form has been filled out.
  */		
-		db_insert('drupal_flags')
+		db_insert('vss_drupal_flags')
 		->fields(array(
 			'uid'=>$user->uid,
 			'identity' => 1,

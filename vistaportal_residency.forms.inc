@@ -48,9 +48,9 @@ function vistaportal_residency_form_submit($form, &$form_state){
 	//save record
 	
 /* If the user refills this form, we need to unset the
- * residency status flag in the drupal_flags table.	
+ * residency status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'residency'=>0,
 	))
@@ -58,7 +58,7 @@ function vistaportal_residency_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the residency table.*/
-	db_delete('residency')
+	db_delete('vss_residency')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -74,7 +74,7 @@ function vistaportal_residency_form_submit($form, &$form_state){
 	$residency->date_to = $form_state['values']['residency']['date_to'];
 	$residency->prog_dir = $form_state['values']['residency']['prog_dir'];
 	
-	db_insert('residency')
+	db_insert('vss_residency')
 		->fields(array(
 			'uid' => $residency->uid,
 			'type' => $residency->type,
@@ -89,10 +89,10 @@ function vistaportal_residency_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Update the drupal_flags table by setting the residency 
+ * Update the vss_drupal_flags table by setting the residency 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'residency'=>1,
 	))

@@ -81,9 +81,9 @@ function vistaportal_disciplinary_form_submit($form, &$form_state){
 	//save record
 	
 /* If the user refills this form, we need to unset the
- * disciplinary status flag in the drupal_flags table.	
+ * disciplinary status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'disciplinary'=>0,
 	))
@@ -91,7 +91,7 @@ function vistaportal_disciplinary_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the disciplinary table.*/
-	db_delete('disciplinary')
+	db_delete('vss_disciplinary')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -116,7 +116,7 @@ function vistaportal_disciplinary_form_submit($form, &$form_state){
 	$disciplinary->treatment = $form_state['values']['disc']['treatment'];
 	$disciplinary->other = $form_state['values']['disc']['other'];
 	
-	db_insert('disciplinary')
+	db_insert('vss_disciplinary')
 		->fields(array(
 	'uid' => $disciplinary->uid,
 	'med_lic' => $disciplinary->med_lic, 
@@ -140,10 +140,10 @@ function vistaportal_disciplinary_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Update the drupal_flags table by setting the disciplinary 
+ * Update the vss_drupal_flags table by setting the disciplinary 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'disciplinary'=>1,
 	))

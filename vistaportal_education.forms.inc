@@ -156,7 +156,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
  * unset and then reset the premed status flag in 
  * the drupal_flags table.	
  */
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'premed'=>0,
 	))
@@ -164,7 +164,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the premed table.*/
-	db_delete('premed')
+	db_delete('vss_premed')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -190,7 +190,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
 		$premed->date_from = $form_state['values']['premed'][$key]['date_from'];
 		$premed->date_to = $form_state['values']['premed'][$key]['date_to'];
 
-	db_insert('premed')
+	db_insert('vss_premed')
 		->fields(array(
 			'uid' => $premed->uid,
 			'formtype' => $premed->formtype,
@@ -208,7 +208,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
  * Update the drupal_flags table by setting the premed 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'premed'=>1,
 	))
@@ -223,7 +223,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
  * unset and then reset the premed status flag in 
  * the drupal_flags table.	
  */
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'med'=>0,
 	))
@@ -231,7 +231,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the med table.*/
-	db_delete('medschool')
+	db_delete('vss_medschool')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -259,7 +259,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
 		$med->date_to = $form_state['values']['premed'][$key]['date_to'];
 		$med->ecfmg = $form_state['values']['ecfmg'];
 
-	db_insert('medschool')
+	db_insert('vss_medschool')
 		->fields(array(
 			'uid' => $med->uid,
 			'formtype' => $med->formtype,
@@ -278,7 +278,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
  * Update the drupal_flags table by setting the premed 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'med'=>1,
 	))

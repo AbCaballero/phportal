@@ -67,9 +67,9 @@ function vistaportal_references_form_submit($form, &$form_state){
 
 /*
  * If the user refills this form, we need to unset the
- * references status flag in the drupal_flags table.	
+ * references status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'ref'=>0,
 	))
@@ -77,7 +77,7 @@ function vistaportal_references_form_submit($form, &$form_state){
 		->execute();
 		 
 /*Overwrite any existing values in the references table.*/
-	db_delete('ref')
+	db_delete('vss_ref')
 		->condition('uid', $user->uid)
 		->execute();
 		
@@ -90,7 +90,7 @@ function vistaportal_references_form_submit($form, &$form_state){
 	$references->home_phone = $form_state['values']['references']['home_phone'];
 	$references->work_phone = $form_state['values']['references']['work_phone'];
 	
-  db_insert('ref')
+  db_insert('vss_ref')
 		->fields(array(
 			'uid' => $references->uid, 
 			'name' => $references->name, 
@@ -101,10 +101,10 @@ function vistaportal_references_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Insert the user_id into the drupal_flags table and set the references bit,
+ * Insert the user_id into the vss_drupal_flags table and set the references bit,
  * letting us know that the form has been filled out.
  */		
-		db_insert('drupal_flags')
+		db_insert('vss_drupal_flags')
 		->fields(array(
 			'uid'=>$user->uid,
 			'ref' => 1,

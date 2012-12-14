@@ -48,9 +48,9 @@ function vistaportal_internship_form_submit($form, &$form_state){
 	//save record
 	
 /* If the user refills this form, we need to unset the
- * internship status flag in the drupal_flags table.	
+ * internship status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags')
+	db_update('vss_drupal_flags')
 		->fields(array(
 			'internship'=>0,
 	))
@@ -58,7 +58,7 @@ function vistaportal_internship_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the internship table.*/
-	db_delete('internship')
+	db_delete('vss_internship')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -75,7 +75,7 @@ function vistaportal_internship_form_submit($form, &$form_state){
 	$internship->date_to = $form_state['values']['internship']['date_to'];
 	$internship->prog_dir = $form_state['values']['internship']['prog_dir'];
 	
-	db_insert('internship')
+	db_insert('vss_internship')
 		->fields(array(
 			'uid' => $internship->uid,
 			'type' => $internship->type,
@@ -90,10 +90,10 @@ function vistaportal_internship_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Update the drupal_flags table by setting the internship 
+ * Update the vss_drupal_flags table by setting the internship 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'internship'=>1,
 	))

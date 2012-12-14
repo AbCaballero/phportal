@@ -57,9 +57,9 @@ function vistaportal_affiliations_form_submit($form, &$form_state){
 	//save record
 	
 /* If the user refills this form, we need to unset the
- * affiliations status flag in the drupal_flags table.	
+ * affiliations status flag in the vss_drupal_flags table.	
  */
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'affiliations'=>0,
 	))
@@ -67,7 +67,7 @@ function vistaportal_affiliations_form_submit($form, &$form_state){
 		->execute();
 
 /*Overwrite any existing values in the affiliations table.*/
-	db_delete('affiliations')
+	db_delete('vss_affiliations')
 		->condition('uid', $user->uid)
 		->execute();		
 
@@ -81,7 +81,7 @@ function vistaportal_affiliations_form_submit($form, &$form_state){
 	$affiliations->zip = $form_state['values']['affiliations']['zip'];
 	$affiliations->country = $form_state['values']['affiliations']['country'];
 	
-	db_insert('affiliations')
+	db_insert('vss_affiliations')
 		->fields(array(
 			'uid' => $affiliations->uid,
 			'facility' => $affiliations->facility,
@@ -94,10 +94,10 @@ function vistaportal_affiliations_form_submit($form, &$form_state){
 		->execute();
 
 /*
- * Update the drupal_flags table by setting the affiliations 
+ * Update the vss_drupal_flags table by setting the affiliations 
  * status flag, letting us know that the form has been filled out.
  */		
-	db_update('drupal_flags	')
+	db_update('vss_drupal_flags	')
 		->fields(array(
 			'affiliations'=>1,
 	))
