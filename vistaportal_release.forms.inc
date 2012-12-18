@@ -64,3 +64,54 @@ function vistaportal_release_authorization_form($form, &$form_state){
 	);											
 return $form;	
 }	
+
+function vistaportal_release_authorization_form_submit($form, &$form_state){
+	global $user;
+	$account = user_load($user->uid);
+	//$user_name;
+	//$html_string;
+	//make_pdf;
+	//make_tiff;
+	//save record
+
+/*
+ * If the user refills this form, we need to unset the
+ * release status flag in the vss_drupal_flags table.	
+ */
+	db_update('vss_drupal_flags')
+		->fields(array(
+			'release'=>0,
+	))
+		->condition('uid', $user->uid)
+		->execute();
+		 
+/*Overwrite any existing values in the references table.*/
+	db_delete('vss_release')
+		->condition('uid', $user->uid)
+		->execute();
+		
+/*Insert the form_state values into the references table.*/		
+  $release = new stdClass();
+	$release->uid = $user->uid;
+	$release->terms = $form_state['values']['authorization']['accept'];
+	
+  db_insert('vss_release')
+		->fields(array(
+			'uid' => $release->uid, 
+			'terms' => $release->terms, 
+	))
+		->execute();
+
+/*
+ * Insert the user_id into the vss_drupal_flags table and set the references bit,
+ * letting us know that the form has been filled out.
+ */		
+		db_update('vss_drupal_flags')
+		->fields(array(
+			'uid'=>$user->uid,
+			'release' => 1,
+		))
+		->execute();								
+	$user = user_load($form_state['uid']);
+	drupal_goto('submission' . $user->uid);	
+}

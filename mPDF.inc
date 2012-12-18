@@ -10,6 +10,7 @@
  */
 
 function make_pdf_1($html_string, $formtype){
+	dsm(getcwd());
 	define('_MPDF_PATH','sites/all/libraries/MPDF54/');
 	include_once(_MPDF_PATH . "mpdf.php");
 	global $user;

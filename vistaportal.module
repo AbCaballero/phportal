@@ -15,7 +15,7 @@ include_once('vistaportal_functions.inc');
 /**
  * Implements hook_init().
  */
-/*function vistaportal_init(){
+function vistaportal_init(){
 	global $user;
 	date_default_timezone_set('America/Los_Angeles');
 	$path = drupal_get_path('module', 'vistaportal');
@@ -25,7 +25,7 @@ include_once('vistaportal_functions.inc');
 	drupal_add_css($path .'/css/forms.css');
 	//This allows jQuery update module to function properly.
 	variable_set('jquery_update_replace', TRUE);
-}*/
+}
 
 /**
  * Implements hook_perm().
@@ -142,7 +142,7 @@ function vistaportal_menu() {
 		'title' => 'References'
 	);									
 	
-	$items['release'] = array(
+	$items['preapp/release'] = array(
 		'page callback' => 'drupal_get_form',
 		'page arguments' => array('vistaportal_release_authorization_form'),
 		'access arguments' => array('authenticated user access'),
@@ -160,6 +160,14 @@ function vistaportal_menu() {
     'type' => MENU_CALLBACK,
   );
 	
+	$items['preapp/submission'] = array(
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('vistaportal_submission_form'),
+		'access arguments' => array('authenticated user access'),
+		'file' => 'vistaportal_submit.forms.inc',
+		'type' => MENU_CALLBACK,
+		'title' => 'Submit'
+  );
   return $items;
 }
 /*
@@ -214,9 +222,9 @@ function vistaportal_form($form, &$form_state){
     '#value' => t('Submit>'),
   );
 	
-/*	$query = db_select('users', 'u');
+	$query = db_select('users', 'u');
 	$query->innerjoin('vss_profile_data', 'p', 'u.uid = p.uid');
-	$query->condition ('p.entity_id', null); 
+	$query->isNotNull ('p.entity_id'); 
 	$query->condition('p.new_user_flag', 0, '=');	
 	$query->fields('u', array('uid', 'name', 'mail'))
 		->fields('p', array('entity_id', 'new_user_flag'))
@@ -225,7 +233,7 @@ function vistaportal_form($form, &$form_state){
 	
 	foreach($result AS $record){
   dsm($record, 'this is record');
-	}	*/
+	}	
 	return $form;	
 }
 
@@ -247,8 +255,8 @@ function vistaportal_form_submit($form, &$form_state){
 	);
 	$account = user_save(NULL, $fields);
 	//This line of code will have to go into the cron job
-	if($mail = _user_mail_notify('register_no_approval_required', $account)){
-		$error = FALSE;
+/*	if($mail = _user_mail_notify('register_no_approval_required', $account)){
+		$error = FALSE;*/
 		$account = user_load($user->uid);									
 		$register = new stdClass();
 		$register->uid = $user->uid;
@@ -286,11 +294,11 @@ function vistaportal_form_submit($form, &$form_state){
 	
 		$user = user_load($form_state['uid']);
 		drupal_goto('confirm' . $user->uid);
-	}
+/*	}
 	else{
 		$error = TRUE;
 		form_set_error('Your registration could not be completed, please try again later');
-	} 
+	}*/ 
 }
 
 /**
@@ -298,7 +306,11 @@ function vistaportal_form_submit($form, &$form_state){
  */
 function vistaportal_form_alter(&$form, &$form_state, $form_id) {
 	global $user;
-  $form['#attributes'] = array('class' => array('vistaportal'));
+	if (substr($form_id, 0, 8) == 'register' || substr($form_id, 0, 6) == 'preapp'){
+		$form['#attributes'] = array('class' => 'vistaportal');
+		$form['#ajax'] = array('enabled' => TRUE);
+		
+  //$form['#attributes'] = array('class' => array('vistaportal'));
   //$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);
   $path = drupal_get_path('module', 'vistaportal');
   drupal_add_js($path . '/js/jquery.field.js');
@@ -320,13 +332,13 @@ function vistaportal_form_alter(&$form, &$form_state, $form_id) {
       
       
     drupal_add_js($settings, 'setting');
-}
+}}
  
 /**
  * Implements hook_cron().
  */
 function vistaportal_cron() {
-	
+include_once('vistaportal_functions.inc');	
 _create_new_account();
 
 }
