@@ -24,20 +24,25 @@ function vistaportal_identity_form($form, &$form_state){
 	$form['identity']['lname'] = textfield('Last Name', 15);
 	$form['identity']['fname'] = textfield('First Name', 15);
 	$form['identity']['initial'] = textfield('Middle', 15);
-	$form['identity']['work_phone'] = phone('Work Phone');
-	$form['identity']['home_phone'] = phone('Home Phone');
-	$form['identity']['cell_phone'] = phone('Cell Phone');
+	$form['identity']['phone_choice'] = phone_choice('Phone');
+	$form['identity']['phone'] = phone('');
 	$form['identity']['email'] = email('E-mail address');
 	$form['identity']['home_address'] = textfield('Home Address', 40);
 	$form['identity']['city'] = textfield('City', 20);
 	$form['identity']['state'] = state('State');
 	$form['identity']['zip'] = zip('Zip Code');
-	$form['identity']['dob'] = date_popup('Date of Birth');
-	$form['identity']['birth_city'] = textfield('City of Birth');
-	$form['identity']['birth_state'] = state('State of Birth');
+	$form['identity']['dob'] = date_mdy('Date of Birth');
 	$form['identity']['birth_country'] = country('Country of Birth');
-	$form['identity']['social_security'] = textfield('Social Security Number', 13);
-	$form['identity']['social_security']['#maxlength'] = 11;
+	$form['identity']['birth_state'] = state('State of Birth');
+	$form['identity']['birth_state_other'] = array(
+		'#type' => 'textfield',
+		'#states' => array(
+			'visible'=> array(
+				':input[name="birth_state"]' => array('value' => 'Other'),
+	)));
+	$form['identity']['birth_city'] = textfield('City of Birth');
+	//$form['identity']['social_security'] = textfield('Social Security Number', 13);
+	//$form['identity']['social_security']['#maxlength'] = 11;
 	$form['identity']['npi'] = textfield('National Physician Identifier');
 	$form['identity']['verification'] = radios_yesno('Can you provide proof of 
 		legal eligibility to work in the USA?');
@@ -45,11 +50,13 @@ function vistaportal_identity_form($form, &$form_state){
 	$form['identity']['marital_status']['#required'] = FALSE;
 	$form['identity']['spouse'] = textfield("Spouse's Name");
 	$form['identity']['spouse']['#required'] = FALSE;
-	$form['identity']['number_of_children'] = children('Number of Children');
+	$form['identity']['number_of_children'] = children('# of Children:');
 	$form['identity']['number_of_children']['#required'] = FALSE;
+	$form['prev'] = button('<Previous');
+	$form['save_logout'] = button('Save & Logout');	
 	$form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save & Continue'),
+		'#value' => t('Save & Next>'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_identity_form_submit'),
 		);
@@ -87,6 +94,7 @@ function vistaportal_identity_form_submit($form, &$form_state){
 		->execute();
 		
 /*Insert the form_state values into the identity table.*/		
+  $form_state['values']['dob'] = date('Y-m-d H:i:s', strtotime($form_state['values']['dob']));
   $identity = new stdClass();
 	$identity->uid = $user->uid;
 	$identity->last_name = $form_state['values']['lname'];
@@ -96,15 +104,13 @@ function vistaportal_identity_form_submit($form, &$form_state){
 	$identity->city = $form_state['values']['city'];
 	$identity->state = $form_state['values']['state'];
 	$identity->zip = $form_state['values']['zip'];
-	$identity->work_phone = $form_state['values']['work_phone'];
-	$identity->home_phone = $form_state['values']['home_phone'];
-	$identity->cell_phone = $form_state['values']['cell_phone'];
+	$identity->phone_choice = $form_state['values']['phone_choice'];
+	$identity->phone = $form_state['values']['phone'];
 	$identity->email = $form_state['values']['email'];
-	$identity->social_security = $form_state['values']['social_security'];
 	$identity->dob = $form_state['values']['dob'];
-	$identity->birth_city = $form_state['values']['birth_city'];
-	$identity->birth_state = $form_state['values']['birth_state'];
 	$identity->birth_country = $form_state['values']['birth_country'];
+	$identity->birth_state = $form_state['values']['birth_state'];
+	$identity->birth_city = $form_state['values']['birth_city'];
 	$identity->npi = $form_state['values']['npi'];
 	$identity->verification = $form_state['values']['verification'];
 	$identity->marital_status = $form_state['values']['marital_status'];
@@ -121,11 +127,9 @@ function vistaportal_identity_form_submit($form, &$form_state){
   		'city'=> $identity->city, 
   		'state'=> $identity->state, 
   		'zip'=> $identity->zip,
-  		'work_phone'=> $identity->work_phone, 
-  		'home_phone'=> $identity->home_phone, 
-  		'cell_phone'=> $identity->cell_phone, 
-  		'email'=>$identity->email, 
-  		'social_security'=> $identity->social_security, 
+  		'phone_choice'=> $identity->phone_choice,
+  		'phone'=> $identity->phone,  
+  		'email'=>$identity->email,  
   		'dob'=> $identity->dob,
   		'birth_city'=> $identity->birth_city,
   		'birth_state'=> $identity->birth_state, 

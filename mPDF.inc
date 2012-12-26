@@ -9,17 +9,14 @@
  * renders the PDFs.
  */
 
-/*function make_pdf_1($html_string, $formtype){
+function make_pdf_1($html_string, $formtype){
 	dsm(getcwd());
-	define('_MPDF_PATH','sites/all/libraries/MPDF54/');
-	include_once(_MPDF_PATH . "mpdf.php");
+	include_once('sites/all/Libraries/MPDF54/mpdf.php');
 	global $user;
 	$account = user_load($user->uid);
-  //$candidate = get_candidate($account->rmaxid, $account->uid);	
-	//$name = $candidate->profile->name;
 	$mpdf = new mPDF('utf-8', 'A4');
 	$mpdf->setFooter("$name - {DATE m-j-Y h:i:s A}||page {PAGENO} of {nb}");
-  $mpdf->setBasePath("sites/all/modules/vistaportal/pdf_html_strings");
+  $mpdf->setBasePath("C:/wamp/www/phportal/sites/default/files/pdf");
   $mpdf->allow_charset_conversion=true;  // Set by default to TRUE
   $mpdf->charset_in='windows-1252';
   $mpdf->WriteHTML($html_string);
@@ -32,9 +29,9 @@
 	}
 	$mpdf->Output($filename);		
 return $filename;
-} */
+} 
 
-function make_pdf_1($html_string){
+/*function make_pdf_1($html_string){
 include_once('sites/all/Libraries/MPDF54/mpdf.php');
   global $user;
   $account = user_load($user->uid);
@@ -53,4 +50,4 @@ include_once('sites/all/Libraries/MPDF54/mpdf.php');
 	}
 	$mpdf->Output($filename);		
 return $filename;
-} 
+} */

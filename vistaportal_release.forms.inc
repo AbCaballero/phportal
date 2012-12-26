@@ -49,7 +49,7 @@ function vistaportal_release_authorization_form($form, &$form_state){
 		making disclosure prior to receipt of such revocation is deemed as having acted in good faith 
 		based on this document. If not previously revoked, this Release and Authorization will terminate 
 		two (2) years from the date on this document.</p><p>The original or a copy hereof shall 
-		operate as full proof of authority and release.'),
+		operate as full proof of authority and release.</p>'),
 	);
 		
 	$form['authorization']['accept'] = array(

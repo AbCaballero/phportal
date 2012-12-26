@@ -16,18 +16,27 @@ function vistaportal_internship_form($form, &$form_state){
 	include_once('vistaportal_functions.inc');	
 	$form = array();
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
-	$form['internship'] = fieldset('Internship');
+	$form['internship'] = fieldset('');
+	$form['internship']['na'] = checkbox('Not Applicable');
 	$form['internship']['type'] = textfield('Type');
 	$form['internship']['institution'] = textfield('Institution');
-	$form['internship']['city'] = textfield('City');
-	$form['internship']['state'] = state('State');
 	$form['internship']['country'] = country('Country');
-	$form['internship']['date_from'] = date_popup('Start Date');
-	$form['internship']['date_to'] = date_popup('End Date');
+	$form['internship']['state'] = state('State');
+	$form['internship']['state_other'] = array(
+		'#type' => 'textfield',
+		'#states' => array(
+			'visible'=> array(
+				':input[name="internship[state]"]' => array('value' => 'Other'),
+	)));
+	$form['internship']['city'] = textfield('City');
+	$form['internship']['date_from'] = date_my('Start Date');
+	$form['internship']['date_to'] = date_my('End Date');
 	$form['internship']['prog_dir'] = textfield('Program Director');
+	$form['<prev'] = button('Previous');
+  $form['save_logout'] = button('Save & Logout');
 	$form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save & Continue'),
+		'#value' => t('Save & Next>'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_internship_form_submit'),
 	);

@@ -15,14 +15,34 @@ function vistaportal_licensure_form($form, &$form_state){
 	include_once('vistaportal.fields.inc');
 	include_once('vistaportal_functions.inc');	
 	$form = array();
+	$date = 'm-Y';
 	$form['licensure'] = array(
 		'#type'=>'fieldset',
 		'#title' => t('Licensure'),
 		'#collapsible' => FALSE,
 	);
-	$form['licensure']['exam'] = textfield('What was your original licensing exam?');
-	$form['licensure']['exam_steps'] = textfield('Number of times taken each step');
-	$form['licensure']['exam_date'] = date_popup('Exam dates each step');
+	$form['licensure']['exam'] = exam('What was your original licensing exam?');
+	$form['licensure']['exam_name'] = array(
+		'#type' => 'textfield',
+		'#title' => t('License exam name'),
+		'#states' => array(
+			'visible'=> array(
+				':input[name="exam"]' => array('value' => 'Other'),
+	)));
+	$form['licensure']['exam_steps'] = number('# of Times Taken');
+	$form['licensure']['exam_date'] = array(
+		'#type' => 'date_select',
+		'#date_format' => $date,
+		'#date_year_range' => '-30:+0',
+		'#date_label_position' => 'within',
+		'#required' => TRUE,
+		'#title' => t("Attempt # "),
+		'#states' => array(
+			'visible' => array(
+				':input[name="exam_steps"]' => array('value' => '1'),
+		)));
+
+
 	$form['licensure']['exam_state'] = state('State in which you took your exam');
 	$form['licensure']['fcvs'] = textfield('Federation Credentials Verification Profile Number');
 	$form['licensure']['state'] = state('State');

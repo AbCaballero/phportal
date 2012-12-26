@@ -48,7 +48,7 @@ function state($title) {
     '#type' => 'select',
     '#required' => TRUE,
     '#title' => t($title),
-    '#options' => drupal_map_assoc(array('AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY')),
+    '#options' => drupal_map_assoc(array('AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'Other')),
     '#attributes' => array('class' => array('select_state')),
     '#rules' => array('not_none'),
   );
@@ -302,7 +302,7 @@ function edu($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('High School diploma', 
-    	'Associates degree', 'Bachelors degree', 'Master degree', 'Ph.D')),
+    	'Associates degree', 'Bachelors degree', 'Master degree', 'Ph.D', 'M.D.')),
     '#attributes' => array('class' => array('select_education')),
     '#rules' => array('not_none'),
   );
@@ -500,6 +500,115 @@ function medical_specialty($title){
     'Urology',
     'Vascular Surgery')),
     '#attributes' => array('class' => array('select-specialty')),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Exam description field function
+ */
+function exam($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('FLEX - Part 1', 
+    'FLEX - Part 2', 
+    'NBME - Part 1',
+    'NBME - Part 2',
+    'NBME - Part 3',
+    'COMLEX - Part 1',
+    'COMLEX - Part 2',
+    'COMLEX - Part 3',
+    'SPEX',
+    'USMLE - Step 1',
+    'USMLE - Step 2CK',
+    'USMLE - Step 2CS',
+    'USMLE - Step 3',
+    'State Exam',
+    'Other',
+     )),
+    '#attributes' => array('class' => array('select-exam')),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Number field function
+ */
+function number($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('1',
+    '2',
+    '3',
+     )),
+    '#attributes' => array('class' => array('select-exam')),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Date field function with 'm-Y' format
+ */
+function date_my($title){
+  $element = array(
+    '#type'=> 'date_select',
+    '#title' => t($title), 
+    '#date_format' => 'm-Y',
+    '#date_year_range' => '-30:+0',
+    '#date_label_position' => 'within',
+    '#required' => TRUE,
+    '#default_value' => NULL,
+  );
+  return $element;
+}
+
+/*
+ * Date field function with 'd-m-Y' format
+ */
+function date_mdy($title){
+  $element = array(
+    '#type'=> 'date_select',
+    '#title' => t($title), 
+    '#date_format' => 'm-d-Y',
+    '#date_year_range' => '-70:+0',
+    '#date_label_position' => 'within',
+    '#required' => TRUE,
+    '#default_value' => NULL,
+    );
+    return $element;
+}
+
+/*
+ * Button field function
+ */
+function button($title){
+  $element = array(
+    '#type' => 'button',
+    '#value' => t($title),
+  );
+  return $element;  
+}
+
+/*
+ * Phone field function
+ */
+function phone_choice($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('Home',
+    'Cell',
+    'Work',
+     )),
+    '#attributes' => array('class' => array('select-exam')),
     '#rules' => array('not_none'),
   );
   return $element;

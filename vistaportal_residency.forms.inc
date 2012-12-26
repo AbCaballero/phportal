@@ -16,18 +16,40 @@ function vistaportal_residency_form($form, &$form_state){
 	include_once('vistaportal_functions.inc');	
 	$form = array();
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
-	$form['residency'] = fieldset('Residency');
+	$form['residency'] = fieldset('');
+	$form['residency']['na'] = checkbox('Not Applicable');
 	$form['residency']['type'] = textfield('Type');
 	$form['residency']['institution'] = textfield('Institution');
-	$form['residency']['city'] = textfield('City');
-	$form['residency']['state'] = state('State');
 	$form['residency']['country'] = country('Country');
-	$form['residency']['date_from'] = date_popup('Start Date');
-	$form['residency']['date_to'] = date_popup('End Date');
-	$form['residency']['prog_dir'] = textfield('Program Director');
+	$form['residency']['state'] = state('State');
+	$form['residency']['state_other'] = array(
+		'#type' => 'textfield',
+		'#states' => array(
+			'visible'=> array(
+				':input[name="residency[state]"]' => array('value' => 'Other'),
+	)));			
+	$form['residency']['city'] = textfield('City');
+	$form['residency']['date_from'] = date_my('Start Date');
+	$form['residency']['date_to'] = date_my('End Date');
+	$form['residency']['prog_dir'] = textfield('Program Director');	
+	
+	$form['residency']['desc'] =array(
+		'#markup'=> t('ADDITIONAL RESIDENCY OR FELLOWSHIP OR OTHER GRADUATE EDUCATION'),
+	);
+	$form['residency']['na2'] = checkbox('Not Applicable');
+  $form['residency']['type2'] = textfield('Type');
+  $form['residency']['institution2'] = textfield('Institution');
+	$form['residency']['country2'] = country('Country');
+	$form['residency']['state2'] = state('State');
+  $form['residency']['city2'] = textfield('City');
+  $form['residency']['date_from2'] = date_my('From');
+  $form['residency']['date_to2'] = date_my('To');
+  $form['residency']['prog_dir2'] = textfield('Program Director');
+	$form['<prev'] = button('Previous');
+  $form['save_logout'] = button('Save & Logout');	
 	$form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save & Continue'),
+		'#value' => t('Save & Next>'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_residency_form_submit'),
 	);
