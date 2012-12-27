@@ -166,13 +166,22 @@
       'type' => MENU_CALLBACK,
       'title' => 'Submit'
     );
+		
+		$items['preapp/exams'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('vistaportal_exams_form'),
+      'access arguments' => array('authenticated user access'),
+      'file' => 'vistaportal_exams.forms.inc',
+      'type' => MENU_NORMAL_ITEM,
+      'title' => 'Exams',
+    );
     return $items;
   }
 
   /*
    * Form callback for the registration form.
    */
-  function vistaportal_form($form, &$form_state) {
+   function vistaportal_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     $form = array();
     $form['#attributes'] = array('enctype' => array("multipart/form-data"));
@@ -180,42 +189,48 @@
     $form['registration'] = array(
       '#title' => t('New Applicants'),
       '#type' => 'fieldset',
-      '#title' => t('New Account'),
+      '#title' => t('<h1>Register</h1>'),
       '#collapsible' => FALSE,
     );
-    $form['registration']['personal'] = array('#markup' => '<em>PERSONAL INFORMATION</em><br />', );
-    $form['registration']['fname'] = array(
+    $form['registration']['personal'] = array('#markup' => '<em><h2>PERSONAL INFORMATION</h2></em><br />', );
+    $form['registration']['fname'] = array( 
+      '#prefix' => '<div class="form_field_1">',  
       '#type' => 'textfield',
       '#title' => t('First Name'),
       '#required' => TRUE,
-      '#attributes' => array('class' => array('percent_35')),
+      '#attributes' => array('class' => array('percent_90')),
+      '#suffix' => '</div>',
     );
     //$form['registration']['fname'] = textfield('First Name', 30);
     $form['registration']['lname'] =array(
+      '#prefix' => '<div class="form_field_2">',
       '#type' => 'textfield',
-      '#title' => t('First Name'),
+      '#title' => t('Last Name'),
       '#required' => TRUE,
-      '#attributes' => array('class' => array('percent_35')),
+      '#attributes' => array('class' => array('percent_90 row_end')),
+      '#suffix' => '</div>',
     );
-    $form['registration']['phone'] = phone('Phone Number');
-    $form['registration']['phone']['#required'] = FALSE;
-    $form['registration']['email'] = email('Email Address (This will be your username)');
-    //$form['registration']['pwd'] = array('#markup' => '<em>PASSWORD</em>', );
-    /*	$form['registration']['password'] = array(
-     '#type' => 'password_confirm',
-     );*/
-    $form['registration']['question'] = array(
-    	'#type'=> 'challenge',
-    	'#title' => t('Challenge Question'),
-    	'#required' => TRUE,
-    	'#attributes' => array('class' => array('id = select')),
-    );	
-    $form['registration']['answer'] = textfield('Challenge Question Answer');
-    $form['registration']['specialty'] = array('#markup' => '<em>SPECIALTY</em><br />', );
+    $form['registration']['phone'] = array(
+      '#prefix' => '<div class="form_field_1">',
+    	'#type' => 'textfield',
+    	'#title' => t('Phone Number'),
+    	'#required' => FALSE,
+    	'#attributes' => array('class' => array('form_field percent_90')),
+    	'#suffix' => '</div>',
+    );
+    $form['registration']['email'] = array(
+      '#prefix' => '<div class="form_field_2">',
+      '#type' => 'textfield',
+      '#title' => t('Email Address (This will be your username)'),
+      '#required' => TRUE,
+      '#attributes' => array('class' => array('percent_90 row_end')),
+      '#suffix' => '</div>',
+    );
+    $form['registration']['specialty'] = array('#markup' => '<em><h2>SPECIALTY</h2></em><br />', );
     $form['registration']['primary'] = medical_specialty('Primary');
     $form['registration']['secondary'] = medical_specialty('Secondary - Optional');
     $form['registration']['secondary']['#required'] = FALSE;
-    $form['registration']['interests'] = array('#markup' => '<em>INTERESTS</em><br />', );
+    $form['registration']['interests'] = array('#markup' => '<em><h2>INTERESTS</h2></em><br />', );
     $form['registration']['locum_us'] = checkbox('Locum US Locum Tenens');
     $form['registration']['locum_us']['#required'] = FALSE;
     $form['registration']['locum_int'] = checkbox('International Locum Tenens');
@@ -226,9 +241,9 @@
     $form['registration']['gov_op']['#required'] = FALSE;
     $form['registration']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Submit>'),
+      '#value' => t('Submit'),
+      '#attributes' => array('class' => array('submit')),
     );
-		dsm('here');
     return $form;
   }
 
@@ -320,6 +335,7 @@
     }
 
     drupal_add_js($settings, 'setting');
+		drupal_add_js($path . '/js/jquery-post-autosave.js', 'file');
   }}
 
   /**

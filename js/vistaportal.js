@@ -31,17 +31,4 @@
 	};
 })(jQuery);
 
-/*
- * To be added later if needed
-*/
 
-/*
-* This function ensures that both email addresses match
-*/
-/*$('.form-item .textfield-email').change(function(){
-	if($('#edit-email-conf').val() != $('edit-email').val()){
-  		alert('Email addresses do not match');
-  	}
-});*/
-  		
-/*$('.ssn-field .form-text').autotab_magic().autotab_filter('numeric');*/

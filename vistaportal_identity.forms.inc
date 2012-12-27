@@ -11,6 +11,9 @@
 /*
  * This is the form callback for the identity form.
  */ 
+/*
+ * This is the form callback for the identity form.
+ */ 
 function vistaportal_identity_form($form, &$form_state){
 	include_once('vistaportal.fields.inc');	
 	$form = array();
@@ -18,51 +21,176 @@ function vistaportal_identity_form($form, &$form_state){
 	//Identifying information
 	$form['identity'] = array(
 		'#type' => 'fieldset',
-		'#title' => t('Identifying Information'),
+		'#title' => t('PERSONAL INFORMATION'),
 		'#collapsible' => FALSE,
 	);	
-	$form['identity']['lname'] = textfield('Last Name', 15);
-	$form['identity']['fname'] = textfield('First Name', 15);
-	$form['identity']['initial'] = textfield('Middle', 15);
-	$form['identity']['phone_choice'] = phone_choice('Phone');
-	$form['identity']['phone'] = phone('');
-	$form['identity']['email'] = email('E-mail address');
-	$form['identity']['home_address'] = textfield('Home Address', 40);
-	$form['identity']['city'] = textfield('City', 20);
-	$form['identity']['state'] = state('State');
-	$form['identity']['zip'] = zip('Zip Code');
+	$form['identity']['lname'] = array(
+	'#prefix' => '<div class="lname">',
+		'#type' => 'textfield',
+		'#title' => t('Last Name'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['fname'] = array(
+	'#prefix' => '<div class="fname">',
+		'#type' => 'textfield',
+		'#title' => t('Fisrt Name'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['initial'] = array(
+	'#prefix' => '<div class="initial">',
+		'#type' => 'textfield',
+		'#title' => t('MI'),
+		'#required' => FALSE,
+		'#attributes' => array('class' => array('percent_95')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['phone_choice'] = array(
+  '#prefix' => '<div class="phone_choice">',
+		'#type' => 'select',
+		'#title' => t('Phone'),
+		'#required' => FALSE,
+		'#options' => drupal_map_assoc(array('Home',
+    'Cell',
+    'Work',
+  	)),
+		'#attributes' => array('class' => array('percent_100')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['phone'] = array(
+	'#prefix' => '<div class="phone">',
+		'#type' => 'textfield',
+		'#title' => t(''),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90','textfield-phone')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['email'] = array(
+	'#prefix' => '<div class="email">',
+		'#type' => 'textfield',
+		'#title' => t('E-mail address'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_100')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['home_address'] = array(
+	'#prefix' => '<div class="home-address">',
+		'#type' => 'textfield',
+		'#title' => t('Home address'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_100')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['city'] = array(
+	'#prefix' => '<div class="city">',
+		'#type' => 'textfield',
+		'#title' => t('City'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_95')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['state'] = array(
+	'#prefix' => '<div class="state">',
+		'#type' => 'textfield',
+		'#title' => t('State'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['zip'] = array(
+	'#prefix' => '<div class="zipcode">',
+		'#type' => 'textfield',
+		'#title' => t('Zipcode'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_95')),
+		'#suffix' => '</div>',
+	);
 	$form['identity']['dob'] = date_mdy('Date of Birth');
-	$form['identity']['birth_country'] = country('Country of Birth');
-	$form['identity']['birth_state'] = state('State of Birth');
+	
+	$form['identity']['birth_country'] = array(
+	'#prefix' => '<div class="birth-country">',
+		'#type' => 'textfield',
+		'#title' => t('Country'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90')),
+		'#suffix' => '</div>',
+	);
+	$form['identity']['birth_state'] = array(
+	'#prefix' => '<div class="birth-state">',
+		'#type' => 'textfield',
+		'#title' => t('State'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90')),
+		'#suffix' => '</div>',
+	);
 	$form['identity']['birth_state_other'] = array(
 		'#type' => 'textfield',
 		'#states' => array(
 			'visible'=> array(
 				':input[name="birth_state"]' => array('value' => 'Other'),
 	)));
-	$form['identity']['birth_city'] = textfield('City of Birth');
-	//$form['identity']['social_security'] = textfield('Social Security Number', 13);
-	//$form['identity']['social_security']['#maxlength'] = 11;
-	$form['identity']['npi'] = textfield('National Physician Identifier');
-	$form['identity']['verification'] = radios_yesno('Can you provide proof of 
-		legal eligibility to work in the USA?');
-	$form['identity']['marital_status'] = marital_status('Marital Status');
+	$form['identity']['birth_city'] = array(
+	'#prefix' => '<div class="birth-city">',
+		'#type' => 'textfield',
+		'#title' => t('City'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_95')),
+		'#suffix' => '</div>',
+	);
+
+	$form['identity']['ver_label'] = array(
+	'#prefix' => '<div class="var_label">',
+		'#markup' => t('Can you provide proof of legal eligibility to work in the USA?'), 
+		'#suffix' => '</div>',
+	);
+	$form['identity']['verification'] = radios_yesno();
+	$form['identity']['marital_status'] = array(
+	'#prefix' => '<div class="marital-status">',
+		'#type' => 'textfield',
+		'#title' => t('Marital Status'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90')),
+		'#suffix' => '</div>',
+	);
 	$form['identity']['marital_status']['#required'] = FALSE;
-	$form['identity']['spouse'] = textfield("Spouse's Name");
+	$form['identity']['spouse'] = array(
+	'#prefix' => '<div class="spouse">',
+		'#type' => 'textfield',
+		'#title' => t('Spouse Name'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_90')),
+		'#suffix' => '</div>',
+	);
 	$form['identity']['spouse']['#required'] = FALSE;
-	$form['identity']['number_of_children'] = children('# of Children:');
+	$form['identity']['number_of_children'] = array(
+	'#prefix' => '<div class="n-children">',
+		'#type' => 'textfield',
+		'#title' => t('# of children'),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_97')),
+		'#suffix' => '</div>',
+	);
 	$form['identity']['number_of_children']['#required'] = FALSE;
-	$form['prev'] = button('<Previous');
+	$form['identity']['comment'] = array(
+	'#prefix' => '<div class="comment">',
+		'#type' => 'textarea'	,
+		'#title' => t('Comment Examples'),
+		'#required' => FALSE,
+		'#attributes' => array('class' => array('percent_95')),
+		'#suffix' => '</div>',
+	);	
+	$form['prev'] = button('Previous');
 	$form['save_logout'] = button('Save & Logout');	
 	$form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save & Next>'),
+		'#value' => t('Save & Next'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_identity_form_submit'),
-		);
-
-return $form;
-	
+	);
+return $form;	
 }
 
 /*
@@ -72,11 +200,6 @@ return $form;
 function vistaportal_identity_form_submit($form, &$form_state){
 	global $user;
 	$account = user_load($user -> uid);
-	//$user_name;
-	//$html_string;
-	//make_pdf;
-	//make_tiff;
-	//save record
 /*
  * If the user refills this form, we need to unset the
  * identity status flag in the vss_drupal_flags table.	

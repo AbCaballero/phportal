@@ -16,35 +16,51 @@ function vistaportal_residency_form($form, &$form_state){
 	include_once('vistaportal_functions.inc');	
 	$form = array();
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
-	$form['residency'] = fieldset('');
-	$form['residency']['na'] = checkbox('Not Applicable');
-	$form['residency']['type'] = textfield('Type');
-	$form['residency']['institution'] = textfield('Institution');
-	$form['residency']['country'] = country('Country');
-	$form['residency']['state'] = state('State');
-	$form['residency']['state_other'] = array(
+	$form['residency1'] = fieldset('');
+	$form['residency1']['na'] = array(
+		'#type'=> 'checkbox',
+		'#title' => t('Not Applicable'),
+		'#required' => FALSE,
+	);
+	$form['residency1']['type'] = textfield('Type');
+	$form['residency1']['institution'] = textfield('Institution');
+	$form['residency1']['country'] = country('Country');
+	$form['residency1']['state'] = state('State');
+	$form['residency1']['state_other'] = array(
 		'#type' => 'textfield',
 		'#states' => array(
 			'visible'=> array(
-				':input[name="residency[state]"]' => array('value' => 'Other'),
+				':input[name="residency1[state]"]' => array('value' => 'Other'),
 	)));			
-	$form['residency']['city'] = textfield('City');
-	$form['residency']['date_from'] = date_my('Start Date');
-	$form['residency']['date_to'] = date_my('End Date');
-	$form['residency']['prog_dir'] = textfield('Program Director');	
+	$form['residency1']['city'] = textfield('City');
+	$form['residency1']['date_from'] = date_my('Start Date');
+	$form['residency1']['date_to'] = date_my('End Date');
+	$form['residency1']['prog_dir'] = textfield('Program Director');
 	
-	$form['residency']['desc'] =array(
+	$form['residency2'] = fieldset('');	
+	
+	$form['residency2']['desc'] =array(
 		'#markup'=> t('ADDITIONAL RESIDENCY OR FELLOWSHIP OR OTHER GRADUATE EDUCATION'),
 	);
-	$form['residency']['na2'] = checkbox('Not Applicable');
-  $form['residency']['type2'] = textfield('Type');
-  $form['residency']['institution2'] = textfield('Institution');
-	$form['residency']['country2'] = country('Country');
-	$form['residency']['state2'] = state('State');
-  $form['residency']['city2'] = textfield('City');
-  $form['residency']['date_from2'] = date_my('From');
-  $form['residency']['date_to2'] = date_my('To');
-  $form['residency']['prog_dir2'] = textfield('Program Director');
+	$form['residency2']['na'] = array(
+		'#type'=> 'checkbox',
+		'#title' => t('Not Applicable'),
+		'#required' => FALSE,
+	);
+  $form['residency2']['type'] = textfield('Type');
+  $form['residency2']['institution'] = textfield('Institution');
+	$form['residency2']['country'] = country('Country');
+	$form['residency2']['state'] = state('State');
+	$form['residency2']['state_other'] = array(
+		'#type' => 'textfield',
+		'#states' => array(
+			'visible'=> array(
+				':input[name="residency2[state]"]' => array('value' => 'Other'),
+	)));
+  $form['residency2']['city'] = textfield('City');
+  $form['residency2']['date_from'] = date_my('From');
+  $form['residency2']['date_to'] = date_my('To');
+  $form['residency2']['prog_dir'] = textfield('Program Director');
 	$form['<prev'] = button('Previous');
   $form['save_logout'] = button('Save & Logout');	
 	$form['submit'] = array(

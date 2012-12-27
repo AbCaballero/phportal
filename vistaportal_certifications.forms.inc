@@ -15,29 +15,45 @@ function vistaportal_certifications_form($form, &$form_state){
 	include_once('vistaportal.fields.inc');
 	include_once('vistaportal_functions.inc');	
 	$form = array();
-	$form['certifications'] = array(
+	$form['certifications1'] = array(
 		'#type'=>'fieldset',
 		'#title' => t('Certifications'),
 		'#collapsible' => FALSE,
 	);
-	$form['certifications']['board_status'] = radios_board_status('Current Specialty Board Status');
-	$form['certifications']['board'] = textfield('American Board of:');
-	$form['certifications']['date'] = date_popup('Certification/Recertification Date');
-	$form['certifications']['other'] = textfield('Other Current ABMS/Subspecialty Certification');
-	$form['certifications']['bcls'] = checkbox('BCLS');
-	//$form['certifications']['bcls']['exp'] = date_popup('Expiration Date');
-	$form['certifications']['acls'] = checkbox('ACLS');
-	//$form['certifications']['acls']['exp'] = date_popup('Expiration Date');
-	$form['certifications']['atls'] = checkbox('ATLS');
-	//$form['certifications']['atls']['exp'] = date_popup('Expiration Date');
-	$form['certifications']['pals'] = checkbox('PALS');
-	//$form['certifications']['pals']['exp'] = date_popup('Expiration Date');
-	$form['certifications']['nrp'] = checkbox('NRP/NALS');
-	//$form['certifications']['nrp']['exp'] = date_popup('Expiration Date');
-	$form['certifications']['also'] = checkbox('ALSO');
-	//$form['certifications']['also']['exp'] = date_popup('Expiration Date');
-	$form['certifications']['mqsa'] = checkbox('MQSA');
-	//$form['certifications']['mqsa']['exp'] = date_popup('Expiration Date');
+	$form['certifications1']['desc'] = array(
+		'#markup' => t('Board Certification'));
+	$form['certifications1']['not_board_cert'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Not Board Certified'),
+		'#required' => FALSE,
+	);	
+	$form['certifications1']['board_status'] = radios_board_status('Current Specialty Board Status');
+	$form['certifications1']['board'] = cert('American Board of Medical Sciences');
+	$form['certifications1']['cert/recert'] = status('Was this a Certification or a Recertification?');
+	$form['certifications1']['specialty'] = medical_specialty('Specialty');
+	$form['certifications1']['date'] = date_my('Certification/Recertification Date');
+	$form['certifications1']['certnum'] = textfield('Certificate #');
+	
+	$form['certifications2']['additional'] = array(
+		'#markup' => t('Additional Certification'),
+	);
+	$form['certifications2']['na'] = array(
+		'#type' => 'checkbox',
+		'#title' => t('Not Applicable'),
+	);
+	$form['certifications2']['type'] = cert('Type');
+	$form['certifications2']['name'] = array(
+		'#type' => 'textfield',
+		'#states' => array(
+			'visible'=> array(
+				':input[name="type"]' => array('value' => 'Other'),
+	)));
+	$form['certifications2']['certnum'] = textfield('Certificate#');
+	$form['certifications2']['exp_date'] = date_my('Expiration Date');
+	
+	$form['certification']['ecfmg'] = textfield('ECFMG CERTIFICATE');
+	$form['certification']['ecfmg_exp'] = date_my('Expiration Date');
+	
 	$form['submit'] = array(
 		'#type' => 'submit',
 		'#value' => t('Save & Continue'),
@@ -78,46 +94,25 @@ function vistaportal_certifications_form_submit($form, &$form_state){
 /*Insert the form_state values into the certifications table.*/
 	$certifications = new stdClass();
 	$certifications->uid = $user->uid;
+	$certifications->not_board_cert = $form_state['values']['not_board_cert'];
 	$certifications->board_status = $form_state['values']['board_status'];
 	$certifications->board = $form_state['values']['board'];
+	$certifications->board_cert_recert = $form_state['values']['cert/recert'];
+	$certifications->specialty = $form_state['values']['specialty'];
 	$certifications->board_cert_date = $form_state['values']['date'];
-	$certifications->other = $form_state['values']['other'];
-	$certifications->bcls = $form_state['values']['bcls'];
-	$certifications->bcls_exp_date = $form_state['values']['bcls_exp'];
-	$certifications->acls = $form_state['values']['acls'];
-	$certifications->acls_exp_date = $form_state['values']['acls_exp'];
-	$certifications->atls = $form_state['values']['atls'];
-	$certifications->atls_exp_date = $form_state['values']['atls_exp'];
-	$certifications->pals = $form_state['values']['pals'];
-	$certifications->pals_exp_date = $form_state['values']['pals_exp'];
-	$certifications->nrp = $form_state['values']['nrp'];
-	$certifications->nrp_exp_date = $form_state['values']['nrp_exp'];
-	$certifications->also = $form_state['values']['also'];
-	$certifications->also_exp_date = $form_state['values']['also_exp'];
-	$certifications->mqsa = $form_state['values']['mqsa'];
-	$certifications->mqsa_exp_date = $form_state['values']['mqsa_exp'];
+	$certifications->board_certnum = $form_state['values']['certnum'];
+
 	
 	db_insert('vss_certifications')
 		->fields(array(
 			'uid' => $certifications->uid,
+			'not_board_cert' => $certifications->not_board_cert,
 			'board_status' => $certifications->board_status,
 			'board' => $certifications->board,
+			'board_cert_recert' => $certifications->board_cert_recert,
+			'board_specialty' => $certifications->specialty,
 			'board_cert_date' => $certifications->board_cert_date,
-			'other' => $certifications->other,
-			'bcls' => $certifications->bcls,
-			'bcls_exp_date' => $certifications->bcls_exp_date,
-			'acls' => $certifications->acls,
-			'acls_exp_date' => $certifications->acls_exp_date,
-			'atls' => $certifications->atls,
-			'atls_exp_date' => $certifications->atls_exp_date,
-			'pals' => $certifications->pals,
-			'pals_exp_date' => $certifications->pals_exp_date,
-			'nrp' => $certifications->nrp,
-			'nrp_exp_date' => $certifications->nrp_exp_date,
-			'also' => $certifications->also,
-			'also_exp_date' => $certifications->also_exp_date,
-			'mqsa' => $certifications->mqsa,
-			'mqsa_exp_date' => $certifications->mqsa_exp_date,
+			'board_cert_num' => $certifications->board_cert_num,
 	))
 		->execute();
 

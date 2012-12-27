@@ -16,10 +16,12 @@ function vistaportal_affiliations_form($form, &$form_state){
 	include_once('vistaportal_functions.inc');	
 	$form = array();
 	$form['#attributes'] = array('enctype' => "multipart/form-data");
-	$form['affiliations'] = array(
-  	'#type'=>'fieldset',
-    '#collapsible' => FALSE,
-  );
+	$form['affiliations'] = fieldset('');
+	$form['affiliations']['na']= array(
+		'#type'=> 'checkbox',
+		'#title' => t('Not Applicable'),
+		'#required' => FALSE,
+	);
 	$form['affiliations']['listing'] = array(
   	'#markup' => t('<p>List all present and previous affiliations with healthcare facilities and medical staff memberships for the past 10 years,
    	in chronological order. Include clerkships, assistantships, and military experience. Specify all departments in which privileges were exercised

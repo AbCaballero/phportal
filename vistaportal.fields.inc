@@ -498,7 +498,8 @@ function medical_specialty($title){
     'Thoracic Surgery',
     'Trauma Surgery',
     'Urology',
-    'Vascular Surgery')),
+    'Vascular Surgery',
+		'Other')),
     '#attributes' => array('class' => array('select-specialty')),
     '#rules' => array('not_none'),
   );
@@ -607,8 +608,48 @@ function phone_choice($title){
     '#options' => drupal_map_assoc(array('Home',
     'Cell',
     'Work',
-     )),
-    '#attributes' => array('class' => array('select-exam')),
+  )),
+    '#attributes' => array('class' => array('select-phone')),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Certification field function
+ */
+function status($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('Certification',
+    'Recertification',
+  )),
+    '#attributes' => array('class' => array('select-cert')),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
+/*
+ * Certification field function
+ */
+function cert($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('BCLS',
+    'ACLS',
+    'ATLS',
+    'PALS',
+    'NRP',
+    'ALSO',
+    'MQSA',
+    'Other',
+  )),
+    '#attributes' => array('class' => array('select-cert')),
     '#rules' => array('not_none'),
   );
   return $element;

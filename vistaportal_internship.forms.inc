@@ -17,7 +17,11 @@ function vistaportal_internship_form($form, &$form_state){
 	$form = array();
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
 	$form['internship'] = fieldset('');
-	$form['internship']['na'] = checkbox('Not Applicable');
+	$form['internship']['na'] = array(
+		'#type'=> 'checkbox',
+		'#title' => t('Not Applicable'),
+		'#required' => FALSE,
+	);
 	$form['internship']['type'] = textfield('Type');
 	$form['internship']['institution'] = textfield('Institution');
 	$form['internship']['country'] = country('Country');
