@@ -19,8 +19,8 @@ function vistaportal_premed_form($form, &$form_state){
 	//Set this to tree so we can access all dynamic form values
 	$form['#tree'] = TRUE;
 	$form['#attributes'] = array('enctype' => array("multipart/form-data"));
-	$date = 'YYYY-MM';
-	$format = 'm-Y';
+	$date = date('Y-m-d H:m:s');
+	$format = 'Y-m';
 	//This is the pre-med education form	
 	$form['premed'] = array(
 		'#type'=>'fieldset',
@@ -53,7 +53,7 @@ function vistaportal_premed_form($form, &$form_state){
 			'#date_year_range' => '-30:+0',
 			'#date_label_position' => 'within',
 			'#required' => TRUE,
-			'#default_value' => $date,
+			'#default_value' => NULL,
 		);
 		$form['premed'][$i]['date_to'] = array(
 			'#type'=> 'date_select',
@@ -61,17 +61,17 @@ function vistaportal_premed_form($form, &$form_state){
 			'#date_year_range' => '-30:+0',
 			'#date_label_position' => 'within',
 			'#required' => TRUE,
-			'#default_value' => $date,
+			'#default_value' => NULL,
 		);
 		$form['premed'][$i]['degree'] = edu('Degree');
 	}
 	
 	//Only allow 3 schools for the premed form
 	if($form_state['num_schools'] < 3 ){
-		$form['p']['add_another'] = array(
+		$form['add_another_premed'] = array(
    		'#type' => 'submit',
-   		'#value' => t('Add another school'),
-   		'#submit' => array('vistaportal_form_add'),
+   		'#value' => t('Add Additional Premed Institution'),
+   		'#submit' => array('vistaportal_form_premed_add'),
    		'#limit_validation_errors' => array(),
    		'#ajax' => array(
      		'callback' => 'vistaportal_premed_form_add_school_callback',
@@ -84,10 +84,10 @@ function vistaportal_premed_form($form, &$form_state){
 	
 	//First school is mandatory
 	if($form_state['num_schools'] > 1 ){
-		$form['p']['remove_school'] = array(
+		$form['remove_school_premed'] = array(
 		  '#type' => 'submit',
-   		'#value' => t('Remove a school'),
-   		'#submit' => array('vistaportal_form_remove'),
+   		'#value' => t('Remove A Premed Institution'),
+   		'#submit' => array('vistaportal_form_premed_remove'),
    		'#limit_validation_errors' => array(),
    		'#ajax' => array(
      		'callback' => 'vistaportal_premed_form_add_school_callback',
@@ -110,44 +110,44 @@ function vistaportal_premed_form($form, &$form_state){
 		$form_state['num_schools'] = 1;
 	}
 	
-	for($i = 0; $i < $form_state['num_schools']; $i++){
-		$form['med'][$i]['school'] = textfield('School of Graduation');
-		$form['med'][$i]['country'] = country('Country');
-		$form['med'][$i]['state'] = state('State');
-		$form['med'][$i]['birth_state_other'] = array(
+	for($j = 0; $j < $form_state['num_schools']; $j++){
+		$form['med'][$j]['school'] = textfield('School of Graduation');
+		$form['med'][$j]['country'] = country('Country');
+		$form['med'][$j]['state'] = state('State');
+		$form['med'][$j]['birth_state_other'] = array(
 		'#type' => 'textfield',
 		'#states' => array(
 			'visible'=> array(
-				':input[name="med['.$i.'][state]"]' => array('value' => 'Other'),
+				':input[name="med['.$j.'][state]"]' => array('value' => 'Other'),
 		)));
-		$form['med'][$i]['city'] = textfield('City');
-		$form['med'][$i]['date_from'] = array(
+		$form['med'][$j]['city'] = textfield('City');
+		$form['med'][$j]['date_from'] = array(
 			'#type'=> 'date_select',
 			'#title' => t('Dates Attended'),
 			'#date_format' => $format,
 			'#date_year_range' => '-30:+0',
 			'#date_label_position' => 'within',
 			'#required' => TRUE,
-			'#default_value' => $date,
+			'#default_value' => NULL
 		);
-		$form['med'][$i]['date_to'] = array(
+		$form['med'][$j]['date_to'] = array(
 			'#type'=> 'date_select',
 			'#date_format' => $format,
 			'#date_year_range' => '-30:+0',
 			'#date_label_position' => 'within',
 			'#required' => TRUE,
-			'#default_value' => $date,
+			'#default_value' => NULL
 		);
-		$form['med'][$i]['degree'] = edu('Degree');
-		$form['med'][$i]['ecfmg'] = textfield('ECFMG CERTIFICATE #');
+		$form['med'][$j]['degree'] = edu('Degree');
+		$form['med'][$j]['ecfmg'] = textfield('ECFMG CERTIFICATE #');
 	}
 	
 	//Only allow 3 schools for the med form
 	if($form_state['num_schools'] < 3 ){
-		$form['m']['add_another'] = array(
+		$form['add_another_med'] = array(
    		'#type' => 'submit',
-   		'#value' => t('Add another school'),
-   		'#submit' => array('vistaportal_form_add'),
+   		'#value' => t('Add Additional Medical Institution'),
+   		'#submit' => array('vistaportal_form_med_add'),
    		'#limit_validation_errors' => array(),
    		'#ajax' => array(
      		'callback' => 'vistaportal_med_form_add_school_callback',
@@ -159,10 +159,10 @@ function vistaportal_premed_form($form, &$form_state){
 	
 	//First school is mandatory
 	if($form_state['num_schools'] > 1 ){
-		$form['m']['remove_school'] = array(
+		$form['remove_school_med'] = array(
 		  '#type' => 'submit',
-   		'#value' => t('Remove a school'),
-   		'#submit' => array('vistaportal_form_remove'),
+   		'#value' => t('Remove A Medical Institution'),
+   		'#submit' => array('vistaportal_form_med_remove'),
    		'#limit_validation_errors' => array(),
    		'#ajax' => array(
      		'callback' => 'vistaportal_med_form_add_school_callback',
@@ -170,14 +170,14 @@ function vistaportal_premed_form($form, &$form_state){
    		),
   	);
 	}
-	$form['<prev'] = button('Previous');
+	$form['prev'] = button('Previous');
   $form['save_logout'] = button('Save & Logout');
 	$form['submit'] = array(
 		'#type' => 'submit',
 		'#value' => t('Save & Next>'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_premed_form_submit'),
-	);		
+	);
 return $form;
 }
 
@@ -273,8 +273,8 @@ function vistaportal_premed_form_submit($form, &$form_state){
  * @TODO remember to add the dynamic fields to the form
  * and also to the db_query.
  */		
-	$premed = new stdClass();
-	foreach($form_state['values']['med'] AS $key => $value){
+	$med = new stdClass();
+		foreach($form_state['values']['med'] AS $key => $value){
 		$form_state['values']['med'][$key]['date_from'] = date('Y-m-d H:i:s', strtotime($form_state['values']['med'][$key]['date_from']));
 		$form_state['values']['med'][$key]['date_to'] = date('Y-m-d H:i:s', strtotime($form_state['values']['med'][$key]['date_to']));		
 		$med->uid = $user->uid;
@@ -286,7 +286,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
 		$med->date_from = $form_state['values']['med'][$key]['date_from'];
 		$med->date_to = $form_state['values']['med'][$key]['date_to'];
 		$med->ecfmg = $form_state['values']['med'][$key]['ecfmg'];
-		watchdog('erros', $key);
+		watchdog('errors', $key);
 	db_insert('vss_medschool')
 		->fields(array(
 			'uid' => $med->uid,
@@ -318,7 +318,7 @@ function vistaportal_premed_form_submit($form, &$form_state){
 /*
  * @TODO add error checking
  */	
-  
+ 
 }	
 
 
@@ -337,20 +337,37 @@ function vistaportal_med_form_add_school_callback($form, $form_state){
 }
 
 /*
- * Increment the counter when the button is pressed
+ * Increment the premed counter when the button is pressed
  */
-function vistaportal_form_add($form, &$form_state){
+function vistaportal_form_premed_add($form, &$form_state){
 	$form_state['num_schools']++;
   $form_state['rebuild'] = TRUE;		
 }
 
 /*
- * Decrement the counter when the button is pressed
+ * Decrement the premed counter when the button is pressed
  */	
-function vistaportal_form_remove($form, &$form_state){
+function vistaportal_form_premed_remove($form, &$form_state){
 	if ($form_state['num_schools'] > 1) {
   	$form_state['num_schools']--;
   }
   $form_state['rebuild'] = TRUE;
 }
 
+/*
+ * Increment the med counter when the button is pressed
+ */
+function vistaportal_form_med_add($form, &$form_state){
+	$form_state['num_schools']++;
+  $form_state['rebuild'] = TRUE;		
+}
+
+/*
+ * Decrement the med counter when the button is pressed
+ */	
+function vistaportal_form_med_remove($form, &$form_state){
+	if ($form_state['num_schools'] > 1) {
+  	$form_state['num_schools']--;
+  }
+  $form_state['rebuild'] = TRUE;
+}

@@ -201,7 +201,6 @@
       '#attributes' => array('class' => array('percent_90')),
       '#suffix' => '</div>',
     );
-    //$form['registration']['fname'] = textfield('First Name', 30);
     $form['registration']['lname'] =array(
       '#prefix' => '<div class="form_field_2">',
       '#type' => 'textfield',
@@ -215,7 +214,7 @@
     	'#type' => 'textfield',
     	'#title' => t('Phone Number'),
     	'#required' => FALSE,
-    	'#attributes' => array('class' => array('form_field percent_90')),
+    	'#attributes' => array('class' => array('form_field percent_90 textfield-phone')),
     	'#suffix' => '</div>',
     );
     $form['registration']['email'] = array(
@@ -226,6 +225,7 @@
       '#attributes' => array('class' => array('percent_90 row_end')),
       '#suffix' => '</div>',
     );
+
     $form['registration']['specialty'] = array('#markup' => '<em><h2>SPECIALTY</h2></em><br />', );
     $form['registration']['primary'] = medical_specialty('Primary');
     $form['registration']['secondary'] = medical_specialty('Secondary - Optional');
@@ -239,10 +239,14 @@
     $form['registration']['permanent_placement']['#required'] = FALSE;
     $form['registration']['gov_op'] = checkbox('Government Oportunities');
     $form['registration']['gov_op']['#required'] = FALSE;
+		$form['registration']['line'] = array(
+			'#markup' => '<hr>',
+			'#attributes' => array('class' => array('dots')),
+			);
     $form['registration']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
-      '#attributes' => array('class' => array('submit')),
+      '#attributes' => array('class' => array('submit-register')),
     );
     return $form;
   }
@@ -383,6 +387,7 @@
     unset($_POST['q'], $_POST['op'], $_POST['form_build_id'], $_POST['form_token']);
     $serialized = serialize($_POST);
 
+		// Currently, each user can have only one autosave form at a particular path.
     db_delete('vss_autosaved_forms') -> condition('form_id', $form_id) -> condition('path', $path) -> condition('uid', $user -> uid) -> execute();
 
     db_insert('vss_autosaved_forms') -> fields(array(
@@ -393,10 +398,6 @@
       'serialized' => $serialized,
     )) -> execute();
 
-    // Currently, each user can have only one autosave form at a particular path.
-    //db_query("DELETE FROM {autosaved_forms} WHERE form_id = '%s' AND path = '%s' AND uid = %d", $form_id, $path, $user->uid);
-    //db_query("INSERT INTO {autosaved_forms} (form_id, path, uid, timestamp, serialized) VALUES ('%s', '%s', %d, %d, '%s')", $form_id, $path, $user->uid, time(), $serialized);
-    // watchdog('rpoa', 'Autosave captured from '. $_POST['q'] .'Post: <pre>'. print_r($_POST, TRUE) .'</pre>');
 
     exit();
   }

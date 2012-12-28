@@ -44,6 +44,7 @@ function vistaportal_internship_form($form, &$form_state){
 		'#name' => 'next',
 		'#submit' => array('vistaportal_internship_form_submit'),
 	);
+	$form['#after_build'][] = 'vistaportal_internship_form_afterbuild';
 return $form;
 }
 
@@ -115,4 +116,21 @@ function vistaportal_internship_form_submit($form, &$form_state){
 			
 	$user = user_load($form_state['uid']);
 	drupal_goto('preapp/residency' . $user->uid);	
-}	
+}
+
+/*
+ * Implements #afterbuild
+ */	
+function vistaportal_internship_form_afterbuild($form, &$form_state){
+	if ($form_state['values']['internship']['na']) {
+		unset($form['internship']['type']['#required'], 
+			$form['internship']['institution']['#required'],
+			$form['internship']['country']['#required'],
+			$form['internship']['state']['#required'],
+			$form['internship']['state_other']['#required'],
+			$form['internship']['city']['#required'],
+			$form['internship']['date_from']['#required'],
+			$form['internship']['date_to']['#required'],
+			$form['internship']['prog_dir']['#required']);
+	} 
+}

@@ -49,7 +49,7 @@ function state($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE', 'FL', 'GA', 'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VA', 'VT', 'WA', 'WI', 'WV', 'WY', 'Other')),
-    '#attributes' => array('class' => array('select_state')),
+    '#attributes' => array('class' => array('select_state edu-state')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -103,7 +103,7 @@ function country($title) {
 			'United States','United States Minor Outlying Islands','Uruguay','Uzbekistan','Vanuatu',
 			'Venezuela','Viet Nam','Virgin Islands, British','Virgin Islands, U.S.','Wallis And Futuna',
 			'Western Sahara','Yemen','Zambia','Zimbabwe')),
-    '#attributes' => array('class' => array('select_country')),
+    '#attributes' => array('class' => array('select_country edu-country ')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -118,7 +118,7 @@ function radios_yesno($title) {
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('Yes', 'No')),
     '#required' => TRUE,
-    '#attributes' => array('class' => array('radios-yes-no')),
+    '#attributes' => array('class' => array('radios-yes-no p-r-yn')),
   );
   return $element;
 }
@@ -333,7 +333,7 @@ function marital_status($title) {
     '#required' => TRUE,
     '#title' => t($title),
     '#options' => drupal_map_assoc(array('-Select-','Single', 'Married', 'Divorced', 'Widowed')),
-    '#attributes' => array('class' => array('select_state')),
+    '#attributes' => array('class' => array('select_marital')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -498,9 +498,8 @@ function medical_specialty($title){
     'Thoracic Surgery',
     'Trauma Surgery',
     'Urology',
-    'Vascular Surgery',
-		'Other')),
-    '#attributes' => array('class' => array('select-specialty')),
+    'Vascular Surgery')),
+    '#attributes' => array('class' => array('select-specialty row_end percent_90')),
     '#rules' => array('not_none'),
   );
   return $element;
@@ -581,6 +580,7 @@ function date_mdy($title){
     '#date_year_range' => '-70:+0',
     '#date_label_position' => 'within',
     '#required' => TRUE,
+    '#attributes' => array('class' => array('pinfo-date')),
     '#default_value' => NULL,
     );
     return $element;
@@ -593,6 +593,7 @@ function button($title){
   $element = array(
     '#type' => 'button',
     '#value' => t($title),
+    '#attributes' => array('class' => array('#edit-prev #edit-save-logout button previous ')),
   );
   return $element;  
 }
@@ -608,48 +609,8 @@ function phone_choice($title){
     '#options' => drupal_map_assoc(array('Home',
     'Cell',
     'Work',
-  )),
-    '#attributes' => array('class' => array('select-phone')),
-    '#rules' => array('not_none'),
-  );
-  return $element;
-}
-
-/*
- * Certification field function
- */
-function status($title){
-  $element = array(
-    '#type' => 'select',
-    '#required' => TRUE,
-    '#title' => t($title),
-    '#options' => drupal_map_assoc(array('Certification',
-    'Recertification',
-  )),
-    '#attributes' => array('class' => array('select-cert')),
-    '#rules' => array('not_none'),
-  );
-  return $element;
-}
-
-/*
- * Certification field function
- */
-function cert($title){
-  $element = array(
-    '#type' => 'select',
-    '#required' => TRUE,
-    '#title' => t($title),
-    '#options' => drupal_map_assoc(array('BCLS',
-    'ACLS',
-    'ATLS',
-    'PALS',
-    'NRP',
-    'ALSO',
-    'MQSA',
-    'Other',
-  )),
-    '#attributes' => array('class' => array('select-cert')),
+     )),
+    '#attributes' => array('class' => array('select-exam')),
     '#rules' => array('not_none'),
   );
   return $element;

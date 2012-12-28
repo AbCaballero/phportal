@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Author: Andrew Browning
@@ -11,9 +12,6 @@
 /*
  * This is the form callback for the identity form.
  */ 
-/*
- * This is the form callback for the identity form.
- */ 
 function vistaportal_identity_form($form, &$form_state){
 	include_once('vistaportal.fields.inc');	
 	$form = array();
@@ -24,14 +22,14 @@ function vistaportal_identity_form($form, &$form_state){
 		'#title' => t('PERSONAL INFORMATION'),
 		'#collapsible' => FALSE,
 	);	
-	$form['identity']['lname'] = array(
+	$form['identity']['lename'] = array(
 	'#prefix' => '<div class="lname">',
 		'#type' => 'textfield',
 		'#title' => t('Last Name'),
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['fname'] = array(
 	'#prefix' => '<div class="fname">',
 		'#type' => 'textfield',
@@ -39,7 +37,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['initial'] = array(
 	'#prefix' => '<div class="initial">',
 		'#type' => 'textfield',
@@ -47,27 +45,24 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['phone_choice'] = array(
-  '#prefix' => '<div class="phone_choice">',
+	'#prefix' => '<div class="phone_choice">',
 		'#type' => 'select',
 		'#title' => t('Phone'),
-		'#required' => FALSE,
-		'#options' => drupal_map_assoc(array('Home',
-    'Cell',
-    'Work',
-  	)),
-		'#attributes' => array('class' => array('percent_100')),
+		'#options' => drupal_map_assoc(array('-Select-','Home', 'Cell', 'Work')),
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['phone'] = array(
-	'#prefix' => '<div class="phone">',
+	'#prefix' => '<div class="phone_number">',
 		'#type' => 'textfield',
 		'#title' => t(''),
 		'#required' => TRUE,
-		'#attributes' => array('class' => array('percent_90','textfield-phone')),
+		'#attributes' => array('class' => array('percent_90 textfield-phone')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['email'] = array(
 	'#prefix' => '<div class="email">',
 		'#type' => 'textfield',
@@ -75,7 +70,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_100')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['home_address'] = array(
 	'#prefix' => '<div class="home-address">',
 		'#type' => 'textfield',
@@ -83,7 +78,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_100')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['city'] = array(
 	'#prefix' => '<div class="city">',
 		'#type' => 'textfield',
@@ -91,7 +86,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['state'] = array(
 	'#prefix' => '<div class="state">',
 		'#type' => 'textfield',
@@ -99,7 +94,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['zip'] = array(
 	'#prefix' => '<div class="zipcode">',
 		'#type' => 'textfield',
@@ -107,25 +102,10 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
-	);
+		);
 	$form['identity']['dob'] = date_mdy('Date of Birth');
-	
-	$form['identity']['birth_country'] = array(
-	'#prefix' => '<div class="birth-country">',
-		'#type' => 'textfield',
-		'#title' => t('Country'),
-		'#required' => TRUE,
-		'#attributes' => array('class' => array('percent_90')),
-		'#suffix' => '</div>',
-	);
-	$form['identity']['birth_state'] = array(
-	'#prefix' => '<div class="birth-state">',
-		'#type' => 'textfield',
-		'#title' => t('State'),
-		'#required' => TRUE,
-		'#attributes' => array('class' => array('percent_90')),
-		'#suffix' => '</div>',
-	);
+	$form['identity']['birth_country'] = country('Country');
+	$form['identity']['birth_state'] = state('State');
 	$form['identity']['birth_state_other'] = array(
 		'#type' => 'textfield',
 		'#states' => array(
@@ -137,60 +117,77 @@ function vistaportal_identity_form($form, &$form_state){
 		'#type' => 'textfield',
 		'#title' => t('City'),
 		'#required' => TRUE,
-		'#attributes' => array('class' => array('percent_95')),
+		'#attributes' => array('class' => array('edu-city')),
 		'#suffix' => '</div>',
-	);
-
+		);
 	$form['identity']['ver_label'] = array(
 	'#prefix' => '<div class="var_label">',
 		'#markup' => t('Can you provide proof of legal eligibility to work in the USA?'), 
 		'#suffix' => '</div>',
+		'#required' => TRUE,
 	);
 	$form['identity']['verification'] = radios_yesno();
 	$form['identity']['marital_status'] = array(
 	'#prefix' => '<div class="marital-status">',
-		'#type' => 'textfield',
+		'#type' => 'select',
 		'#title' => t('Marital Status'),
-		'#required' => TRUE,
+		'#options' => drupal_map_assoc(array('-Select-','Single', 'Married', 'Divorced', 'Widowed')),
+		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
-	);
-	$form['identity']['marital_status']['#required'] = FALSE;
+		);
 	$form['identity']['spouse'] = array(
 	'#prefix' => '<div class="spouse">',
 		'#type' => 'textfield',
 		'#title' => t('Spouse Name'),
-		'#required' => TRUE,
+		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
-	);
-	$form['identity']['spouse']['#required'] = FALSE;
+		);
 	$form['identity']['number_of_children'] = array(
 	'#prefix' => '<div class="n-children">',
 		'#type' => 'textfield',
 		'#title' => t('# of children'),
-		'#required' => TRUE,
+		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_97')),
 		'#suffix' => '</div>',
-	);
-	$form['identity']['number_of_children']['#required'] = FALSE;
+		);
 	$form['identity']['comment'] = array(
 	'#prefix' => '<div class="comment">',
-		'#type' => 'textarea'	,
-		'#title' => t('Comment Examples'),
+		'#type' => 'textarea',
+		'#title' => t('Comments Example'),
 		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
-	);	
-	$form['prev'] = button('Previous');
-	$form['save_logout'] = button('Save & Logout');	
+		);
+		$form['identity']['line2'] = array(
+	'#prefix' => '<div class="line_left">',
+		'#markup' => '<hr>',
+		'#attributes' => array('class' => array('line_left')),
+		'#suffix' => '</div>',
+		);
+			
+	$form['identity']['required_field'] = array(
+	'#prefix' => '<div class="required_field">',
+		'#markup' => 'Required Field',
+		'#required' => TRUE,
+		'#attributes' => array('class' => array('required_field')),
+		'#suffix' => '</div>',
+		);
 	$form['submit'] = array(
 		'#type' => 'submit',
 		'#value' => t('Save & Next'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_identity_form_submit'),
-	);
-return $form;	
+		'#attributes' => array('class' => array('identity-submit')),
+		);
+	$form['save_logout'] = button('Save & Logout');	
+	$form['prev'] = button('Previous');
+	
+	
+
+return $form;
+	
 }
 
 /*
@@ -200,6 +197,11 @@ return $form;
 function vistaportal_identity_form_submit($form, &$form_state){
 	global $user;
 	$account = user_load($user -> uid);
+	//$user_name;
+	//$html_string;
+	//make_pdf;
+	//make_tiff;
+	//save record
 /*
  * If the user refills this form, we need to unset the
  * identity status flag in the vss_drupal_flags table.	
