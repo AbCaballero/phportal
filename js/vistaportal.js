@@ -32,3 +32,13 @@
 })(jQuery);
 
 
+(function ($) {
+	Drupal.behaviors.addAnother = {
+			attach: function(context, settings){
+  			$(".add-another").click(function() {
+    		$(this).hide();
+    		$(this).parent.next().slideDown();
+  			});
+			}
+	};
+})(jQuery);

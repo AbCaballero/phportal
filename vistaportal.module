@@ -70,7 +70,7 @@
 
     $items['preapp/education'] = array(
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('vistaportal_premed_form'),
+      'page arguments' => array('vistaportal_education_form'),
       'access arguments' => array('authenticated user access'),
       'file' => 'vistaportal_education.forms.inc',
       'type' => MENU_NORMAL_ITEM,
@@ -166,8 +166,8 @@
       'type' => MENU_CALLBACK,
       'title' => 'Submit'
     );
-		
-		$items['preapp/exams'] = array(
+
+    $items['preapp/exams'] = array(
       'page callback' => 'drupal_get_form',
       'page arguments' => array('vistaportal_exams_form'),
       'access arguments' => array('authenticated user access'),
@@ -175,13 +175,22 @@
       'type' => MENU_NORMAL_ITEM,
       'title' => 'Exams',
     );
+		
+		$items['preapp/test'] = array(
+			'page callback' => 'drupal_get_form',
+			'page_arguments' => array('vistaportal_test_form'),
+			'access arguments' => array('access content'),
+			'file' => 'test.inc',
+			'type' => MENU_CALLBACK,
+			'title' => 'Test',
+		);
     return $items;
   }
 
   /*
    * Form callback for the registration form.
    */
-   function vistaportal_form($form, &$form_state) {
+  function vistaportal_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     $form = array();
     $form['#attributes'] = array('enctype' => array("multipart/form-data"));
@@ -193,15 +202,15 @@
       '#collapsible' => FALSE,
     );
     $form['registration']['personal'] = array('#markup' => '<em><h2>PERSONAL INFORMATION</h2></em><br />', );
-    $form['registration']['fname'] = array( 
-      '#prefix' => '<div class="form_field_1">',  
+    $form['registration']['fname'] = array(
+      '#prefix' => '<div class="form_field_1">',
       '#type' => 'textfield',
       '#title' => t('First Name'),
       '#required' => TRUE,
       '#attributes' => array('class' => array('percent_90')),
       '#suffix' => '</div>',
     );
-    $form['registration']['lname'] =array(
+    $form['registration']['lname'] = array(
       '#prefix' => '<div class="form_field_2">',
       '#type' => 'textfield',
       '#title' => t('Last Name'),
@@ -211,11 +220,11 @@
     );
     $form['registration']['phone'] = array(
       '#prefix' => '<div class="form_field_1">',
-    	'#type' => 'textfield',
-    	'#title' => t('Phone Number'),
-    	'#required' => FALSE,
-    	'#attributes' => array('class' => array('form_field percent_90 textfield-phone')),
-    	'#suffix' => '</div>',
+      '#type' => 'textfield',
+      '#title' => t('Phone Number'),
+      '#required' => FALSE,
+      '#attributes' => array('class' => array('form_field percent_90 textfield-phone')),
+      '#suffix' => '</div>',
     );
     $form['registration']['email'] = array(
       '#prefix' => '<div class="form_field_2">',
@@ -239,10 +248,10 @@
     $form['registration']['permanent_placement']['#required'] = FALSE;
     $form['registration']['gov_op'] = checkbox('Government Oportunities');
     $form['registration']['gov_op']['#required'] = FALSE;
-		$form['registration']['line'] = array(
-			'#markup' => '<hr>',
-			'#attributes' => array('class' => array('dots')),
-			);
+    $form['registration']['line'] = array(
+      '#markup' => '<hr>',
+      '#attributes' => array('class' => array('dots')),
+    );
     $form['registration']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
@@ -266,9 +275,6 @@
       'roles' => array( array(logintoboggan_validating_id() => TRUE), ),
     );
     $account = user_save(NULL, $fields);
-    //This line of code will have to go into the cron job
-    /*	if($mail = _user_mail_notify('register_no_approval_required', $account)){
-     $error = FALSE;*/
     $account = user_load($user -> uid);
     $register = new stdClass();
     $register -> uid = $user -> uid;
@@ -315,32 +321,32 @@
    */
   function vistaportal_form_alter(&$form, &$form_state, $form_id) {
     global $user;
-    if (substr($form_id, 0, 12) == 'vistaportal_'){
-     $form['#attributes'] = array('class' => 'vistaportal');
-     $form['#ajax'] = array('enabled' => TRUE);
+   // if (substr($form_id, 0, 12) == 'vistaportal_' || substr($form_id, 0, 8) == 'register') {
+      $form['#attributes'] = array('class' => 'vistaportal');
+      $form['#ajax'] = array('enabled' => TRUE);
 
-    $form['#attributes'] = array('class' => array('vistaportal'));
-    //$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);
-    $path = drupal_get_path('module', 'vistaportal');
-    drupal_add_js($path . '/js/jquery.field.js');
-    drupal_add_js($path . '/js/autosave.js');
-    //dsm($form_id);
-    $settings['autosave']['url'] = url('autosave');
-    $settings['autosave']['q'] = $_GET['q'];
-    $settings['autosave']['form_id'] = $form_id;
-    $settings['autosave']['form_id_id'] = $form['#id'];
+      $form['#attributes'] = array('class' => array('vistaportal'));
+      //$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);
+      $path = drupal_get_path('module', 'vistaportal');
+      drupal_add_js($path . '/js/jquery.field.js');
+      drupal_add_js($path . '/js/autosave.js');
+      $settings['autosave']['url'] = url('autosave');
+      $settings['autosave']['q'] = $_GET['q'];
+      $settings['autosave']['form_id'] = $form_id;
+      $settings['autosave']['form_id_id'] = $form['#id'];
 
-    // If an autosaved version of the form exists, make it available via javascript.
-    if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
-      $settings['autosave'] = array_merge($settings['autosave'], array(
-        'serialized' => unserialize($autosaved_form['serialized']),
-        'saved_date' => format_date($autosaved_form['timestamp'], 'medium'),
-      ));
-    }
+      // If an autosaved version of the form exists, make it available via javascript.
+      if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
+        $settings['autosave'] = array_merge($settings['autosave'], array(
+          'serialized' => unserialize($autosaved_form['serialized']),
+          'saved_date' => format_date($autosaved_form['timestamp'], 'medium'),
+        ));
+      }
 
-    drupal_add_js($settings, 'setting');
-		drupal_add_js($path . '/js/jquery-post-autosave.js', 'file');
-  }}
+      drupal_add_js($settings, 'setting');
+      drupal_add_js($path . '/js/jquery-post-autosave.js', 'file');
+   //}
+  }
 
   /**
    * Implements hook_cron().
@@ -383,11 +389,10 @@
 
     $path = $_POST['q'];
     $form_id = $_POST['form_id'];
-
     unset($_POST['q'], $_POST['op'], $_POST['form_build_id'], $_POST['form_token']);
     $serialized = serialize($_POST);
 
-		// Currently, each user can have only one autosave form at a particular path.
+    // Currently, each user can have only one autosave form at a particular path.
     db_delete('vss_autosaved_forms') -> condition('form_id', $form_id) -> condition('path', $path) -> condition('uid', $user -> uid) -> execute();
 
     db_insert('vss_autosaved_forms') -> fields(array(
@@ -397,7 +402,6 @@
       'timestamp' => REQUEST_TIME,
       'serialized' => $serialized,
     )) -> execute();
-
 
     exit();
   }
