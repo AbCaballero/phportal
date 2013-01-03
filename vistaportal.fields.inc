@@ -122,7 +122,6 @@ function radios_yesno($title) {
   );
   return $element;
 }
-
 /*
  * phone field function
  */
@@ -414,6 +413,23 @@ function challenge($title){
   );
   return $element;
 }
+
+/*
+ * Challenge question field fuinction
+ */
+function medical_sciences($title){
+  $element = array(
+    '#type' => 'select',
+    '#required' => TRUE,
+    '#title' => t($title),
+    '#options' => drupal_map_assoc(array('Select a specialty', 'Example', 'Example1'
+     )),
+    '#attributes' => array('class' => array('select-sciences row_end percent_90')),
+    '#rules' => array('not_none'),
+  );
+  return $element;
+}
+
 
 /*
  * Challenge question field fuinction

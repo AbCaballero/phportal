@@ -12,9 +12,11 @@
 
   include_once ('vistaportal.fields.inc');
   include_once ('vistaportal_functions.inc');
+
   /**
    * Implements hook_init().
    */
+
   function vistaportal_init() {
     global $user;
     date_default_timezone_set('America/Los_Angeles');
@@ -23,13 +25,17 @@
     drupal_add_js($path . '/js/jquery.autotab-1.1b.js', 'file');
     drupal_add_js($path . '/js/jquery.ba-untils.min.js');
     drupal_add_css($path . '../../themes/jobapp/css/global.css');
-    //This allows jQuery update module to function properly.
+    drupal_add_css($path . '../../themes/jobapp/css/date.css');
+
+    /*This allows jQuery update module to function properly.*/
+
     variable_set('jquery_update_replace', TRUE);
   }
 
   /**
    * Implements hook_perm().
    */
+
   function vistaportal_permission() {
     return array('authenticated user access' => array(
         'title' => t('Access to vistaportal forms'),
@@ -41,6 +47,7 @@
   /**
    * Implements hook_menu().
    */
+
   function vistaportal_menu() {
     $path = drupal_get_path('module', 'vistaportal');
     $items = array();
@@ -190,6 +197,7 @@
   /*
    * Form callback for the registration form.
    */
+
   function vistaportal_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     $form = array();
@@ -263,6 +271,7 @@
   /*
    * Form submission callback for the registration form.
    */
+
   function vistaportal_form_submit($form, &$form_state) {
     global $user;
 
@@ -319,6 +328,7 @@
   /**
    * Implements the hook_form_alter()
    */
+
   function vistaportal_form_alter(&$form, &$form_state, $form_id) {
     global $user;
     // if (substr($form_id, 0, 12) == 'vistaportal_' || substr($form_id, 0, 8) == 'register') {
@@ -342,7 +352,8 @@
       $settings['autosave']['form_id_id'] = $form['#id'];
     }
 
-    // If an autosaved version of the form exists, make it available via javascript.
+    /* If an autosaved version of the form exists, make it available via javascript.*/
+
     if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
       $settings['autosave'] = array_merge($settings['autosave'], array(
         'serialized' => unserialize($autosaved_form['serialized']),
@@ -358,6 +369,7 @@
   /**
    * Implements hook_cron().
    */
+
   function vistaportal_cron() {
     include_once ('vistaportal_functions.inc');
     _create_new_account();
@@ -367,6 +379,7 @@
   /**
    * Implements get_autosaved_form
    */
+
   function vistaportal_get_autosaved_form($form_id, $path, $uid) {
     $result = db_query("SELECT form_id, serialized, timestamp FROM {vss_autosaved_forms} WHERE form_id = :form_id AND path = :path AND uid = :uid", array(
       ':form_id' => $form_id,
@@ -383,6 +396,7 @@
   /**
    * Implements vistaportal_autosave_form
    */
+
   function vistaportal_autosave() {
     global $user;
     // Bad request

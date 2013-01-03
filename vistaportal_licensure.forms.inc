@@ -20,7 +20,8 @@
     $form['#tree'] = TRUE;
     $form['#attributes'] = array('enctype' => array("multipart/form-data"));
 
-    // This is the licensure form
+    /*This is the licensure form*/
+    
     $form['licensure'] = array(
       '#type' => 'fieldset',
       '#title' => t('Licenses'),
@@ -30,7 +31,8 @@
     $form['licensure']['na']['#required'] = FALSE;
     $form['licensure']['fcvs'] = textfield('FCVS(Federation Credentials Verification) Profile #');
 
-    //This is the licenses form
+    /*This is the licenses form*/
+    
     $form['licenses'] = array(
       '#type' => 'fieldset',
       '#title' => t('License 1'),
@@ -39,7 +41,8 @@
       '#suffix' => '</div>',
     );
 
-    //This counter will be used to determine how many lincenses sections to add
+    /*This counter will be used to determine how many lincenses sections to add*/
+    
     if (empty($form_state['licenses_num'])) {
       $form_state['licenses_num'] = 1;
     }
@@ -69,7 +72,8 @@
         ),
       );
     }
-    //First license is mandatory
+    /*First license is mandatory*/
+    
     if ($form_state['licenses_num'] > 1) {
       $form['licenses']['remove_license'] = array(
         '#type' => 'submit',
@@ -83,7 +87,8 @@
       );
     }
 
-    //This is the DEA registration form
+    /*This is the DEA registration form*/
+    
     $form['deareg'] = array(
       '#type' => 'fieldset',
       '#title' => t('DEA REGISTRATION'),
@@ -92,7 +97,8 @@
       '#suffix' => '</div>',
     );
 
-    //This counter will be used to determine how many lincenses sections to add
+    /*This counter will be used to determine how many lincenses sections to add*/
+    
     if (empty($form_state['deareg_num'])) {
       $form_state['deareg_num'] = 1;
     }
@@ -136,7 +142,8 @@
         ),
       );
     }
-    //First DEA registration is mandatory
+		
+    /*First DEA registration is mandatory*/
 
     if ($form_state['deareg_num'] > 1) {
       $form['deareg']['remove_deareg'] = array(
@@ -150,7 +157,7 @@
         ),
       );
     }
-    $form['deareg']['language_spoken'] = textfield('In addition to English, other languages spoken 
+    $form['language_spoken'] = textfield('In addition to English, other languages spoken 
         with communication ease and/or fluency');
     $form['submit'] = array(
       '#type' => 'submit',
@@ -216,11 +223,7 @@
 
     db_delete('vss_licenses') -> condition('uid', $user -> uid) -> execute();
 
-    /*Insert the form_state values into the licenses table.
-     * @TODO remember to add the dynamic fields to the form
-     * and also to the db_query.
-     */
-
+    unset($form_state['values']['licenses']['add_another'], $form_state['values']['licenses']['remove_license']); 
     $licenses = new stdClass();
     foreach ($form_state['values']['licenses'] AS $key => $value) {
       $form_state['values']['licenses'][$key]['date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['licenses'][$key]['date_issued']));
@@ -269,17 +272,18 @@
      * and also to the db_query.
      */
 
-    dsm($form_state, 'form state');
+		unset($form_state['values']['deareg']['add_another'], $form_state['values']['deareg']['remove_deareg']);
     $deareg = new stdClass();
     foreach ($form_state['values']['deareg'] AS $key => $value) {
       $form_state['values']['deareg'][$key]['dea_date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_issued']));
       $form_state['values']['deareg'][$key]['dea_date_expired'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_expired']));
+      dsm($form_state['values']['deareg']);
       $deareg -> uid = $user -> uid;
       $deareg -> dea_lic_num = $form_state['values']['deareg'][$key]['dea_lic_num'];
-      $deareg -> country = $form_state['values']['deareg'][$key]['country'];
+      $deareg -> country = $form_state['values']['deareg'][$key]['dea_country'];
       $deareg -> dea_date_issued = $form_state['values']['deareg'][$key]['dea_date_issued'];
       $deareg -> dea_date_expired = $form_state['values']['deareg'][$key]['dea_date_expired'];
-      $deareg -> language_spoken = $form_state['values']['ldeareg'][$key]['language_spoken'];
+      $deareg -> language_spoken = $form_state['values']['language_spoken'];
 
       db_insert('vss_deareg') -> fields(array(
         'uid' => $deareg -> uid,
