@@ -175,15 +175,15 @@
       'type' => MENU_NORMAL_ITEM,
       'title' => 'Exams',
     );
-		
-		$items['preapp/test'] = array(
-			'page callback' => 'drupal_get_form',
-			'page_arguments' => array('vistaportal_test_form'),
-			'access arguments' => array('access content'),
-			'file' => 'test.inc',
-			'type' => MENU_CALLBACK,
-			'title' => 'Test',
-		);
+
+    $items['preapp/test'] = array(
+      'page callback' => 'drupal_get_form',
+      'page_arguments' => array('vistaportal_test_form'),
+      'access arguments' => array('access content'),
+      'file' => 'test.inc',
+      'type' => MENU_CALLBACK,
+      'title' => 'Test',
+    );
     return $items;
   }
 
@@ -321,31 +321,38 @@
    */
   function vistaportal_form_alter(&$form, &$form_state, $form_id) {
     global $user;
-   // if (substr($form_id, 0, 12) == 'vistaportal_' || substr($form_id, 0, 8) == 'register') {
-      $form['#attributes'] = array('class' => 'vistaportal');
-      $form['#ajax'] = array('enabled' => TRUE);
+    // if (substr($form_id, 0, 12) == 'vistaportal_' || substr($form_id, 0, 8) == 'register') {
+    $form['#attributes'] = array('class' => 'vistaportal');
+    $form['#ajax'] = array('enabled' => TRUE);
 
-      $form['#attributes'] = array('class' => array('vistaportal'));
-      //$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);
-      $path = drupal_get_path('module', 'vistaportal');
-      drupal_add_js($path . '/js/jquery.field.js');
-      drupal_add_js($path . '/js/autosave.js');
-      $settings['autosave']['url'] = url('autosave');
+    $form['#attributes'] = array('class' => array('vistaportal'));
+    //$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);
+    $path = drupal_get_path('module', 'vistaportal');
+    drupal_add_js($path . '/js/jquery.field.js');
+    drupal_add_js($path . '/js/autosave.js');
+    $settings['autosave']['url'] = url('autosave');
+    if ($_GET['q'] != 'system/ajax') {
       $settings['autosave']['q'] = $_GET['q'];
-      $settings['autosave']['form_id'] = $form_id;
+    }
+    $settings['autosave']['form_id'] = $form_id;
+    if (strlen($form_id) != strlen($form['#id'])) {
+      $settings['autosave']['form_id_id'] = str_replace('_', '-', $form_id);
+    }
+    else {
       $settings['autosave']['form_id_id'] = $form['#id'];
+    }
 
-      // If an autosaved version of the form exists, make it available via javascript.
-      if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
-        $settings['autosave'] = array_merge($settings['autosave'], array(
-          'serialized' => unserialize($autosaved_form['serialized']),
-          'saved_date' => format_date($autosaved_form['timestamp'], 'medium'),
-        ));
-      }
+    // If an autosaved version of the form exists, make it available via javascript.
+    if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
+      $settings['autosave'] = array_merge($settings['autosave'], array(
+        'serialized' => unserialize($autosaved_form['serialized']),
+        'saved_date' => format_date($autosaved_form['timestamp'], 'medium'),
+      ));
+    }
 
-      drupal_add_js($settings, 'setting');
-      drupal_add_js($path . '/js/jquery-post-autosave.js', 'file');
-   //}
+    drupal_add_js($settings, 'setting');
+    drupal_add_js($path . '/js/jquery-post-autosave.js', 'file');
+    //}
   }
 
   /**

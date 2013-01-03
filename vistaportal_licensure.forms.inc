@@ -26,12 +26,9 @@
       '#title' => t('Licenses'),
       '#collapsible' => FALSE,
     );
-		$form['licensure']['desc'] = array(
-			'#markup' => t('FCVS(Federation Credentials Verification) Profile #'),
-			'#required' => TRUE,
-		);
-		$form['licensure']['na'] = checkbox('Not Applicable');
-    $form['licensure']['fcvs'] = textfield();
+    $form['licensure']['na'] = checkbox('Not Applicable');
+    $form['licensure']['na']['#required'] = FALSE;
+    $form['licensure']['fcvs'] = textfield('FCVS(Federation Credentials Verification) Profile #');
 
     //This is the licenses form
     $form['licenses'] = array(
@@ -48,8 +45,8 @@
     }
 
     for ($i = 0; $i < $form_state['licenses_num']; $i++) {
-    	$form['licenses'][$i]['orig_lic'] = checkbox('Original State License');
-    	$form['licenses'][$i]['orig_lic']['#required'] = FALSE;
+      $form['licenses'][$i]['orig_lic'] = checkbox('Original State License');
+      $form['licenses'][$i]['orig_lic']['#required'] = FALSE;
       $form['licenses'][$i]['lic_type'] = lic('License Type');
       $form['licenses'][$i]['country'] = country('Country');
       $form['licenses'][$i]['state'] = state('State');
@@ -58,19 +55,20 @@
       $form['licenses'][$i]['date_expired'] = date_my('Expiration Date');
     }
 
-    $form['licenses']['add_another'] = array(
-      '#type' => 'submit',
-      '#value' => t('Add Additional License'),
-      '#submit' => array('vistaportal_licenses_add'),
-      '#limit_validation_errors' => array(),
-      '#ajax' => array(
-        'callback' => 'vistaportal_licenses_form_add_callback',
-        'wrapper' => 'licenses-fieldset-wrapper',
-        'method' => 'replaceWith',
-        'speed' => 'fast',
-      ),
-    );
-
+    if ($form_state['licenses_num'] < 3) {
+      $form['licenses']['add_another'] = array(
+        '#type' => 'submit',
+        '#value' => t('Add Additional License'),
+        '#submit' => array('vistaportal_licenses_add'),
+        '#limit_validation_errors' => array(),
+        '#ajax' => array(
+          'callback' => 'vistaportal_licenses_form_add_callback',
+          'wrapper' => 'licenses-fieldset-wrapper',
+          'method' => 'replaceWith',
+          'speed' => 'fast',
+        ),
+      );
+    }
     //First license is mandatory
     if ($form_state['licenses_num'] > 1) {
       $form['licenses']['remove_license'] = array(
@@ -100,47 +98,44 @@
     }
 
     for ($i = 0; $i < $form_state['deareg_num']; $i++) {
-       $form['deareg'][$i]['dea_state'] = array(
-       '#type' => 'checkboxes',
-       '#title' => 'DEA REGISTRATION',
-       '#options' => drupal_map_assoc(array(
-       t('Not Applicable'),
-       t('Pending')
-       )),
-       );
+      $form['deareg'][$i]['na'] = checkbox('Not Applicable');
+      $form['deareg'][$i]['na']['#required'] = FALSE;
+      $form['deareg'][$i]['pending'] = checkbox('Pending');
+      $form['deareg'][$i]['pending']['#required'] = FALSE;
       $form['deareg'][$i]['dea_country'] = country('Country');
       $form['deareg'][$i]['dea_lic_num'] = textfield('License #');
       $form['deareg'][$i]['dea_date_issued'] = date_my('Date Issued');
       $form['deareg'][$i]['dea_date_expired'] = date_my('Date Expired');
       $form['deareg'][$i]['schedules'] = array(
-       '#type' => 'checkboxes',
-       '#title' => t('Schedules'),
-       '#options' => drupal_map_assoc(array(
-       t('Not Applicable'),
-       t('All'),
-       2,
-       3,
-       4,
-       t('2N'),
-       t('3N'),
-       5
-       )),
-       );
+        '#type' => 'checkboxes',
+        '#title' => t('Schedules'),
+        '#options' => drupal_map_assoc(array(
+          t('Not Applicable'),
+          t('All'),
+          2,
+          3,
+          4,
+          t('2N'),
+          t('3N'),
+          5
+        )),
+      );
     }
 
-    $form['deareg']['add_another'] = array(
-      '#type' => 'submit',
-      '#value' => t('Add Additional DEA Registration'),
-      '#submit' => array('vistaportal_deareg_add'),
-      '#limit_validation_errors' => array(),
-      '#ajax' => array(
-        'callback' => 'vistaportal_deareg_form_add_callback',
-        'wrapper' => 'deareg-fieldset-wrapper',
-        'method' => 'replaceWith',
-        'speed' => 'fast',
-      ),
-    );
-
+    if ($form_state['deareg_num'] < 3) {
+      $form['deareg']['add_another'] = array(
+        '#type' => 'submit',
+        '#value' => t('Add Additional DEA Registration'),
+        '#submit' => array('vistaportal_deareg_add'),
+        '#limit_validation_errors' => array(),
+        '#ajax' => array(
+          'callback' => 'vistaportal_deareg_form_add_callback',
+          'wrapper' => 'deareg-fieldset-wrapper',
+          'method' => 'replaceWith',
+          'speed' => 'fast',
+        ),
+      );
+    }
     //First DEA registration is mandatory
 
     if ($form_state['deareg_num'] > 1) {
@@ -184,31 +179,29 @@
     db_update('vss_drupal_flags') -> fields(array('licensure' => 0, )) -> condition('uid', $user -> uid) -> execute();
 
     /*Overwrite any existing values in the licensure table.*/
+
     db_delete('vss_licensure') -> condition('uid', $user -> uid) -> execute();
 
     /*Insert the form_state values into the licensure table.
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
-    //  dsm($form_state, 'form state');
+
     $licensure = new stdClass();
     $licensure -> uid = $user -> uid;
     $licensure -> fcvs = $form_state['values']['licensure']['fcvs'];
-    $licensure -> language_spoken = $form_state['values']['licensure']['language_spoken'];
 
     db_insert('vss_licensure') -> fields(array(
       'uid' => $licensure -> uid,
       'fcvs' => $licensure -> fcvs,
-      'language_spoken' => $licensure -> language_spoken,
     )) -> execute();
 
     /*
      * Update the drupal_flags table by setting the licensure
      * status flag, letting us know that the form has been filled out.
      */
-    db_update('vss_drupal_flags') -> fields(array('licensure' => 1, )) -> condition('uid', $user -> uid) -> execute();
 
-    /*%&%&%&&%%&%&%&%&%&%&&%&%&%&%&%&%&&%&%&%&%&%&%&%&%&%&%&%&%%&%&%&*/
+    db_update('vss_drupal_flags') -> fields(array('licensure' => 1, )) -> condition('uid', $user -> uid) -> execute();
 
     /* Save the form values to the licenses table in
      * the database and set the flag in the drupal_flags
@@ -216,16 +209,18 @@
      * unset and then reset the licenses status flag in
      * the drupal_flags table.
      */
+
     db_update('vss_drupal_flags') -> fields(array('licenses' => 0, )) -> condition('uid', $user -> uid) -> execute();
 
     /*Overwrite any existing values in the licenses table.*/
+
     db_delete('vss_licenses') -> condition('uid', $user -> uid) -> execute();
 
     /*Insert the form_state values into the licenses table.
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
-    // dsm($form_state, 'form state');
+
     $licenses = new stdClass();
     foreach ($form_state['values']['licenses'] AS $key => $value) {
       $form_state['values']['licenses'][$key]['date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['licenses'][$key]['date_issued']));
@@ -248,13 +243,13 @@
         'date_expired' => $licenses -> date_expired,
       )) -> execute();
     }
+
     /*
      * Update the drupal_flags table by setting the deareg
      * status flag, letting us know that the form has been filled out.
      */
-    db_update('vss_drupal_flags') -> fields(array('licenses' => 1, )) -> condition('uid', $user -> uid) -> execute();
 
-    /*%&%&%&&%%&%&%&%&%&%&&%&%&%&%&%&%&&%&%&%&%&%&%&%&%&%&%&%&%%&%&%&*/
+    db_update('vss_drupal_flags') -> fields(array('licenses' => 1, )) -> condition('uid', $user -> uid) -> execute();
 
     /* Save the form values to the deareg table in
      * the database and set the flag in the drupal_flags
@@ -262,35 +257,37 @@
      * unset and then reset the deareg status flag in
      * the drupal_flags table.
      */
+
     db_update('vss_drupal_flags') -> fields(array('deareg' => 0, )) -> condition('uid', $user -> uid) -> execute();
 
     /*Overwrite any existing values in the deareg table.*/
+
     db_delete('vss_deareg') -> condition('uid', $user -> uid) -> execute();
 
     /*Insert the form_state values into the deareg table.
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
+
     dsm($form_state, 'form state');
     $deareg = new stdClass();
     foreach ($form_state['values']['deareg'] AS $key => $value) {
       $form_state['values']['deareg'][$key]['dea_date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_issued']));
       $form_state['values']['deareg'][$key]['dea_date_expired'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_expired']));
       $deareg -> uid = $user -> uid;
-      // $deareg -> dea_state = $form_state['values']['deareg'][$key]['dea_state'];
       $deareg -> dea_lic_num = $form_state['values']['deareg'][$key]['dea_lic_num'];
       $deareg -> country = $form_state['values']['deareg'][$key]['country'];
       $deareg -> dea_date_issued = $form_state['values']['deareg'][$key]['dea_date_issued'];
       $deareg -> dea_date_expired = $form_state['values']['deareg'][$key]['dea_date_expired'];
-      //$deareg -> schedules = $form_state['values']['deareg'][$key]['schedules'];
+      $deareg -> language_spoken = $form_state['values']['ldeareg'][$key]['language_spoken'];
+
       db_insert('vss_deareg') -> fields(array(
         'uid' => $deareg -> uid,
         'dea_lic_num' => $deareg -> dea_lic_num,
         'country' => $deareg -> country,
         'dea_date_issued' => $deareg -> dea_date_issued,
         'dea_date_expired' => $deareg -> dea_date_expired,
-        //  'dea_state' => $deareg -> dea_state,
-        //'schedules' => $deareg -> schedules,
+        'language_spoken' => $deareg -> language_spoken,
       )) -> execute();
     }
 
@@ -298,6 +295,7 @@
      * Update the drupal_flags table by setting the deareg
      * status flag, letting us know that the form has been filled out.
      */
+
     db_update('vss_drupal_flags') -> fields(array('deareg' => 1, )) -> condition('uid', $user -> uid) -> execute();
 
     $user = user_load($form_state['uid']);
@@ -308,6 +306,7 @@
   /*
    * Ajax callback for the license form
    */
+
   function vistaportal_licenses_form_add_callback($form, $form_state) {
     return $form['licenses'];
   }
@@ -315,6 +314,7 @@
   /*
    * Ajax callback for the dea registration form
    */
+
   function vistaportal_deareg_form_add_callback($form, $form_state) {
     return $form['deareg'];
   }
@@ -322,6 +322,7 @@
   /*
    * Increment the counter when the button is pressed
    */
+
   function vistaportal_licenses_add($form, &$form_state) {
     $form_state['licenses_num']++;
     $form_state['rebuild'] = TRUE;
@@ -330,6 +331,7 @@
   /*
    * Decrement the counter when the button is pressed
    */
+
   function vistaportal_licenses_remove($form, &$form_state) {
     if ($form_state['licenses_num'] > 1) {
       $form_state['licenses_num']--;
@@ -340,6 +342,7 @@
   /*
    * Increment the counter when the button is pressed
    */
+
   function vistaportal_deareg_add($form, &$form_state) {
     $form_state['deareg_num']++;
     $form_state['rebuild'] = TRUE;
@@ -348,6 +351,7 @@
   /*
    * Decrement the counter when the button is pressed
    */
+
   function vistaportal_deareg_remove($form, &$form_state) {
     if ($form_state['deareg_num'] > 1) {
       $form_state['deareg_num']--;
