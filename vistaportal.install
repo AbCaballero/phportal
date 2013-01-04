@@ -1,0 +1,921 @@
+<?php
+
+  /**
+   * Author: Tejdeep Addula
+   * Company: Aner Group
+   * Client: Vista Staffing Solutions
+   * Date: December 14th, 2012
+   * Notes: This file implements the hook_install().
+   */
+
+  /**
+   * Implements the hook_install().
+   */
+
+  function vistaportal_install() {
+    drupal_install_schema('vistapotal');
+  }
+
+  /**
+   * Implementation of hook_uninstall().
+   */
+
+  function vistaportal_uninstall() {
+    drupal_uninstall_schema('vistaportal');
+  }
+
+  /**
+   * Implementation of hook_enable().
+   */
+  function vistaportal_enable() {
+    drupal_uninstall_schema('vistaportal');
+    drupal_install_schema('vistaportal');
+  }
+
+  /**
+   * Implementation of hook_schema()
+   */
+
+  function vistaportal_schema() {
+    return array(
+      'vss_affiliations' => array(
+        'description' => t("Table to save the affiliations info"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'facility' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'date_from' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'date_to' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'address' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'city' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'zip' => array(
+            'type' => 'varchar',
+            'length' => 11,
+            'not null' => TRUE,
+          ),
+          'capacity' => array(
+            'type' => 'int',
+            'length' => 4,
+            'not null' => TRUE,
+          ),
+          'licensure' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'licenses' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'deareg' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+        ),
+      ),
+      'vss_autosaved_forms' => array(
+        'description' => t("Table to save forms in the database"),
+        'fields' => array(
+          'form_id' => array(
+            'type' => 'varchar',
+            'length' => 64,
+            'not null' => TRUE,
+          ),
+          'path' => array(
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => TRUE,
+          ),
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'timestamp' => array(
+            'type' => 'int',
+            'length' => 11,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'serialized' => array(
+            'type' => 'text',
+            'not null' => TRUE,
+            'size' => 'big',
+          ),
+        ),
+      ),
+      'vss_certifications' => array(
+        'description' => t("Table to save certifications information"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'board_status' => array(
+            'mysql_type' => 'enum(\'certified\',\'prepared\')',
+            'not null' => TRUE,
+          ),
+          'board' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'board_cert_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'other' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'bcls' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'bcls_exp_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'acls' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'acls_exp_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'atls' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'atls_exp_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'pals' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'pals_exp_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'nrp' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'nrp_exp_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'also' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'also_exp_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'mqsa' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'mqsa_exp_date' => array(
+            'mysql_type' => 'datetime',
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+        ),
+      ),
+      'vss_disciplinary' => array(
+        'description' => t("Table to save Disciplinary information in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'length' => 10,
+            'not null' => TRUE,
+          ),
+          'med_lic' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'other_lic' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'dea_reg' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'academic_apt' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'med_staff_apt' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'clinical_priv' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'perogatives' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'affiliation' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'board_cert' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'pro_office' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'other_sanction' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'convicted' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'malpractice' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'insurance' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'med_condition' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'treatment' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+          'other' => array(
+            'mysql_type' => 'enum(\'yes\',\'no\')',
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_drupal_flags' => array(
+        'decription' => t("Table to save flags information in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => FALSE,
+            'default' => 0,
+          ),
+          'identity' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'premed' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'medschool' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'internship' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'residency' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'affiliations' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'certifications' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'licensure' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'licenses' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'deareg' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'disciplinary' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'ref' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+          'release' => array(
+            'type' => 'varchar',
+            'length' => 1,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+        ),
+      ),
+      'vss_identity' => array(
+        'description' => t("Table to save identification information in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'last_name' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'first_name' => array(
+            'type' => 'varchar',
+            'length' => 15,
+            'not null' => TRUE,
+          ),
+          'middle_init' => array(
+            'type' => 'varchar',
+            'length' => 15,
+            'not null' => TRUE,
+          ),
+          'address' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'city' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'zip' => array(
+            'type' => 'varchar',
+            'length' => 11,
+            'not null' => TRUE,
+          ),
+          'phone_choice' => array(
+            'type' => 'varchar',
+            'length' => 4,
+            'not null' => TRUE,
+          ),
+          'phone' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'email' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'dob' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'birth_city' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'birth_state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'birth_country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'npi' => array(
+            'type' => 'varchar',
+            'length' => 10,
+            'not null' => FALSE,
+          ),
+          'verification' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'marital_status' => array(
+            'type' => 'varchar',
+            'length' => 7,
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'spouse' => array(
+            'type' => 'varchar',
+            'length' => 39,
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'number_children' => array(
+            'type' => 'int',
+            'size' => 'small',
+            'length' => 6,
+            'not null' => TRUE,
+            'default' => 0,
+          ),
+        ),
+      ),
+      'vss_internship' => array(
+        'description' => t("Table to save internship information in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'type' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'institution' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'city' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'date_from' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'date_to' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'prog_dir' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_licensure' => array(
+        'description' => t("Table to save licensure info in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'fcvs' => array(
+            'type' => 'varchar',
+            'length' => 15,
+            'not null' => FALSE,
+          ),
+          'language_spoken' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+        ),
+      ),
+      'vss_licenses' => array(
+        'description' => t("Table to save licenses info in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'lic_type' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'lic_number' => array(
+            'type' => 'varchar',
+            'length' => 15,
+            'not null' => TRUE,
+          ),
+          'date_issued' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'date_expired' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_deareg' => array(
+        'description' => t("Table to store dea registration deatils in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'dea_lic_num' => array(
+            'type' => 'varchar',
+            'length' => 10,
+            'not null' => TRUE,
+          ),
+          'dea_date_issued' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'dea_date_expired' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_medschool' => array(
+        'description' => t("Table to save medschool information in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'school' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'degree' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'city' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'date_from' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'date_to' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'ecfmg' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_premed' => array(
+        'description' => t("Table to save premedical information in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'school' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'degree' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'city' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'date_from' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'date_to' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_profile_data' => array(
+        'description' => t("Table to save Profile data in the database"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'entity_id' => array(
+            'type' => 'int',
+            'length' => 10,
+            'not null' => FALSE,
+          ),
+          'first_name' => array(
+            'type' => 'varchar',
+            'length' => 15,
+            'not null' => TRUE,
+          ),
+          'last_name' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'phone' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'email' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'primary_specialty' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'secondary_specialty' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => FALSE,
+            'default' => NULL,
+          ),
+          'locum_us' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'locum_int' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'perm' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'gov_op' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'new_user_flag' => array(
+            'mysql_type' => 'enum(\'0\',\'1\')',
+            'not null' => TRUE,
+            'default' => '0',
+          ),
+        ),
+        'foreign key' => array('uid'),
+      ),
+      'vss_references' => array(
+        'description' => t("Table to save references information"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'name' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'association' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'speciality' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'home_phone' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'work_phone' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_residency' => array(
+        'description' => t("Table to save residency information"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'type' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'institution' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+          'city' => array(
+            'type' => 'varchar',
+            'length' => 20,
+            'not null' => TRUE,
+          ),
+          'state' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+          'country' => array(
+            'type' => 'varchar',
+            'length' => 60,
+            'not null' => TRUE,
+          ),
+          'date_from' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'date_to' => array(
+            'mysql_type' => 'datetime',
+            'not null' => TRUE,
+          ),
+          'prog_dir' => array(
+            'type' => 'varchar',
+            'length' => 40,
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+      'vss_release' => array(
+        'description' => t("Table to save release terms"),
+        'fields' => array(
+          'uid' => array(
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ),
+          'terms' => array(
+            'type' => 'varchar',
+            'length' => 3,
+            'not null' => TRUE,
+          ),
+        ),
+      ),
+    );
+  }
