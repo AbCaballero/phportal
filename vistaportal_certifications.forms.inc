@@ -1,132 +1,315 @@
 <?php
-/**
- * Author: Andrew Browning
- * Company: Aner Group
- * Client: Vista Staffing Solutions
- * Date: November 19th, 2012
- * Notes: This file contains the certifications section of the 
- * physicians pre-application form.
- */
+  /**
+   * Author: Andrew Browning
+   * Company: Aner Group
+   * Client: Vista Staffing Solutions
+   * Date: November 19th, 2012
+   * Notes: This file contains the certifications section of the
+   * physicians pre-application form.
+   */
 
-/*
- * This is the form callback for the certifications form.
- */ 
-function vistaportal_certifications_form($form, &$form_state){
-	include_once('vistaportal.fields.inc');
-	include_once('vistaportal_functions.inc');	
-	$form = array();
-	$form['certifications1'] = array(
-		'#type'=>'fieldset',
-		'#title' => t('Certifications'),
-		'#collapsible' => FALSE,
-	);
-	$form['certifications1']['desc'] = array(
-		'#markup' => t('Board Certification'));
-	$form['certifications1']['not_board_cert'] = array(
-		'#type' => 'checkbox',
-		'#title' => t('Not Board Certified'),
-		'#required' => FALSE,
-	);	
-	$form['certifications1']['board_status'] = radios_board_status('Current Specialty Board Status');
-	$form['certifications1']['board'] = cert('American Board of Medical Sciences');
-	$form['certifications1']['cert/recert'] = status('Was this a Certification or a Recertification?');
-	$form['certifications1']['specialty'] = medical_specialty('Specialty');
-	$form['certifications1']['date'] = date_my('Certification/Recertification Date');
-	$form['certifications1']['certnum'] = textfield('Certificate #');
-	
-	$form['certifications2']['additional'] = array(
-		'#markup' => t('Additional Certification'),
-	);
-	$form['certifications2']['na'] = array(
-		'#type' => 'checkbox',
-		'#title' => t('Not Applicable'),
-	);
-	$form['certifications2']['type'] = cert('Type');
-	$form['certifications2']['name'] = array(
-		'#type' => 'textfield',
-		'#states' => array(
-			'visible'=> array(
-				':input[name="type"]' => array('value' => 'Other'),
-	)));
-	$form['certifications2']['certnum'] = textfield('Certificate#');
-	$form['certifications2']['exp_date'] = date_my('Expiration Date');
-	
-	$form['certification']['ecfmg'] = textfield('ECFMG CERTIFICATE');
-	$form['certification']['ecfmg_exp'] = date_my('Expiration Date');
-	
-	$form['submit'] = array(
-		'#type' => 'submit',
-		'#value' => t('Save & Continue'),
-		'#name' => 'next',
-		'#submit' => array('vistaportal_certifications_form_submit'),
-	);
+  /*
+   * This is the form callback for the certifications form.
+   */
+  function vistaportal_certifications_form($form, &$form_state) {
+    include_once ('vistaportal.fields.inc');
+    include_once ('vistaportal_functions.inc');
+    $form = array();
 
-return $form;
-}
-/*
- * This is the form submission callback for the certifications form.
- */
-			
-function vistaportal_certifications_form_submit($form, &$form_state){
-	global $user;
-	$account = user_load($user -> uid);
-	//$user_name;
-	//$html_string;
-	//make_pdf;
-	//make_tiff;
-	//save record
+    $form['certifications'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Certifications'),
+      '#collapsible' => FALSE,
+    );
 
-/* If the user refills this form, we need to unset the
- * certifications status flag in the vss_drupal_flags table.	
- */
-	db_update('vss_drupal_flags	')
-		->fields(array(
-			'certifications'=>0,
-	))
-		->condition('uid', $user->uid)
-		->execute();
+    //This counter will be used to determine how many board certifications to add
+    if (empty($form_state['boardcerts_count'])) {
+      $form_state['boardcerts_count'] = 1;
+    }
 
-/*Overwrite any existing values in the certifications table.*/
-	db_delete('vss_certifications')
-		->condition('uid', $user->uid)
-		->execute();		
+    $form['certifications']['board'] = array(
+      '#type' => 'container',
+      '#prefix' => '<div id="board-fieldset-wrapper">',
+      '#suffix' => '</div>',
+    );
 
-/*Insert the form_state values into the certifications table.*/
-	$certifications = new stdClass();
-	$certifications->uid = $user->uid;
-	$certifications->not_board_cert = $form_state['values']['not_board_cert'];
-	$certifications->board_status = $form_state['values']['board_status'];
-	$certifications->board = $form_state['values']['board'];
-	$certifications->board_cert_recert = $form_state['values']['cert/recert'];
-	$certifications->specialty = $form_state['values']['specialty'];
-	$certifications->board_cert_date = $form_state['values']['date'];
-	$certifications->board_certnum = $form_state['values']['certnum'];
+    for ($i = 0; $i < $form_state['boardcerts_count']; $i++) {
+      $form['certifications']['board'][$i] = getBoardCertfields();
+    }
 
-	
-	db_insert('vss_certifications')
-		->fields(array(
-			'uid' => $certifications->uid,
-			'not_board_cert' => $certifications->not_board_cert,
-			'board_status' => $certifications->board_status,
-			'board' => $certifications->board,
-			'board_cert_recert' => $certifications->board_cert_recert,
-			'board_specialty' => $certifications->specialty,
-			'board_cert_date' => $certifications->board_cert_date,
-			'board_cert_num' => $certifications->board_cert_num,
-	))
-		->execute();
+    $form['certifications']['board']['board_another'] = array(
+      '#type' => 'submit',
+      '#value' => t('Add another board certificate'),
+      '#submit' => array('vistaportal_board_add'),
+      '#limit_validation_errors' => array(),
+      '#ajax' => array(
+        'callback' => 'vistaportal_boardcert_callback',
+        'wrapper' => 'board-fieldset-wrapper',
+        'method' => 'replaceWith',
+        'speed' => 'fast',
+      ),
+    );
 
-/*
- * Update the vss_drupal_flags table by setting the certifications 
- * status flag, letting us know that the form has been filled out.
- */		
-	db_update('vss_drupal_flags	')
-		->fields(array(
-			'certifications'=>1,
-	))
-		->condition('uid', $user->uid)
-		->execute();			
-	$user = user_load($form_state['uid']);
-	drupal_goto('preapp/licensure' . $user->uid);	
-}
-	
+    if ($form_state['boardcerts_count'] > 1) {
+
+      $form['certifications']['board']['board_remove'] = array(
+        '#type' => 'submit',
+        '#value' => t('Remove board certificate'),
+        '#submit' => array('vistaportal_board_remove'),
+        '#limit_validation_errors' => array(),
+        '#ajax' => array(
+          'callback' => 'vistaportal_boardcert_callback',
+          'wrapper' => 'board-fieldset-wrapper',
+        ),
+      );
+    }
+    /*
+     $form['certifications']['board_status'] = radios_board_status('Current Specialty Board Status');
+     $form['certifications']['board'] = medical_specialty('American Board of Medical Sciences:');
+     $form['certifications']['specialty'] = array(
+     '#type' => 'textfield',
+     '#title' => t('Specialty'),
+     '#required' => TRUE,
+     '#states' => array(
+     'visible'=> array(
+     ':input[name="board"]' => array('value' => 'Not Listed'),
+     )));
+     $form['certifications']['cert_recert'] = cert_recert('Was this a certification or a Recertification?');
+     $form['certifications']['board_exp_date'] = date_my('Date');
+     $form['certifications']['cert_number'] = textfield('Ceritificate #');
+     * */
+
+    //This counter will be used to determine how many other certifications to add
+    if (empty($form_state['othcerts_count'])) {
+      $form_state['othcerts_count'] = 1;
+    }
+    $form['certifications']['addCerts'] = array(
+      '#type' => 'container',
+      '#prefix' => '<div id="othcert-fieldset-wrapper">',
+      '#suffix' => '</div>',
+    );
+    for ($i = 0; $i < $form_state['othcerts_count']; $i++) {
+      $form['certifications']['addCerts']['other'][$i]['set'] = array(
+        '#type' => 'fieldset',
+        '#title' => 'Additional Certifications',
+        '#collapsible' => FALSE,
+      );
+      $form['certifications']['addCerts']['other'][$i]['set']['other_certifications'] = other_certifications('Type');
+      $form['certifications']['addCerts']['other'][$i]['set']['exp_date'] = date_my('Expiration Date');
+    }
+
+    $form['certifications']['addCerts']['othcert_another'] = array(
+      '#type' => 'submit',
+      '#value' => t('Add another certificate'),
+      '#submit' => array('vistaportal_othcert_add'),
+      '#limit_validation_errors' => array(),
+      '#ajax' => array(
+        'callback' => 'vistaportal_othcert_callback',
+        'wrapper' => 'othcert-fieldset-wrapper',
+        'method' => 'replaceWith',
+        'speed' => 'fast',
+      ),
+    );
+
+    if ($form_state['othcerts_count'] > 1) {
+      //dsm($form_state['othcerts_count'], 'here');
+      $form['certifications']['addCerts']['othcert_remove'] = array(
+        '#type' => 'submit',
+        '#value' => t('Remove certificate'),
+        '#submit' => array('vistaportal_othcert_remove'),
+        '#limit_validation_errors' => array(),
+        '#ajax' => array(
+          'callback' => 'vistaportal_othcert_callback',
+          'wrapper' => 'othcert-fieldset-wrapper',
+        ),
+      );
+    }
+
+    $form['certifications']['ecfmg_cert_number'] = textfield('ECFMG Certificate #');
+    $form['certifications']['ecfmg_exp_date'] = date_my('Expiration Date');
+
+    /*$form['certifications']['other'] = textfield('Other Current ABMS/Subspecialty Certification');
+     $form['certifications']['bcls'] = checkbox('BCLS');
+     $form['certifications']['bcls']['exp'] = date_popup('Expiration Date');
+     $form['certifications']['acls'] = checkbox('ACLS');
+     $form['certifications']['acls']['exp'] = date_popup('Expiration Date');
+     $form['certifications']['atls'] = checkbox('ATLS');
+     $form['certifications']['atls']['exp'] = date_popup('Expiration Date');
+     $form['certifications']['pals'] = checkbox('PALS');
+     $form['certifications']['pals']['exp'] = date_popup('Expiration Date');
+     $form['certifications']['nrp'] = checkbox('NRP/NALS');
+     $form['certifications']['nrp']['exp'] = date_popup('Expiration Date');
+     $form['certifications']['also'] = checkbox('ALSO');
+     $form['certifications']['also']['exp'] = date_popup('Expiration Date');
+     $form['certifications']['mqsa'] = checkbox('MQSA');
+     $form['certifications']['mqsa']['exp'] = date_popup('Expiration Date');*/
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save & Continue'),
+      '#name' => 'next',
+      '#submit' => array('vistaportal_certifications_form_submit'),
+    );
+    $form['prev'] = button('Previous');
+    $form['save_logout'] = button('Save & Logout');
+
+    return $form;
+  }
+
+  function getBoardCertfields() {
+
+    $boardcerts['set'] = array(
+      '#type' => 'fieldset',
+      '#title' => 'Board Certifications',
+      '#collapsible' => FALSE,
+    );
+
+    $boardcerts['set']['board_status'] = radios_board_status('Current Specialty Board Status');
+    $boardcerts['set']['board'] = medical_specialty('American Board of Medical Sciences:');
+    $boardcerts['set']['specialty'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Specialty'),
+      '#required' => TRUE,
+      '#states' => array('visible' => array(':input[name="board"]' => array('value' => 'Not Listed'), ))
+    );
+    $boardcerts['set']['cert_recert'] = cert_recert('Was this a certification or a Recertification?');
+    $boardcerts['set']['board_exp_date'] = date_my('Date');
+    $boardcerts['set']['cert_number'] = textfield('Ceritificate #');
+
+    return $boardcerts;
+  }
+
+  /*
+   * Ajax callback for the premed form
+   */
+  function vistaportal_boardcert_callback($form, $form_state) {
+
+    return $form['certifications']['board'];
+  }
+
+  /*
+   * Increment the counter when the button is pressed
+   */
+  function vistaportal_board_add($form, &$form_state) {
+    $form_state['boardcerts_count']++;
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /*
+   * Decrement the counter when the button is pressed
+   */
+  function vistaportal_board_remove($form, &$form_state) {
+    if ($form_state['boardcerts_count'] > 1) {
+      $form_state['boardcerts_count']--;
+    }
+    dsm('here');
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /*
+   * Ajax callback for the premed form
+   */
+  function vistaportal_othcert_callback($form, $form_state) {
+
+    return $form['certifications']['addCerts'];
+  }
+
+  /*
+   * Increment the counter when the button is pressed
+   */
+  function vistaportal_othcert_add($form, &$form_state) {
+    $form_state['othcerts_count']++;
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /*
+   * Decrement the counter when the button is pressed
+   */
+  function vistaportal_othcert_remove($form, &$form_state) {
+    if ($form_state['othcerts_count'] > 1) {
+      $form_state['othcerts_count']--;
+    }
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /*
+   * This is the form submission callback for the certifications form.
+   */
+
+  function vistaportal_certifications_form_submit($form, &$form_state) {
+    global $user;
+    $account = user_load($user -> uid);
+    //$user_name;
+    //$html_string;
+    //make_pdf;
+    //make_tiff;
+    //save record
+
+    /* If the user refills this form, we need to unset the
+     * certifications status flag in the vss_drupal_flags table.
+     */
+    db_update('vss_drupal_flags ') -> fields(array('certifications' => 0, )) -> condition('uid', $user -> uid) -> execute();
+
+    /*Overwrite any existing values in the certifications table.*/
+    db_delete('vss_certifications') -> condition('uid', $user -> uid) -> execute();
+
+    /*Insert the form_state values into the certifications table.*/
+    $certifications = new stdClass();
+    $certifications -> uid = $user -> uid;
+    $certifications -> board_status = $form_state['values']['board_status'];
+    $certifications -> board = $form_state['values']['board'];
+    $certifications -> cert_recert = $form_state['values']['cert_recert'];
+    $certifications -> cert_number = $form_state['values']['cert_number'];
+    $certifications -> board_cert_date = $form_state['values']['certifications']['board_cert_date'] = date('Y-m-d H:i:s', strtotime($form_state['values']['certifications']['board_cert_date']));
+    $certifications -> other = $form_state['values']['other_certifications'];
+    $certifications -> exp_date = $form_state['values']['certifications']['exp_date'] = date('Y-m-d H:i:s', strtotime($form_state['values']['certifications']['exp_date']));
+    $certifications -> ecfmg_cert_number = $form_state['values']['ecfmg_cert_numb'];
+    $certifications -> ecfmg_exp_date = $form_state['values']['certifications']['ecfmg_exp_date'] = date('Y-m-d H:i:s', strtotime($form_state['values']['certifications']['ecfmg_exp_date']));
+    /*$certifications->bcls = $form_state['values']['bcls'];
+     $certifications->bcls_exp_date = $form_state['values']['bcls_exp'];
+     $certifications->acls = $form_state['values']['acls'];
+     $certifications->acls_exp_date = $form_state['values']['acls_exp'];
+     $certifications->atls = $form_state['values']['atls'];
+     $certifications->atls_exp_date = $form_state['values']['atls_exp'];
+     $certifications->pals = $form_state['values']['pals'];
+     $certifications->pals_exp_date = $form_state['values']['pals_exp'];
+     $certifications->nrp = $form_state['values']['nrp'];
+     $certifications->nrp_exp_date = $form_state['values']['nrp_exp'];
+     $certifications->also = $form_state['values']['also'];
+     $certifications->also_exp_date = $form_state['values']['also_exp'];
+     $certifications->mqsa = $form_state['values']['mqsa'];
+     $certifications->mqsa_exp_date = $form_state['values']['mqsa_exp']; */
+
+    db_insert('vss_certifications') -> fields(array(
+      'uid' => $certifications -> uid,
+      'board_status' => $certifications -> board_status,
+      'board' => $certifications -> board,
+      'board_cert_date' => $certifications -> board_cert_date,
+      'other_certifications' => $certifications -> other_certifications,
+      'cert_recert' => $certifications -> cert_recert,
+      'cert_number' => $certifications -> cert_number,
+      'exp_date' => $certifications -> exp_date,
+      'ecfmg_cert_number' => $certifications -> ecfmg_cert_number,
+      /* 'bcls' => $certifications->bcls,
+       'bcls_exp_date' => $certifications->bcls_exp_date,
+       'acls' => $certifications->acls,
+       'acls_exp_date' => $certifications->acls_exp_date,
+       'atls' => $certifications->atls,
+       'atls_exp_date' => $certifications->atls_exp_date,
+       'pals' => $certifications->pals,
+       'pals_exp_date' => $certifications->pals_exp_date,
+       'nrp' => $certifications->nrp,
+       'nrp_exp_date' => $certifications->nrp_exp_date,
+       'also' => $certifications->also,
+       'also_exp_date' => $certifications->also_exp_date,
+       'mqsa' => $certifications->mqsa,
+       'mqsa_exp_date' => $certifications->mqsa_exp_date,*/
+    )) -> execute();
+
+    /*
+     * Update the vss_drupal_flags table by setting the certifications
+     * status flag, letting us know that the form has been filled out.
+     */
+    db_update('vss_drupal_flags ') -> fields(array('certifications' => 1, )) -> condition('uid', $user -> uid) -> execute();
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/licensure' . $user -> uid);
+  }

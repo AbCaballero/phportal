@@ -25,7 +25,6 @@
     drupal_add_js($path . '/js/jquery.autotab-1.1b.js', 'file');
     drupal_add_js($path . '/js/jquery.ba-untils.min.js');
     drupal_add_css($path . '../../themes/jobapp/css/global.css');
-    drupal_add_css($path . '../../themes/jobapp/css/date.css');
 
     /*This allows jQuery update module to function properly.*/
 
@@ -277,7 +276,7 @@
 
     $fields = array(
       'name' => $form_state['values']['email'],
-      'pass' => $form_state['values']['password'],
+    //  'pass' => $form_state['values']['password'],
       'mail' => $form_state['values']['email'],
       'status' => 1,
       'init' => $form_state['values']['email'],
@@ -291,8 +290,8 @@
     $register -> lname = $form_state['values']['lname'];
     $register -> phone = $form_state['values']['phone'];
     $register -> email = $form_state['values']['email'];
-    $register -> question = $form_state['values']['question'];
-    $register -> answer = $form_state['values']['answer'];
+   // $register -> question = $form_state['values']['question'];
+   // $register -> answer = $form_state['values']['answer'];
     $register -> primary_specialty = $form_state['values']['primary'];
     $register -> secondary_specialty = $form_state['values']['secondary'];
     $register -> locum_us = $form_state['values']['locum_us'];
@@ -306,8 +305,8 @@
       'last_name' => $register -> lname,
       'phone' => $register -> phone,
       'email' => $register -> email,
-      'question' => $register -> question,
-      'answer' => $register -> answer,
+     // 'question' => $register -> question,
+     // 'answer' => $register -> answer,
       'primary_specialty' => $register -> primary_specialty,
       'secondary_specialty' => $register -> secondary_specialty,
       'locum_us' => $register -> locum_us,

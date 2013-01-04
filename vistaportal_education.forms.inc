@@ -39,7 +39,6 @@
       $form_state['p_num_schools'] = 1;
     }
 		
-    unset($form_state['values']['premed']['add_another'], $form_state['values']['med']['add_another']); 
     for ($i = 0; $i < $form_state['p_num_schools']; $i++) {
       $form['premed'][$i]['school'] = textfield('School of Graduation');
 			$form['premed'][$i]['school']['#required'] = FALSE;
