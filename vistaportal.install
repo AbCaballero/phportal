@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Author: Tejdeep Addula
  * Company: Aner Group
@@ -551,6 +550,7 @@ function vistaportal_schema() {
     ),
         'vss_licensure' => array(
         'description' => t(""),
+
         'fields' => array(
           'uid' => array(
             'type' => 'int',

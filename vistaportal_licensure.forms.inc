@@ -28,17 +28,15 @@
     );
 
     $form['licensure']['na'] = checkbox('Not Applicable');
-		$form['licensure']['na']['#required'] = FALSE;
+    $form['licensure']['na']['#required'] = FALSE;
     $form['licensure']['fcvs'] = textfield('FCVS(Federation Credentials Verification) Profile #');
-
-
-		//This is the line separator
+    //This is the line separator
     $form['licensure']['line3'] = array(
-	  '#prefix' => '<div class="line-solid">',
-		//'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line-solid')),
-		'#suffix' => '</div>',
-	  );
+      '#prefix' => '<div class="line-solid">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line-solid')),
+      '#suffix' => '</div>',
+    );
 
     //This is the licenses form
     $form['licenses'] = array(
@@ -78,13 +76,13 @@
       ),
     );
 
-		//This is the line separator
+    //This is the line separator
     $form['medlicensure']['line'] = array(
-	  '#prefix' => '<div class="line-solid1">',
-		//'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line-solid')),
-		'#suffix' => '</div>',
-	  );
+      '#prefix' => '<div class="line-solid1">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line-solid')),
+      '#suffix' => '</div>',
+    );
 
     //First license is mandatory
     if ($form_state['licenses_num'] > 1) {
@@ -109,10 +107,10 @@
       '#suffix' => '</div>',
     );
 
-      $form['deareg']['na'] = checkbox('Not Applicable');
-      $form['deareg']['na']['#required'] = FALSE;
-      $form['deareg']['pending'] = checkbox('Pending');
-      $form['deareg']['pending']['#required'] = FALSE;
+    $form['deareg']['na'] = checkbox('Not Applicable');
+    $form['deareg']['na']['#required'] = FALSE;
+    $form['deareg']['pending'] = checkbox('Pending');
+    $form['deareg']['pending']['#required'] = FALSE;
 
     //This counter will be used to determine how many lincenses sections to add
     if (empty($form_state['deareg_num'])) {
@@ -125,49 +123,49 @@
       $form['deareg'][$i]['dea_lic_num'] = textfield('License #');
       $form['deareg'][$i]['dea_date_issued'] = date_my('Date Issued');
       $form['deareg'][$i]['dea_date_expired'] = date_my('Date Expired');
-			$form['deareg'][$i]['schedule'] = array(
-			  '#prefix' => '<div class="schedule">',
-		    '#markup' => 'Schedule',
-		    '#required' => TRUE,
-		     '#suffix' => '</div>',
-			 );
-			$form['deareg'][$i]['not'] = checkbox('Not Applicable');
-			$form['deareg'][$i]['not']['#required'] = FALSE;
-			$form['deareg'][$i]['all'] = checkbox('All');
-			$form['deareg'][$i]['all']['#required'] = FALSE;
+      $form['deareg'][$i]['schedule'] = array(
+        '#prefix' => '<div class="schedule">',
+        '#markup' => 'Schedule',
+        '#required' => TRUE,
+        '#suffix' => '</div>',
+      );
+      $form['deareg'][$i]['not'] = checkbox('Not Applicable');
+      $form['deareg'][$i]['not']['#required'] = FALSE;
+      $form['deareg'][$i]['all'] = checkbox('All');
+      $form['deareg'][$i]['all']['#required'] = FALSE;
       $form['deareg'][$i]['all']['#suffix'] = '<div class="small-line"></div>';
-			
-			$form['deareg'][$i]['schedules2'] = checkbox('2');
-			$form['deareg'][$i]['schedules2']['#required'] = FALSE;
-			
-			$form['deareg'][$i]['schedules3'] = checkbox('3');
-			$form['deareg'][$i]['schedules3']['#required'] = FALSE;
-			
-			$form['deareg'][$i]['schedules4'] = checkbox('4');
-			$form['deareg'][$i]['schedules4']['#required'] = FALSE;
-			
-			$form['deareg'][$i]['schedules2N'] = checkbox('2N');
-			$form['deareg'][$i]['schedules2N']['#required'] = FALSE;
-			
-			$form['deareg'][$i]['schedules3N'] = checkbox('3N');
-			$form['deareg'][$i]['schedules3N']['#required'] = FALSE;
-			
-			$form['deareg'][$i]['schedules5'] = checkbox('5');
-			$form['deareg'][$i]['schedules5']['#required'] = FALSE;
+
+      $form['deareg'][$i]['schedules2'] = checkbox('2');
+      $form['deareg'][$i]['schedules2']['#required'] = FALSE;
+
+      $form['deareg'][$i]['schedules3'] = checkbox('3');
+      $form['deareg'][$i]['schedules3']['#required'] = FALSE;
+
+      $form['deareg'][$i]['schedules4'] = checkbox('4');
+      $form['deareg'][$i]['schedules4']['#required'] = FALSE;
+
+      $form['deareg'][$i]['schedules2N'] = checkbox('2N');
+      $form['deareg'][$i]['schedules2N']['#required'] = FALSE;
+
+      $form['deareg'][$i]['schedules3N'] = checkbox('3N');
+      $form['deareg'][$i]['schedules3N']['#required'] = FALSE;
+
+      $form['deareg'][$i]['schedules5'] = checkbox('5');
+      $form['deareg'][$i]['schedules5']['#required'] = FALSE;
 
       /*$form['deareg'][$i]['schedules'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t(''),
-        '#options' => drupal_map_assoc(array(
-          2,
-          3,
-          4,
+       '#type' => 'checkboxes',
+       '#title' => t(''),
+       '#options' => drupal_map_assoc(array(
+       2,
+       3,
+       4,
 
-          t('2N'),
-          t('3N'),
-          5,
-        )),
-      );*/
+       t('2N'),
+       t('3N'),
+       5,
+       )),
+       );*/
     }
 
     $form['deareg']['add_another'] = array(
@@ -197,40 +195,40 @@
         ),
       );
     }
-
-		//This is the line separator
+    //This is the line separator
     $form['deareg']['lines'] = array(
-	  '#prefix' => '<div class="line-solid">',
-		//'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line-solid')),
-		'#suffix' => '</div>',
-	  );
+      '#prefix' => '<div class="line-solid">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line-solid')),
+      '#suffix' => '</div>',
+    );
+
     $form['deareg']['language_spoken'] = textfield('In addition to English, other languages spoken
         with communication ease and/or fluency');
     //this is a line at the bottom
-	$form['last']['line'] = array(
-	'#prefix' => '<div class="line_left">',
-		//'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line_left')),
-		'#suffix' => '</div>',
-		);
+    $form['last']['line'] = array(
+      '#prefix' => '<div class="line_left">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line_left')),
+      '#suffix' => '</div>',
+    );
 
-		$form['last']['required_field'] = array(
-	'#prefix' => '<div class="required_field2">',
-		'#markup' => 'Required Field',
-		'#required' => TRUE,
-		'#suffix' => '</div>',
-		);
-		$form['submit'] = array(
+    $form['last']['required_field'] = array(
+      '#prefix' => '<div class="required_field2">',
+      '#markup' => 'Required Field',
+      '#required' => TRUE,
+      '#suffix' => '</div>',
+    );
+    $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Next'),
       '#name' => 'next',
       '#submit' => array('vistaportal_licensure_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
-		$form['save_logout'] = button('Save & Logout');
+    $form['save_logout'] = button('Save & Logout');
     $form['prev'] = button('Previous');
-   $form['prev']['#attributes'] = array('class' => array('prev'));
+    $form['prev']['#attributes'] = array('class' => array('prev'));
 
     return $form;
   }
@@ -260,16 +258,20 @@
      * and also to the db_query.
      */
 
- /*   $licensure = new stdClass();
-    $licensure -> uid = $user -> uid;
-    $licensure -> fcvs = $form_state['values']['licensure']['fcvs'];
-    $licensure -> language_spoken = $form_state['values']['licensure']['language_spoken'];
+    /*   $licensure = new stdClass();
+     =======
+     $licensure = new stdClass();
+     >>>>>>> 8946bcadc7a780506ff46361d45d209ffd27df17
+     $licensure -> uid = $user -> uid;
+     $licensure -> fcvs = $form_state['values']['licensure']['fcvs'];
+     $licensure -> language_spoken = $form_state['values']['licensure']['language_spoken'];
 
-    db_insert('vss_licensure') -> fields(array(
-      'uid' => $licensure -> uid,
-      'fcvs' => $licensure -> fcvs,
-      'language_spoken' => $licensure -> language_spoken,
-    )) -> execute();*/
+     db_insert('vss_licensure') -> fields(array(
+     'uid' => $licensure -> uid,
+     'fcvs' => $licensure -> fcvs,
+     'language_spoken' => $licensure -> language_spoken,
+     <<<<<<< HEAD
+     )) -> execute();*/
 
     /*
      * Update the drupal_flags table by setting the licensure
@@ -296,28 +298,32 @@
      * and also to the db_query.
      */
 
- /*   $licenses = new stdClass();
-    foreach ($form_state['values']['licenses'] AS $key => $value) {
-      $form_state['values']['licenses'][$key]['date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['licenses'][$key]['date_issued']));
-      $form_state['values']['licenses'][$key]['date_expired'] = date('Y-m-d H:i:s', strtotime($form_state['values']['licenses'][$key]['date_expired']));
-      $licenses -> uid = $user -> uid;
-      $licenses -> lic_type = $form_state['values']['licenses'][$key]['lic_type'];
-      $licenses -> state = $form_state['values']['licenses'][$key]['state'];
-      $licenses -> lic_number = $form_state['values']['licenses'][$key]['lic_number'];
-      $licenses -> country = $form_state['values']['licenses'][$key]['country'];
-      $licenses -> date_issued = $form_state['values']['licenses'][$key]['date_issued'];
-      $licenses -> date_expired = $form_state['values']['licenses'][$key]['date_expired'];
+    /*   $licenses = new stdClass();
+     =======
+     $licenses = new stdClass();
+     >>>>>>> 8946bcadc7a780506ff46361d45d209ffd27df17
+     foreach ($form_state['values']['licenses'] AS $key => $value) {
+     $form_state['values']['licenses'][$key]['date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['licenses'][$key]['date_issued']));
+     $form_state['values']['licenses'][$key]['date_expired'] = date('Y-m-d H:i:s', strtotime($form_state['values']['licenses'][$key]['date_expired']));
+     $licenses -> uid = $user -> uid;
+     $licenses -> lic_type = $form_state['values']['licenses'][$key]['lic_type'];
+     $licenses -> state = $form_state['values']['licenses'][$key]['state'];
+     $licenses -> lic_number = $form_state['values']['licenses'][$key]['lic_number'];
+     $licenses -> country = $form_state['values']['licenses'][$key]['country'];
+     $licenses -> date_issued = $form_state['values']['licenses'][$key]['date_issued'];
+     $licenses -> date_expired = $form_state['values']['licenses'][$key]['date_expired'];
 
-      db_insert('vss_licenses') -> fields(array(
-        'uid' => $licenses -> uid,
-        'lic_type' => $licenses -> lic_type,
-        'state' => $licenses -> state,
-        'lic_number' => $licenses -> lic_number,
-        'country' => $licenses -> country,
-        'date_issued' => $licenses -> date_issued,
-        'date_expired' => $licenses -> date_expired,
-      )) -> execute();
-    }*/
+     db_insert('vss_licenses') -> fields(array(
+     'uid' => $licenses -> uid,
+     'lic_type' => $licenses -> lic_type,
+     'state' => $licenses -> state,
+     'lic_number' => $licenses -> lic_number,
+     'country' => $licenses -> country,
+     'date_issued' => $licenses -> date_issued,
+     'date_expired' => $licenses -> date_expired,
+     )) -> execute();
+     <<<<<<< HEAD
+     }*/
 
     /*
      * Update the drupal_flags table by setting the deareg
@@ -344,25 +350,25 @@
      * and also to the db_query.
      */
 
- /*   dsm($form_state, 'form state');
-    $deareg = new stdClass();
-    foreach ($form_state['values']['deareg'] AS $key => $value) {
-      $form_state['values']['deareg'][$key]['dea_date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_issued']));
-      $form_state['values']['deareg'][$key]['dea_date_expired'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_expired']));
-      $deareg -> uid = $user -> uid;
-      $deareg -> dea_lic_num = $form_state['values']['deareg'][$key]['dea_lic_num'];
-      $deareg -> country = $form_state['values']['deareg'][$key]['country'];
-      $deareg -> dea_date_issued = $form_state['values']['deareg'][$key]['dea_date_issued'];
-      $deareg -> dea_date_expired = $form_state['values']['deareg'][$key]['dea_date_expired'];
+    /*   dsm($form_state, 'form state');
+     $deareg = new stdClass();
+     foreach ($form_state['values']['deareg'] AS $key => $value) {
+     $form_state['values']['deareg'][$key]['dea_date_issued'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_issued']));
+     $form_state['values']['deareg'][$key]['dea_date_expired'] = date('Y-m-d H:i:s', strtotime($form_state['values']['deareg'][$key]['dea_date_expired']));
+     $deareg -> uid = $user -> uid;
+     $deareg -> dea_lic_num = $form_state['values']['deareg'][$key]['dea_lic_num'];
+     $deareg -> country = $form_state['values']['deareg'][$key]['country'];
+     $deareg -> dea_date_issued = $form_state['values']['deareg'][$key]['dea_date_issued'];
+     $deareg -> dea_date_expired = $form_state['values']['deareg'][$key]['dea_date_expired'];
 
-      db_insert('vss_deareg') -> fields(array(
-        'uid' => $deareg -> uid,
-        'dea_lic_num' => $deareg -> dea_lic_num,
-        'country' => $deareg -> country,
-        'dea_date_issued' => $deareg -> dea_date_issued,
-        'dea_date_expired' => $deareg -> dea_date_expired,
-      )) -> execute();
-    }*/
+     db_insert('vss_deareg') -> fields(array(
+     'uid' => $deareg -> uid,
+     'dea_lic_num' => $deareg -> dea_lic_num,
+     'country' => $deareg -> country,
+     'dea_date_issued' => $deareg -> dea_date_issued,
+     'dea_date_expired' => $deareg -> dea_date_expired,
+     )) -> execute();
+     }*/
 
     /*
      * Update the drupal_flags table by setting the deareg

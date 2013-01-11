@@ -39,29 +39,29 @@
         '#required' => FALSE,
       );
       $form['residency'][$i]['type' . $i] = textfield('Type');
-			$form['residency'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">' ;
-			$form['residency'][$i]['type' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">';
+      $form['residency'][$i]['type' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['institution' . $i] = textfield('Institution');
-			$form['residency'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">' ;
-			$form['residency'][$i]['institution' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">';
+      $form['residency'][$i]['institution' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['country' . $i] = country('Country');
-			$form['residency'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">' ;
-			$form['residency'][$i]['country' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">';
+      $form['residency'][$i]['country' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['state' . $i] = state('State');
-			$form['residency'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">' ;
-			$form['residency'][$i]['state' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">';
+      $form['residency'][$i]['state' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['city' . $i] = textfield('City');
-			$form['residency'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">' ;
-			$form['residency'][$i]['city' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">';
+      $form['residency'][$i]['city' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['date_from' . $i] = date_my('From');
-			$form['residency'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">' ;
-			$form['residency'][$i]['date_from' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">';
+      $form['residency'][$i]['date_from' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['date_to' . $i] = date_my('To');
-			$form['residency'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">' ;
-			$form['residency'][$i]['date_to' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">';
+      $form['residency'][$i]['date_to' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['prog_dir' . $i] = textfield('Program Director');
-			$form['residency'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">' ;
-			$form['residency'][$i]['prog_dir' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">';
+      $form['residency'][$i]['prog_dir' . $i]['#suffix'] = '</div>';
     }
 
     if ($form_state['num_res'] < 3) {
@@ -91,14 +91,14 @@
         ),
       );
     }
-		
-			//This is the line separator
-      $form['p']['line3'] = array(
-	    '#prefix' => '<div class="line-solid">',
-		  //'#markup' => '<hr>',
-	  	'#attributes' => array('class' => array('line-solid')),
-		  '#suffix' => '</div>',
-	    );
+
+    //This is the line separator
+    $form['p']['line3'] = array(
+      '#prefix' => '<div class="line-solid">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line-solid')),
+      '#suffix' => '</div>',
+    );
 
     $form['fellowship'] = array(
       '#type' => 'fieldset',
@@ -119,29 +119,29 @@
         '#required' => FALSE,
       );
       $form['fellowship'][$i]['type' . $i] = textfield('Type');
-			$form['fellowship'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">' ;
-			$form['fellowship'][$i]['type' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">';
+      $form['fellowship'][$i]['type' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['institution' . $i] = textfield('Institution');
-			$form['fellowship'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">' ;
-			$form['fellowship'][$i]['institution' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">';
+      $form['fellowship'][$i]['institution' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['country' . $i] = country('Country');
-			$form['fellowship'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">' ;
-			$form['fellowship'][$i]['country' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">';
+      $form['fellowship'][$i]['country' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['state' . $i] = state('State');
-			$form['fellowship'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">' ;
-			$form['fellowship'][$i]['state' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">';
+      $form['fellowship'][$i]['state' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['city' . $i] = textfield('City');
-			$form['fellowship'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">' ;
-			$form['fellowship'][$i]['city' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">';
+      $form['fellowship'][$i]['city' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['date_from' . $i] = date_my('From');
-			$form['fellowship'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">' ;
-			$form['fellowship'][$i]['date_from' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">';
+      $form['fellowship'][$i]['date_from' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['date_to' . $i] = date_my('To');
-			$form['fellowship'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">' ;
-			$form['fellowship'][$i]['date_to' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">';
+      $form['fellowship'][$i]['date_to' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['prog_dir' . $i] = textfield('Program Director');
-			$form['fellowship'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">' ;
-			$form['fellowship'][$i]['prog_dir' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">';
+      $form['fellowship'][$i]['prog_dir' . $i]['#suffix'] = '</div>';
     }
 
     if ($form_state['num_fellow'] < 3) {
@@ -173,29 +173,29 @@
     }
 
     //this is a line at the bottom
-	$form['last']['line'] = array(
-	'#prefix' => '<div class="line_left">',
-		//'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line_left')),
-		'#suffix' => '</div>',
-		);
-		
-		$form['last']['required_field'] = array(
-	'#prefix' => '<div class="required_field2">',
-		'#markup' => 'Required Field',
-		'#required' => TRUE,
-		'#suffix' => '</div>',
-		);
-		$form['submit'] = array(
+    $form['last']['line'] = array(
+      '#prefix' => '<div class="line_left">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line_left')),
+      '#suffix' => '</div>',
+    );
+
+    $form['last']['required_field'] = array(
+      '#prefix' => '<div class="required_field2">',
+      '#markup' => 'Required Field',
+      '#required' => TRUE,
+      '#suffix' => '</div>',
+    );
+    $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Next'),
       '#name' => 'next',
       '#submit' => array('vistaportal_residency_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
-		$form['save_logout'] = button('Save & Logout');
+    $form['save_logout'] = button('Save & Logout');
     $form['prev'] = button('Previous');
-		$form['prev']['#attributes'] = array('class' => array('prev'));
+    $form['prev']['#attributes'] = array('class' => array('prev'));
     return $form;
   }
 
@@ -223,27 +223,27 @@
     /*Insert the form_state values into the residency table.*/
     $residency = new stdClass();
     $residency -> uid = $user -> uid;
-		foreach ($form_state['values']['internship'] AS $key => $value) {
-    $residency -> type = $form_state['values']['residency'][$key]['type'. $key];
-    $residency -> institution = $form_state['values']['residency'][$key]['institution'. $key];
-    $residency -> city = $form_state['values']['residency'][$key]['city'. $key];
-    $residency -> state = $form_state['values']['residency'][$key]['state'. $key];
-    $residency -> country = $form_state['values']['residency'][$key]['country'. $key];
-    $residency -> date_from = $form_state['values']['residency'][$key]['date_from'. $key];
-    $residency -> date_to = $form_state['values']['residency'][$key]['date_to'. $key];
-    $residency -> prog_dir = $form_state['values']['residency'][$key]['prog_dir'. $key];
+    foreach ($form_state['values']['internship'] AS $key => $value) {
+      $residency -> type = $form_state['values']['residency'][$key]['type' . $key];
+      $residency -> institution = $form_state['values']['residency'][$key]['institution' . $key];
+      $residency -> city = $form_state['values']['residency'][$key]['city' . $key];
+      $residency -> state = $form_state['values']['residency'][$key]['state' . $key];
+      $residency -> country = $form_state['values']['residency'][$key]['country' . $key];
+      $residency -> date_from = $form_state['values']['residency'][$key]['date_from' . $key];
+      $residency -> date_to = $form_state['values']['residency'][$key]['date_to' . $key];
+      $residency -> prog_dir = $form_state['values']['residency'][$key]['prog_dir' . $key];
 
-    db_insert('vss_residency') -> fields(array(
-      'uid' => $residency -> uid,
-      'type' => $residency -> type,
-      'institution' => $residency -> institution,
-      'city' => $residency -> city,
-      'state' => $residency -> state,
-      'country' => $residency -> country,
-      'date_from' => $residency -> date_from,
-      'date_to' => $residency -> date_to,
-      'prog_dir' => $residency -> prog_dir,
-    )) -> execute();
+      db_insert('vss_residency') -> fields(array(
+        'uid' => $residency -> uid,
+        'type' => $residency -> type,
+        'institution' => $residency -> institution,
+        'city' => $residency -> city,
+        'state' => $residency -> state,
+        'country' => $residency -> country,
+        'date_from' => $residency -> date_from,
+        'date_to' => $residency -> date_to,
+        'prog_dir' => $residency -> prog_dir,
+      )) -> execute();
     }
     /*
      * Update the vss_drupal_flags table by setting the residency

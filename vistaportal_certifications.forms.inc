@@ -177,7 +177,6 @@
 	  );
 	  $form['<prev'] = button('Previous');
     $form['save_logout'] = button('Save & Logout');	
-
     return $form;
   }
 
@@ -314,6 +313,7 @@
      $certifications->mqsa = $form_state['values']['mqsa'];
      $certifications->mqsa_exp_date = $form_state['values']['mqsa_exp']; */
 
+
   /*  db_insert('vss_certifications') -> fields(array(
       'uid' => $certifications -> uid,
       'board_status' => $certifications -> board_status,
@@ -337,6 +337,7 @@
        'also' => $certifications->also,
        'also_exp_date' => $certifications->also_exp_date,
        'mqsa' => $certifications->mqsa,
+<<<<<<< HEAD
        'mqsa_exp_date' => $certifications->mqsa_exp_date,
     )) -> execute();*/
 

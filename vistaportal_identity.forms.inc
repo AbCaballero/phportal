@@ -122,7 +122,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#required' => TRUE,
 		'#suffix' => '</div>',
 	);
-	$form['identity']['verification'] = radios_yesno();
+	$form['identity']['verification'] = radios_yesno('');
 	$form['identity']['marital_status'] = array(
 	'#prefix' => '<div class="marital-status">',
 		'#type' => 'select',
@@ -239,7 +239,7 @@ function vistaportal_identity_form_submit($form, &$form_state){
 	$identity->birth_country = $form_state['values']['birth_country'];
 	$identity->birth_state = $form_state['values']['birth_state'];
 	$identity->birth_city = $form_state['values']['birth_city'];
-	$identity->npi = $form_state['values']['npi'];
+	//$identity->npi = $form_state['values']['npi'];
 	$identity->verification = $form_state['values']['verification'];
 	$identity->marital_status = $form_state['values']['marital_status'];
 	$identity->spouse = $form_state['values']['spouse'];
@@ -262,7 +262,7 @@ function vistaportal_identity_form_submit($form, &$form_state){
   		'birth_city'=> $identity->birth_city,
   		'birth_state'=> $identity->birth_state, 
   		'birth_country'=> $identity->birth_country,
-  		'npi'=> $identity->npi,
+  		//'npi'=> $identity->npi,
   		'verification'=> $identity->verification,  
   		'marital_status'=> $identity->marital_status,
   		'spouse'=> $identity->spouse, 
@@ -280,7 +280,7 @@ function vistaportal_identity_form_submit($form, &$form_state){
 		))
 		->execute();		
 	$user = user_load($form_state['uid']);	
-	drupal_goto('preapp/premed' . $user->uid);
+	drupal_goto('preapp/education' . $user->uid);
 
 /*
  * @TODO add error checking

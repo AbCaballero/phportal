@@ -30,52 +30,52 @@
     }
 
     for ($i = 0; $i < $form_state['num_ints']; $i++) {
-    	if($i > 0) {
-      $form['internship'][$i]['type']['#prefix'] = '<div class="line-solid"></div><h2>Internship ' . ($i+1) . '</h2><br/>';
+      if ($i > 0) {
+        $form['internship'][$i]['type']['#prefix'] = '<div class="line-solid"></div><h2>Internship ' . ($i + 1) . '</h2><br/>';
       }
       $form['internship'][$i]['na'] = array(
         '#type' => 'checkbox',
         '#title' => t('Not Applicable'),
         '#required' => FALSE,
       );
-			/*---------------This adds the line each time that we add the fields------------*/
-			
+      /*---------------This adds the line each time that we add the fields------------*/
+
       /*if($i > 0) {
-      $form['internship'][$i]['type' . $i]['#prefix'] = '<div class="line-solid"></div>';
-      }*/
-			
-      $form['internship'][$i]['type'. $i] = textfield('Type');
-			$form['internship'][$i]['type' . $i]['#prefix'] = '<div class = "internship-type">' ;
-			$form['internship'][$i]['type' . $i]['#suffix'] = '</div>' ;
-      $form['internship'][$i]['institution'. $i] = textfield('Institution');
-			$form['internship'][$i]['institution' . $i]['#prefix'] = '<div class = "internship-institution">' ;
-			$form['internship'][$i]['institution' . $i]['#suffix'] = '</div>' ;
-      $form['internship'][$i]['country'. $i] = country('Country');
-			$form['internship'][$i]['country' . $i]['#prefix'] = '<div class = "internship-country">' ;
-			$form['internship'][$i]['country' . $i]['#suffix'] = '</div>' ;
-      $form['internship'][$i]['state'. $i] = state('State');
-			$form['internship'][$i]['state' . $i]['#prefix'] = '<div class = "internship-state">' ;
-			$form['internship'][$i]['state' . $i]['#suffix'] = '</div>' ;
-      $form['internship'][$i]['city'. $i] = textfield('City');
-			$form['internship'][$i]['city' . $i]['#prefix'] = '<div class = "internship-city">' ;
-			$form['internship'][$i]['city' . $i]['#suffix'] = '</div>' ;
-			//This is the date 
-		  $form['internship'][$i]['date'. $i] = array(
-		  '#prefix' => '<div class="internship-date">',
-			'#markup' => 'Dates Attended',
-			'#required' => TRUE,
-			'#suffix' => '</div>',
-		  );
-      $form['internship'][$i]['date_from'. $i] = date_my('From');
-			$form['internship'][$i]['date_from' . $i]['#prefix'] = '<div class = "internship-date_from">' ;
-			$form['internship'][$i]['date_from' . $i]['#suffix'] = '</div>' ;
-      $form['internship'][$i]['date_to'. $i] = date_my('To');
-			$form['internship'][$i]['date_to' . $i]['#prefix'] = '<div class = "internship-date_to">' ;
-			$form['internship'][$i]['date_to' . $i]['#suffix'] = '</div>' ;
-      $form['internship'][$i]['prog_dir'. $i] = textfield('Program Director');
-			$form['internship'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "internship-prog_dir">' ;
-			$form['internship'][$i]['prog_dir' . $i]['#suffix'] = '</div>' ;
-			
+       $form['internship'][$i]['type' . $i]['#prefix'] = '<div class="line-solid"></div>';
+       }*/
+
+      $form['internship'][$i]['type' . $i] = textfield('Type');
+      $form['internship'][$i]['type' . $i]['#prefix'] = '<div class = "internship-type">';
+      $form['internship'][$i]['type' . $i]['#suffix'] = '</div>';
+      $form['internship'][$i]['institution' . $i] = textfield('Institution');
+      $form['internship'][$i]['institution' . $i]['#prefix'] = '<div class = "internship-institution">';
+      $form['internship'][$i]['institution' . $i]['#suffix'] = '</div>';
+      $form['internship'][$i]['country' . $i] = country('Country');
+      $form['internship'][$i]['country' . $i]['#prefix'] = '<div class = "internship-country">';
+      $form['internship'][$i]['country' . $i]['#suffix'] = '</div>';
+      $form['internship'][$i]['state' . $i] = state('State');
+      $form['internship'][$i]['state' . $i]['#prefix'] = '<div class = "internship-state">';
+      $form['internship'][$i]['state' . $i]['#suffix'] = '</div>';
+      $form['internship'][$i]['city' . $i] = textfield('City');
+      $form['internship'][$i]['city' . $i]['#prefix'] = '<div class = "internship-city">';
+      $form['internship'][$i]['city' . $i]['#suffix'] = '</div>';
+      //This is the date
+      $form['internship'][$i]['date' . $i] = array(
+        '#prefix' => '<div class="internship-date">',
+        '#markup' => 'Dates Attended',
+        '#required' => TRUE,
+        '#suffix' => '</div>',
+      );
+      $form['internship'][$i]['date_from' . $i] = date_my('From');
+      $form['internship'][$i]['date_from' . $i]['#prefix'] = '<div class = "internship-date_from">';
+      $form['internship'][$i]['date_from' . $i]['#suffix'] = '</div>';
+      $form['internship'][$i]['date_to' . $i] = date_my('To');
+      $form['internship'][$i]['date_to' . $i]['#prefix'] = '<div class = "internship-date_to">';
+      $form['internship'][$i]['date_to' . $i]['#suffix'] = '</div>';
+      $form['internship'][$i]['prog_dir' . $i] = textfield('Program Director');
+      $form['internship'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "internship-prog_dir">';
+      $form['internship'][$i]['prog_dir' . $i]['#suffix'] = '</div>';
+
     }
 
     if ($form_state['num_ints'] < 3) {
@@ -92,7 +92,6 @@
         ),
       );
     }
-
     //First school is mandatory
     if ($form_state['num_ints'] > 1) {
       $form['internship']['remove_school'] = array(
@@ -107,30 +106,30 @@
       );
     }
     //this is a line at the bottom
-	  $form['last']['line'] = array(
-	  '#prefix' => '<div class="line_left">',
-		//'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line_left')),
-		'#suffix' => '</div>',
-		);
-		
-		$form['last']['required_field'] = array(
-	  '#prefix' => '<div class="required_field2">',
-		'#markup' => 'Required Field',
-		'#required' => TRUE,
-		'#suffix' => '</div>',
-		);
-		$form['submit'] = array(
+    $form['last']['line'] = array(
+      '#prefix' => '<div class="line_left">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line_left')),
+      '#suffix' => '</div>',
+    );
+
+    $form['last']['required_field'] = array(
+      '#prefix' => '<div class="required_field2">',
+      '#markup' => 'Required Field',
+      '#required' => TRUE,
+      '#suffix' => '</div>',
+    );
+    $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Next'),
       '#name' => 'next',
       '#submit' => array('vistaportal_internship_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
-		$form['save_logout'] = button('Save & Logout');
+    $form['save_logout'] = button('Save & Logout');
     $form['prev'] = button('Previous');
-		$form['prev']['#attributes'] = array('class' => array('prev'));
-		
+    $form['prev']['#attributes'] = array('class' => array('prev'));
+
     //$form['#after_build'][] = 'vistaportal_internship_form_afterbuild';
     return $form;
   }
@@ -160,27 +159,28 @@
     /*The ['internship'] index should fail here, but fails without it*/
     $internship = new stdClass();
     $internship -> uid = $user -> uid;
-		foreach ($form_state['values']['internship'] AS $key => $value) {
-    $internship -> type = $form_state['values']['internship'][$key]['type' . $key];
-    $internship -> institution = $form_state['values']['internship'][$key]['institution' . $key];
-    $internship -> city = $form_state['values']['internship'][$key]['city' . $key];
-    $internship -> state = $form_state['values']['internship'][$key]['state' . $key];
-    $internship -> country = $form_state['values']['internship'][$key]['country' . $key];
-    $internship -> date_from = $form_state['values']['internship'][$key]['date_from' . $key];
-    $internship -> date_to = $form_state['values']['internship'][$key]['date_to' . $key];
-    $internship -> prog_dir = $form_state['values']['internship'][$key]['prog_dir' . $key];
+    foreach ($form_state['values']['internship'] AS $key => $value) {
+      $internship -> type = $form_state['values']['internship'][$key]['type' . $key];
+      $internship -> institution = $form_state['values']['internship'][$key]['institution' . $key];
+      $internship -> city = $form_state['values']['internship'][$key]['city' . $key];
+      $internship -> state = $form_state['values']['internship'][$key]['state' . $key];
+      $internship -> country = $form_state['values']['internship'][$key]['country' . $key];
+      $internship -> date_from = $form_state['values']['internship'][$key]['date_from' . $key];
+      $internship -> date_to = $form_state['values']['internship'][$key]['date_to' . $key];
+      $internship -> prog_dir = $form_state['values']['internship'][$key]['prog_dir' . $key];
 
-    db_insert('vss_internship') -> fields(array(
-      'uid' => $internship -> uid,
-      'type' => $internship -> type,
-      'institution' => $internship -> institution,
-      'city' => $internship -> city,
-      'state' => $internship -> state,
-      'country' => $internship -> country,
-      'date_from' => $internship -> date_from,
-      'date_to' => $internship -> date_to,
-      'prog_dir' => $internship -> prog_dir,
-    )) -> execute();
+      db_insert('vss_internship') -> fields(array(
+        'uid' => $internship -> uid,
+        'type' => $internship -> type,
+        'institution' => $internship -> institution,
+        'city' => $internship -> city,
+        'state' => $internship -> state,
+        'country' => $internship -> country,
+        'date_from' => $internship -> date_from,
+        'date_to' => $internship -> date_to,
+        'prog_dir' => $internship -> prog_dir,
+      )) -> execute();
+
     }
     /*
      * Update the vss_drupal_flags table by setting the internship

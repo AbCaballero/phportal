@@ -628,12 +628,15 @@
   /*
    * marital field function
    */
+
   /*function marital_status($title) {
+  function marital_status($title) {
     $element = array(
       '#type' => 'select',
       '#required' => TRUE,
       '#title' => t($title),
       '#options' => drupal_map_assoc(array(
+        '-Select-',
         'Single',
         'Married',
         'Divorced',
@@ -642,6 +645,9 @@
       '#attributes' => array('class' => array('select_marital')),
       '#rules' => array('not_none'),
       '#empty_option' => "Select",
+    );
+    return $element;
+  }
     );
     return $element;
   }*/
@@ -878,7 +884,6 @@
       )),
       '#attributes' => array('class' => array('select-specialty row_end percent_90')),
       '#rules' => array('not_none'),
-      '#empty_option' => "Select a specialty",
     );
     return $element;
   }
@@ -946,7 +951,7 @@
       '#date_year_range' => '-30:+0',
       '#date_label_position' => 'within',
       '#required' => TRUE,
-      //'#default_value' => N,
+      '#default_value' => NULL,
     );
     return $element;
   }
