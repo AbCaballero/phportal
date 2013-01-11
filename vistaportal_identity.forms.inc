@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Author: Andrew Browning
@@ -22,9 +21,10 @@ function vistaportal_identity_form($form, &$form_state){
 		'#title' => t('PERSONAL INFORMATION'),
 		'#collapsible' => FALSE,
 	);	
+	//$form['identity']['lname'] = textfield('Last Name', 15);
 	$form['identity']['lename'] = array(
 	'#prefix' => '<div class="lname">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('Last Name'),
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_90')),
@@ -32,7 +32,7 @@ function vistaportal_identity_form($form, &$form_state){
 		);
 	$form['identity']['fname'] = array(
 	'#prefix' => '<div class="fname">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('Fisrt Name'),
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_90')),
@@ -40,7 +40,7 @@ function vistaportal_identity_form($form, &$form_state){
 		);
 	$form['identity']['initial'] = array(
 	'#prefix' => '<div class="initial">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('MI'),
 		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_95')),
@@ -51,21 +51,21 @@ function vistaportal_identity_form($form, &$form_state){
 		'#type' => 'select',
 		'#title' => t('Phone'),
 		'#options' => drupal_map_assoc(array('-Select-','Home', 'Cell', 'Work')),
-		'#required' => TRUE,
+		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
 		);
 	$form['identity']['phone'] = array(
 	'#prefix' => '<div class="phone_number">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t(''),
 		'#required' => TRUE,
-		'#attributes' => array('class' => array('percent_90 textfield-phone')),
+		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
 		);
 	$form['identity']['email'] = array(
 	'#prefix' => '<div class="email">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('E-mail address'),
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_100')),
@@ -73,7 +73,7 @@ function vistaportal_identity_form($form, &$form_state){
 		);
 	$form['identity']['home_address'] = array(
 	'#prefix' => '<div class="home-address">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('Home address'),
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_100')),
@@ -87,17 +87,10 @@ function vistaportal_identity_form($form, &$form_state){
 		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
 		);
-	$form['identity']['state'] = array(
-	'#prefix' => '<div class="state">',
-		'#type' => 'textfield',
-		'#title' => t('State'),
-		'#required' => TRUE,
-		'#attributes' => array('class' => array('percent_90')),
-		'#suffix' => '</div>',
-		);
+	$form['identity']['home_state'] = state('State');
 	$form['identity']['zip'] = array(
 	'#prefix' => '<div class="zipcode">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('Zipcode'),
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_95')),
@@ -114,17 +107,20 @@ function vistaportal_identity_form($form, &$form_state){
 	)));
 	$form['identity']['birth_city'] = array(
 	'#prefix' => '<div class="birth-city">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('City'),
 		'#required' => TRUE,
 		'#attributes' => array('class' => array('edu-city')),
 		'#suffix' => '</div>',
 		);
+	//$form['identity']['social_security'] = textfield('Social Security Number', 13);
+	//$form['identity']['social_security']['#maxlength'] = 11;
+	//$form['identity']['npi'] = textfield('National Physician Identifier');
 	$form['identity']['ver_label'] = array(
 	'#prefix' => '<div class="var_label">',
 		'#markup' => t('Can you provide proof of legal eligibility to work in the USA?'), 
-		'#suffix' => '</div>',
 		'#required' => TRUE,
+		'#suffix' => '</div>',
 	);
 	$form['identity']['verification'] = radios_yesno();
 	$form['identity']['marital_status'] = array(
@@ -132,38 +128,41 @@ function vistaportal_identity_form($form, &$form_state){
 		'#type' => 'select',
 		'#title' => t('Marital Status'),
 		'#options' => drupal_map_assoc(array('-Select-','Single', 'Married', 'Divorced', 'Widowed')),
-		'#required' => FALSE,
+		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
 		);
+	$form['identity']['marital_status']['#required'] = FALSE;
 	$form['identity']['spouse'] = array(
 	'#prefix' => '<div class="spouse">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('Spouse Name'),
-		'#required' => FALSE,
+		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
 		);
+	$form['identity']['spouse']['#required'] = FALSE;
 	$form['identity']['number_of_children'] = array(
 	'#prefix' => '<div class="n-children">',
-		'#type' => 'textfield',
+		'#type' => textfield,
 		'#title' => t('# of children'),
-		'#required' => FALSE,
+		'#required' => TRUE,
 		'#attributes' => array('class' => array('percent_97')),
 		'#suffix' => '</div>',
 		);
-	$form['identity']['comment'] = array(
+	$form['identity']['number_of_children']['#required'] = FALSE;
+	/*$form['identity']['comment'] = array(
 	'#prefix' => '<div class="comment">',
-		'#type' => 'textarea',
-		'#title' => t('Comments Example'),
+		'#type' => textarea,
+		'#title' => t('Comment Examples'),
 		'#required' => FALSE,
 		'#attributes' => array('class' => array('percent_95')),
 		'#suffix' => '</div>',
-		);
+		);*/
 		$form['identity']['line2'] = array(
-	'#prefix' => '<div class="line_left">',
-		'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line_left')),
+	  '#prefix' => '<div class="line_left">',
+		//'#markup' => '<hr>',
+		//'#attributes' => array('class' => array('line_left')),
 		'#suffix' => '</div>',
 		);
 			
@@ -182,7 +181,11 @@ function vistaportal_identity_form($form, &$form_state){
 		'#attributes' => array('class' => array('identity-submit')),
 		);
 	$form['save_logout'] = button('Save & Logout');	
+	//$form['save_logout']['#attributes'] = array('id' => array('identity-save'));
+	$form['save_logout']['#attributes'] = array('class' => array('edit-save-logout button previous'));
 	$form['prev'] = button('Previous');
+	//$form['prev']['#attributes'] = array('id' => array('identity-prev'));
+	$form['prev']['#attributes'] = array('class' => array('edit-prev button previous identity-prev'));
 	
 	
 
