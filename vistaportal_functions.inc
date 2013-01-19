@@ -20,7 +20,8 @@
  function _create_new_account(){
 	$query = db_select('users', 'u');
 	$query->innerjoin('vss_profile_data', 'p', 'u.uid = p.uid');
-	$query->isNotNull ('p.entity_id'); 
+	/*Set to isNotNull after testing is complete*/
+	$query->isNull('p.entity_id'); 
 	$query->condition('p.new_user_flag', 0, '=');	
 	$query->fields('u', array('uid', 'name', 'mail'))
 		->fields('p', array('entity_id', 'new_user_flag'))
@@ -33,13 +34,20 @@
 			->fields(array(
 			'new_user_flag' => 1
 		))
-		->condition('email', $result)
+		->condition('uid', $account->uid)
 		->execute();
 	}
  }
 
 
- 
+
+  /*
+   * Save and logout redirect
+   */
+  function vistaportal_save_logout($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('user/logout' . $user -> uid);
+  } 
 
 
     

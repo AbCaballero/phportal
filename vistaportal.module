@@ -12,9 +12,11 @@
 
   include_once ('vistaportal.fields.inc');
   include_once ('vistaportal_functions.inc');
+
   /**
    * Implements hook_init().
    */
+
   function vistaportal_init() {
     global $user;
     date_default_timezone_set('America/Los_Angeles');
@@ -23,13 +25,16 @@
     drupal_add_js($path . '/js/jquery.autotab-1.1b.js', 'file');
     drupal_add_js($path . '/js/jquery.ba-untils.min.js');
     drupal_add_css($path . '../../themes/jobapp/css/global.css');
-    //This allows jQuery update module to function properly.
+
+    /*This allows jQuery update module to function properly.*/
+
     variable_set('jquery_update_replace', TRUE);
   }
 
   /**
    * Implements hook_perm().
    */
+
   function vistaportal_permission() {
     return array('authenticated user access' => array(
         'title' => t('Access to vistaportal forms'),
@@ -41,6 +46,7 @@
   /**
    * Implements hook_menu().
    */
+
   function vistaportal_menu() {
     $path = drupal_get_path('module', 'vistaportal');
     $items = array();
@@ -59,6 +65,15 @@
       'type' => MENU_CALLBACK,
     );
 
+    $items['preapp/downloadfile'] = array(
+      'title' => 'Download file',
+      'page callback' => 'download_file',
+      //'page arguments' => array('vistaportal_autosave'),
+      'access arguments' => array('access content'),
+      //'file' => 'vistaportal.module',
+      'type' => MENU_CALLBACK,
+    );
+
     $items['preapp/identity'] = array(
       'page callback' => 'drupal_get_form',
       'page arguments' => array('vistaportal_identity_form'),
@@ -70,7 +85,7 @@
 
     $items['preapp/education'] = array(
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('vistaportal_premed_form'),
+      'page arguments' => array('vistaportal_education_form'),
       'access arguments' => array('authenticated user access'),
       'file' => 'vistaportal_education.forms.inc',
       'type' => MENU_NORMAL_ITEM,
@@ -158,16 +173,16 @@
       'type' => MENU_CALLBACK,
     );
 
-    $items['preapp/submission'] = array(
+ /*   $items['preapp/submission'] = array(
       'page callback' => 'drupal_get_form',
       'page arguments' => array('vistaportal_submission_form'),
       'access arguments' => array('authenticated user access'),
       'file' => 'vistaportal_submit.forms.inc',
       'type' => MENU_CALLBACK,
       'title' => 'Submit'
-    );
-		
-		$items['preapp/exams'] = array(
+    );*/
+
+    $items['preapp/exams'] = array(
       'page callback' => 'drupal_get_form',
       'page arguments' => array('vistaportal_exams_form'),
       'access arguments' => array('authenticated user access'),
@@ -175,13 +190,82 @@
       'type' => MENU_NORMAL_ITEM,
       'title' => 'Exams',
     );
+
+    $items['home'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('vistaportal_preapp_form'),
+      'access arguments' => array('access content'),
+      'type' => MENU_CALLBACK,
+    );
+
+    $items['whyapply'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('whyapply'),
+      'access arguments' => array('access content'),
+      'type' => MENU_CALLBACK,
+    );
+
+    $items['preapp/upload'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('vistaportal_cv_upload_form'),
+      'access arguments' => array('authenticated user access'),
+      'file' => 'vistaportal_cv_upload.forms.inc',
+      'type' => MENU_NORMAL_ITEM,
+      'title' => 'Upload CV',
+    );
+
+    $items['preapp/submit'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('vistaportal_submit_form'),
+      'access arguments' => array('authenticated user access'),
+      'file' => 'vistaportal_submit.forms.inc',
+      'type' => MENU_NORMAL_ITEM,
+      'title' => 'Submit'
+    );
+
+    $items['registeremail'] = array(
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('registeremail'),
+      'access arguments' => array('access content'),
+      'type' => MENU_CALLBACK,
+    );
+
+    $items['forgotpassemail'] = array(
+     'page callback' => 'drupal_get_form',
+     'page arguments' => array('forgotpassemail'),
+     'access arguments' => array('access content'),
+     'type' => MENU_CALLBACK,
+    );
+
+    $items['preapp/submitted'] = array(
+     'page callback' => 'drupal_get_form',
+     'page arguments' => array('submitted'),
+     'access arguments' => array('authenticated user access'),
+     'type' => MENU_CALLBACK,
+    );
+
+    /*my documents page*/
+    $items['preapp/mydocuments'] = array(
+     'page callback' => 'drupal_get_form',
+     'page arguments' => array('vistaportal_mydocuments_form'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('vistaportal_mydocuments_form'),
+     'access arguments' => array('access content'),
+     'type' => MENU_CALLBACK,
+      'access arguments' => array('authenticated user access'),
+      'file' => 'vistaportal_mydocuments.forms.inc',
+      'type' => MENU_NORMAL_ITEM,
+      'title' => 'Why Apply',
+    );
+
     return $items;
   }
 
   /*
    * Form callback for the registration form.
    */
-   function vistaportal_form($form, &$form_state) {
+
+  function vistaportal_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     $form = array();
     $form['#attributes'] = array('enctype' => array("multipart/form-data"));
@@ -193,29 +277,32 @@
       '#collapsible' => FALSE,
     );
     $form['registration']['personal'] = array('#markup' => '<em><h2>PERSONAL INFORMATION</h2></em><br />', );
-    $form['registration']['fname'] = array( 
-      '#prefix' => '<div class="form_field_1">',  
+    $form['registration']['fname'] = array(
+      '#prefix' => '<div class="form_field_1">',
       '#type' => 'textfield',
       '#title' => t('First Name'),
       '#required' => TRUE,
       '#attributes' => array('class' => array('percent_90')),
       '#suffix' => '</div>',
+      '#maxlength' => 15,
     );
-    $form['registration']['lname'] =array(
+    $form['registration']['lname'] = array(
       '#prefix' => '<div class="form_field_2">',
       '#type' => 'textfield',
       '#title' => t('Last Name'),
       '#required' => TRUE,
       '#attributes' => array('class' => array('percent_90 row_end')),
       '#suffix' => '</div>',
+      '#maxlength' => 40,
     );
     $form['registration']['phone'] = array(
       '#prefix' => '<div class="form_field_1">',
-    	'#type' => 'textfield',
-    	'#title' => t('Phone Number'),
-    	'#required' => FALSE,
-    	'#attributes' => array('class' => array('form_field percent_90 textfield-phone')),
-    	'#suffix' => '</div>',
+      '#type' => 'textfield',
+      '#title' => t('Phone Number'),
+      '#required' => FALSE,
+      '#attributes' => array('class' => array('form_field percent_90 textfield-phone')),
+      '#suffix' => '</div>',
+      '#maxlength' => 20,
     );
     $form['registration']['email'] = array(
       '#prefix' => '<div class="form_field_2">',
@@ -224,8 +311,19 @@
       '#required' => TRUE,
       '#attributes' => array('class' => array('percent_90 row_end')),
       '#suffix' => '</div>',
+      '#maxlength' => 60,
     );
-
+    $form['registration']['pass'] = array(
+      '#type' => 'password_confirm',
+      '#maxlength' => 64,
+      '#size' => 15,
+    );
+    $form['registration']['question'] = challenge('Challenge Question');
+    $form['registration']['answer'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Challenge Question Answer',
+      '#maxlength' => 64,
+    );
     $form['registration']['specialty'] = array('#markup' => '<em><h2>SPECIALTY</h2></em><br />', );
     $form['registration']['primary'] = medical_specialty('Primary');
     $form['registration']['secondary'] = medical_specialty('Secondary - Optional');
@@ -239,10 +337,10 @@
     $form['registration']['permanent_placement']['#required'] = FALSE;
     $form['registration']['gov_op'] = checkbox('Government Oportunities');
     $form['registration']['gov_op']['#required'] = FALSE;
-		$form['registration']['line'] = array(
-			'#markup' => '<hr>',
-			'#attributes' => array('class' => array('dots')),
-			);
+    $form['registration']['line'] = array(
+      '#markup' => '<hr>',
+      '#attributes' => array('class' => array('dots')),
+    );
     $form['registration']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Submit'),
@@ -254,24 +352,31 @@
   /*
    * Form submission callback for the registration form.
    */
+
   function vistaportal_form_submit($form, &$form_state) {
-    global $user;
+    $user_name = $form_state['values']['fname'] . ' ' . $form_state['values']['lname'];
+    $password = $form_state['values']['pass'];
+    $email = $form_state['values']['email'];
 
     $fields = array(
-      'name' => $form_state['values']['email'],
-      'pass' => $form_state['values']['password'],
-      'mail' => $form_state['values']['email'],
+      'name' => $user_name,
+      'mail' => $email,
+      'pass' => $password,
       'status' => 1,
-      'init' => $form_state['values']['email'],
-      'roles' => array( array(logintoboggan_validating_id() => TRUE), ),
+      'init' => $email,
+      'access' => REQUEST_TIME,
+      'roles' => array(DRUPAL_AUTHENTICATED_RID => 'non-authenticated user'),
     );
+
     $account = user_save(NULL, $fields);
-    //This line of code will have to go into the cron job
-    /*	if($mail = _user_mail_notify('register_no_approval_required', $account)){
-     $error = FALSE;*/
-    $account = user_load($user -> uid);
+    /* Terminate if an error occurred during user_save().*/
+    if (!$account) {
+      drupal_set_message(t("Error saving user account."), 'error');
+      return;
+    }
+
     $register = new stdClass();
-    $register -> uid = $user -> uid;
+    $register -> uid = $account -> uid;
     $register -> fname = $form_state['values']['fname'];
     $register -> lname = $form_state['values']['lname'];
     $register -> phone = $form_state['values']['phone'];
@@ -302,49 +407,65 @@
     )) -> execute();
 
     $user = user_load($form_state['uid']);
-    drupal_goto('confirm' . $user -> uid);
-    /*	}
-     else{
-     $error = TRUE;
-     form_set_error('Your registration could not be completed, please try again later');
-     }*/
+    /* Terminate if an error occurred during user_load().*/
+    if (!$account) {
+      drupal_set_message(t("Your registration could not be completed, please try again later"), 'error');
+      return;
+    }
+    else {
+      drupal_goto('confirm' . $user -> uid);
+    }
   }
 
   /**
    * Implements the hook_form_alter()
    */
+
   function vistaportal_form_alter(&$form, &$form_state, $form_id) {
     global $user;
-    if (substr($form_id, 0, 12) == 'vistaportal_'){
-     $form['#attributes'] = array('class' => 'vistaportal');
-     $form['#ajax'] = array('enabled' => TRUE);
 
-    $form['#attributes'] = array('class' => array('vistaportal'));
-    //$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);
-    $path = drupal_get_path('module', 'vistaportal');
-    drupal_add_js($path . '/js/jquery.field.js');
-    drupal_add_js($path . '/js/autosave.js');
-    //dsm($form_id);
-    $settings['autosave']['url'] = url('autosave');
-    $settings['autosave']['q'] = $_GET['q'];
-    $settings['autosave']['form_id'] = $form_id;
-    $settings['autosave']['form_id_id'] = $form['#id'];
+    /*Double check that autosave is behaving correctly with this line of code*/
+    if (($form_id != 'vistaportal_form') && ($form_id != 'user_login') && ($form_id != 'vistaportal_release_authorization_form')) {
+      $form['#attributes'] = array('class' => 'vistaportal');
+      $form['#ajax'] = array('enabled' => TRUE);
 
-    // If an autosaved version of the form exists, make it available via javascript.
-    if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
-      $settings['autosave'] = array_merge($settings['autosave'], array(
-        'serialized' => unserialize($autosaved_form['serialized']),
-        'saved_date' => format_date($autosaved_form['timestamp'], 'medium'),
-      ));
+      $form['#attributes'] = array('class' => array('vistaportal'));
+
+      /*$form['#ajax']['path'] = url('intro/autosave');//array('enabled' => TRUE);*/
+
+      $path = drupal_get_path('module', 'vistaportal');
+      drupal_add_js($path . '/js/jquery.field.js');
+      drupal_add_js($path . '/js/autosave.js');
+      $settings['autosave']['url'] = url('autosave');
+      if ($_GET['q'] != 'system/ajax') {
+        $settings['autosave']['q'] = $_GET['q'];
+      }
+      $settings['autosave']['form_id'] = $form_id;
+      if (strlen($form_id) != strlen($form['#id'])) {
+        $settings['autosave']['form_id_id'] = str_replace('_', '-', $form_id);
+      }
+      else {
+        $settings['autosave']['form_id_id'] = $form['#id'];
+      }
+
+      /* If an autosaved version of the form exists, make it available via javascript.*/
+
+      if ($autosaved_form = vistaportal_get_autosaved_form($form_id, $_GET['q'], $user -> uid)) {
+        $settings['autosave'] = array_merge($settings['autosave'], array(
+          'serialized' => unserialize($autosaved_form['serialized']),
+          'saved_date' => format_date($autosaved_form['timestamp'], 'medium'),
+        ));
+      }
+
+      drupal_add_js($settings, 'setting');
+      drupal_add_js($path . '/js/jquery-post-autosave.js', 'file');
     }
-
-    drupal_add_js($settings, 'setting');
-		drupal_add_js($path . '/js/jquery-post-autosave.js', 'file');
-  }}
+  }
 
   /**
    * Implements hook_cron().
    */
+
   function vistaportal_cron() {
     include_once ('vistaportal_functions.inc');
     _create_new_account();
@@ -354,6 +475,7 @@
   /**
    * Implements get_autosaved_form
    */
+
   function vistaportal_get_autosaved_form($form_id, $path, $uid) {
     $result = db_query("SELECT form_id, serialized, timestamp FROM {vss_autosaved_forms} WHERE form_id = :form_id AND path = :path AND uid = :uid", array(
       ':form_id' => $form_id,
@@ -370,6 +492,7 @@
   /**
    * Implements vistaportal_autosave_form
    */
+
   function vistaportal_autosave() {
     global $user;
     // Bad request
@@ -383,11 +506,10 @@
 
     $path = $_POST['q'];
     $form_id = $_POST['form_id'];
-
     unset($_POST['q'], $_POST['op'], $_POST['form_build_id'], $_POST['form_token']);
     $serialized = serialize($_POST);
 
-		// Currently, each user can have only one autosave form at a particular path.
+    // Currently, each user can have only one autosave form at a particular path.
     db_delete('vss_autosaved_forms') -> condition('form_id', $form_id) -> condition('path', $path) -> condition('uid', $user -> uid) -> execute();
 
     db_insert('vss_autosaved_forms') -> fields(array(
@@ -398,6 +520,233 @@
       'serialized' => $serialized,
     )) -> execute();
 
-
     exit();
+  }
+
+  /**
+   * This function assigns different roles to different users
+   * based upon their entity_id.
+   */
+  function user_role_edit() {
+    global $user;
+    $account = $user_load($user -> uid);
+    $result = db_query("SELECT entity_id FROM {vss_profile_data} WHERE uid = :uid", array(':uid' => $uid));
+    $uid = $user -> uid;
+    $fields = array(
+      'name' => $account -> name,
+      'mail' => $account -> mail,
+      'pass' => $account -> pass,
+      'status' => 1,
+      'init' => $account -> init,
+      'access' => REQUEST_TIME,
+      'roles' => array(
+        DRUPAL_AUTHENTICATED_RID => 'non-authenticated user',
+        'physician'
+      ),
+    );
+    $account = user_save(NULL, $fields);
+
+    // Terminate if an error occurred during user_save().
+    if (!$account) {
+      drupal_set_message(t("Error saving user account."), 'error');
+      return;
+    }
+    user_set_authmaps($account, array("authname_$module" => $name));
+
+    sleep(10);
+    $account = user_load($user -> uid);
+  }
+
+  /**
+   * Implements the hook_user_login()
+   */
+
+  function vistaportal_user_login(&$edit, $account) {
+
+    /*Do not redirect on password reset*/
+
+    if (!isset($_POST['form_id']) || $_POST['form_id'] != 'user_pass_reset') {
+      if (in_array('administrator', $account -> roles)) {
+        $edit['redirect'] = 'home';
+      }
+      if (in_array('authenticated user', $account -> roles)) {
+        $edit['redirect'] = 'home';
+      }
+      if (in_array('physician', $account -> roles)) {
+        $edit['redirect'] = 'home';
+      }
+      if (in_array('non-authenticated user', $account -> roles)) {
+        $edit['redirect'] = 'user/login';
+      }
+      if (in_array('anonymous user', $account -> roles)) {
+        $edit['redirect'] = 'user/login';
+      }
+    }
+  }
+
+  /**
+   * Why apply
+   */
+  function whyapply_form($form, &$form_state) {
+
+    $form['#theme'] = 'whyapply';
+    return $form;
+  }
+
+  /**
+   * Impelementation of hook_theme()
+   */
+  function vistaportal_theme($existing, $type, $theme, $path) {
+    return array(
+      'vistaportal_preapp_form' => array(
+        'template' => 'user-steps',
+        'path' => drupal_get_path('theme', 'jobapp') . '/templates',
+        'arguments' => array('form' => null),
+      ),
+      'whyapply' => array(
+        'template' => 'why-apply',
+        'path' => drupal_get_path('theme', 'jobapp') . '/templates',
+        'arguments' => array('form' => null)
+      ),
+      'registeremail' => array(
+        'template' => 'register-email',
+        'path' => drupal_get_path('theme', 'jobapp') . '/templates',
+        'arguments' => array('form' => null),
+      ),
+      'forgotpassemail' => array(
+        'template' => 'forgot-pass-email',
+        'path' => drupal_get_path('theme', 'jobapp') . '/templates',
+        'arguments' => array('form' => null),
+      ),
+      'submitted' => array(
+        'template' => 'submitted',
+        'path' => drupal_get_path('theme', 'jobapp') . '/templates',
+        'arguments' => array('form' => null),
+      ),
+    );
+  }
+
+  /**
+   * Function to download a file from the server
+   */
+
+  function download_file($userid = 0, $filename = NULL) {
+    // if the page is called without any arguments do nothing
+    if (($userid == 0) || is_null($filename)) {
+      echo 'Invalid arguments supplied. Please verify your URL and provide the correct number of arguments';
+    }
+    else {
+      downloadfilefromFTP($userid, $filename);
+
+    }
+
+  }
+
+  /**
+   * Function to copy the file from the FTP server onto the local server
+   */
+  function downloadfilefromFTP($userid, $originalfilename) {
+
+    $ftpRootdocspath = variable_get('vistadocsrootpath', '/docs/Vistaportalfiles');
+    $Stream = ftp_connect(variable_get("ftpserver", "oasslcftp02"));
+    ftp_login($Stream, variable_get("ftpuser", "applyVista_dev"), variable_get("ftppass", "pw4drup@lFTP"));
+
+    $localfilestring = drupal_realpath("public://") . '/' . $userid . '_' . time() . '_' . $originalfilename;
+    $remotefilestring = $ftpRootdocspath . "/$userid/$originalfilename";
+
+    if (ftp_size($Stream, $remotefilestring) != -1) {
+      if (ftp_get($Stream, $localfilestring, $remotefilestring, FTP_BINARY)) {
+        pushfileToUser($localfilestring, $originalfilename);
+      }
+      else {
+        echo 'An error occurred while retrieving the file. Please try again later';
+      }
+    }
+    else {
+      echo 'File does not exist on the remote server.';
+    }
+    exit ;
+  }
+
+  /**
+   * Function to push the file to the browser
+   */
+
+  function pushfileToUser($localfilestring, $originalfilename) {
+
+    $file = fopen($localfilestring, "rb");
+    $fsize = filesize($localfilestring);
+
+    $allowed_ext = array(
+
+      // archives
+      'zip' => 'application/zip',
+
+      //text
+      'txt' => 'text/plain',
+
+      // documents
+      'pdf' => 'application/pdf',
+      'doc' => 'application/msword',
+      'xls' => 'application/vnd.ms-excel',
+      'ppt' => 'application/vnd.ms-powerpoint',
+
+      // executables
+      'exe' => 'application/octet-stream',
+
+      // images
+      'gif' => 'image/gif',
+      'png' => 'image/png',
+      'jpg' => 'image/jpeg',
+      'jpeg' => 'image/jpeg',
+
+      // audio
+      'mp3' => 'audio/mpeg',
+      'wav' => 'audio/x-wav',
+
+      // video
+      'mpeg' => 'video/mpeg',
+      'mpg' => 'video/mpeg',
+      'mpe' => 'video/mpeg',
+      'mov' => 'video/quicktime',
+      'avi' => 'video/x-msvideo',
+
+      //Office 2003 and above
+      'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+      'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+      'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+      'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+      'sldx' => 'application/vnd.openxmlformats-officedocument.presentationml.slide',
+      'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+      'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+      'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+    );
+
+    $filemimetype = substr($originalfilename, (strrpos($originalfilename, '.') + 1));
+
+    $headers = array(
+      'Content-Type' => array_key_exists($filemimetype, $allowed_ext) ? $allowed_ext[$filemimetype] : 'application/octet-stream',
+      'Content-Length' => $fsize,
+      'Content-Disposition' => 'attachment; filename="' . $originalfilename . '"',
+    );
+    foreach ($headers as $header => $value) {
+      $header = preg_replace('/\r?\n(?!\t| )/', '', $header);
+      $value = preg_replace('/\r?\n(?!\t| )/', '', $value);
+      drupal_add_http_header($header, $value);
+    }
+
+    if ($file) {
+      while (!feof($file)) {
+        print fread($file, 1024 * 8);
+      }
+    }
+
+    //close the handler and delete the file
+    if ($file) {
+      fclose($file);
+      unlink($localfilestring);
+    }
+    exit ;
   }
