@@ -1,0 +1,50 @@
+@charset "utf-8";
+/* CSS Document for pdf strings */
+body {
+}
+
+div#logo {
+	margin-bottom : 25px;
+}
+
+#content-pdf {
+  width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+p, h3 {
+  /*margin-left:40px;*/
+}
+#title {
+  padding-left: 40px;
+  border-bottom: #000;
+  border-bottom-width: 6px;
+  border-bottom-style: solid;
+  line-height: 13px;
+}
+
+ul li {
+  text-decoration: none;
+  list-style: none;
+  list-style-image: none;
+  list-style-type: none;
+}
+#bold {
+  font-size: 16px;
+  font-weight: bold;
+}
+#dis-answer {
+  margin-left: 60px;
+}
+#premed, #med, #internship, #residency, #affiliations, #certification, #certification2, #add-certification, #exam, #exam1, #exam2, #state-exam, #licenses, #licenses1, #licenses2, #dea, #references, #references1, #references2, #references3, #references4, #references5, #references6 {
+  padding-left: 40px;
+  border-bottom: #000;
+  border-bottom-width: 3px;
+  border-bottom-style: solid;
+}
+#personal-info, #other-med, #internship2, #other-residency, #affiliation2, #ecfmg, #state-exam2, #disciplinary, #dea-language {
+  padding-left: 40px;
+  border-bottom: #000;
+  border-bottom-width: 6px;
+  border-bottom-style: solid;
+}
