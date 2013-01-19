@@ -20,7 +20,11 @@ function vistaportal_disciplinary_form($form, &$form_state){
   $form['disc']['desc'] = array('#markup' => t('<p>Have any of the following ever been
 		or are currently in the process of being investigated, denied, revoked, suspended, reduced,
 		limited, placed on probation, not renewed, been subject to disciplinary action or voluntarily
+<<<<<<< HEAD
 		relinquished? <strong>IF yes, please provide a full explanation on a separate sheet of paper</strong></p>'));
+=======
+		relinquished? <strong>IF yes, please provide a full explanation on a separate sheey of paper</strong></p>'));
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
 		/*$form['disc']['expl'] = array('#markup' => t("<p><strong>If you answer 'YES' to any of the following, please provide 
 		signed and dated explanations on a separate sheet</strong></p>"));*/
 				//This is the line separator
@@ -85,7 +89,11 @@ function vistaportal_disciplinary_form($form, &$form_state){
   );
 	$form['disc']['convicted'] = array(
       '#type' => 'radios','#title' => t('Have you ever been convicted of a misdemeanor
+<<<<<<< HEAD
 		/(other than minor traffic violation) or a felony?'),
+=======
+		//(other than minor traffic violation) or a felony?'),
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
       '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
       '#options' => drupal_map_assoc(array('Yes','No' )),
   );
@@ -184,6 +192,7 @@ function vistaportal_disciplinary_form($form, &$form_state){
 		'#submit' => array('vistaportal_disciplinary_form_submit'),
 		'#attributes' => array('class' => array('affiliations-submit')),
 	  );
+<<<<<<< HEAD
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -200,6 +209,12 @@ function vistaportal_disciplinary_form($form, &$form_state){
       '#submit'=> array('vistaportal_disciplinary_previous'),
     );
     $form['prev']['#attributes'] = array('class' => array('prev'));
+=======
+		$form['save_logout'] = button('Save & Logout');	
+	  $form['prev'] = button('Previous');
+		$form['prev']['#attributes'] = array('class' => array('prev'));
+   
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
 
 return $form;
 }

@@ -11,12 +11,15 @@
   /*
    * This is the form callback for the premed form.
    */
+   
   function vistaportal_education_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     include_once ('vistaportal_functions.inc');
     drupal_add_library('system', 'drupal.ajax');
     drupal_add_library('system', 'jquery.form');
-    //Set this to tree so we can access all dynamic form values
+    
+    /*Set this to tree so we can access all dynamic form values*/
+    
     $form['#tree'] = TRUE;
     $form['#attributes'] = array('enctype' => array("multipart/form-data"));
     $date = date('Y-m-d H:m:s');
@@ -31,7 +34,8 @@
       '#suffix' => '</div>',
     );
 
-    //This counter will be used to determine how many premed sections to add
+    /*This counter will be used to determine how many premed sections to add*/
+    
     if (empty($form_state['p_num_schools'])) {
       $form_state['p_num_schools'] = 1;
     }
@@ -58,7 +62,6 @@
       $form['premed'][$i]['city' . $i]['#required'] = FALSE;
       $form['premed'][$i]['city' . $i]['#prefix'] = '<div class = "premed-city">';
       $form['premed'][$i]['city' . $i]['#suffix'] = '</div>';
-      //This is the date
       $form['premed'][$i]['date' . $i] = array(
         '#prefix' => '<div class="premed-date">',
         '#markup' => 'Dates Attended',
@@ -77,11 +80,10 @@
       $form['premed'][$i]['degree' . $i]['#prefix'] = '<div class = "premed-degree">';
       $form['premed'][$i]['degree' . $i]['#suffix'] = '</div>';
     }
-
-    //Only allow 3 schools for the premed form
+    /*Only allow 3 schools for the premed form*/
+    
     if ($form_state['p_num_schools'] < 3) {
       $form['premed']['add_another'] = array(
-        //'#prefix' => '<div class="edu-btn">',
         '#type' => 'submit',
         '#value' => t('+ Add Pre-Medical Institution'),
         '#submit' => array('vistaportal_form_premed_add'),
@@ -133,6 +135,7 @@
 
     for ($i = 0; $i < $form_state['m_num_schools']; $i++) {
       if ($i > 0) {
+
         $form['med'][$i]['title-txt' . $i]['#prefix'] = '<div class="line-solid2"></div><h2> Medical Education ' . ($i + 1) . '</h2><br/>';
       }
       $form['med'][$i]['school' . $i] = textfield('School of Graduation');
@@ -184,7 +187,6 @@
       $form['med'][$i]['exp_date' . $i] = date_my('If no, state expiration date');
       $form['med'][$i]['exp_date' . $i]['#prefix'] = '<div class = "med-exp-date">';
       $form['med'][$i]['exp_date' . $i]['#suffix'] = '</div>';
-
     }
 
     //Only allow 3 schools for the med form
@@ -259,6 +261,14 @@
   }
 
   /*
+   =======
+   $form['save_logout'] = button('Save & Logout');
+   $form['prev'] = button('Previous');
+
+   return $form;
+   }
+
+   /*
    * This is the form submission callback for the premed form.
    */
 
@@ -318,6 +328,7 @@
      * unset and then reset the premed status flag in
      * the drupal_flags table.
      */
+     
     db_update('vss_drupal_flags') -> fields(array('medschool' => 0, )) -> condition('uid', $user -> uid) -> execute();
 
     /*Overwrite any existing values in the med table.*/
@@ -327,6 +338,7 @@
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
+     
     $med = new stdClass();
     unset($form_state['values']['med']['add_another'], $form_state['values']['med']['remove_school']);
     foreach ($form_state['values']['med'] AS $key => $value) {
@@ -392,8 +404,164 @@
   }
 
   /*
+   =======
+   $form['prev'] = button('Previous');
+   $form['save_logout'] = button('Save & Logout');
+
+   return $form;
+   }
+
+   /*
+   >>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
+   * This is the form submission callback for the premed form.
+   */
+
+  function vistaportal_education_form_submit($form, &$form_state) {
+    global $user;
+    $account = user_load($user -> uid);
+
+    /* Save the form values to the premed table in
+     * the database and set the flag in the drupal_flags
+     * table. If the user refills this form, we need to
+     * unset and then reset the premed status flag in
+     * the drupal_flags table.
+     */
+
+    db_update('vss_drupal_flags') -> fields(array('premed' => 0, )) -> condition('uid', $user -> uid) -> execute();
+
+    /*Overwrite any existing values in the premed table.*/
+
+    db_delete('vss_premed') -> condition('uid', $user -> uid) -> execute();
+
+    /*Insert the form_state values into the premed table.
+     * @TODO remember to add the dynamic fields to the form
+     * and also to the db_query.
+     */
+
+    $premed = new stdClass();
+    unset($form_state['values']['premed']['add_another'], $form_state['values']['premed']['remove_school']);
+    foreach ($form_state['values']['premed'] AS $key => $value) {
+      $form_state['values']['premed'][$key]['date_from' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['premed'][$key]['date_from' . $key]));
+      $form_state['values']['premed'][$key]['date_to' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['premed'][$key]['date_to' . $key]));
+      $premed -> uid = $user -> uid;
+      $premed -> school = $form_state['values']['premed'][$key]['school' . $key];
+      $premed -> degree = $form_state['values']['premed'][$key]['degree' . $key];
+      $premed -> city = $form_state['values']['premed'][$key]['city' . $key];
+      $premed -> state = $form_state['values']['premed'][$key]['state' . $key];
+      $premed -> country = $form_state['values']['premed'][$key]['country' . $key];
+      $premed -> date_from = $form_state['values']['premed'][$key]['date_from' . $key];
+      $premed -> date_to = $form_state['values']['premed'][$key]['date_to' . $key];
+
+      db_insert('vss_premed') -> fields(array(
+        'uid' => $premed -> uid,
+        'school' => $premed -> school,
+        'degree' => $premed -> degree,
+        'city' => $premed -> city,
+        'state' => $premed -> state,
+        'country' => $premed -> country,
+        'date_from' => $premed -> date_from,
+        'date_to' => $premed -> date_to,
+      )) -> execute();
+    }
+
+    /*
+     * Update the drupal_flags table by setting the premed
+     * status flag, letting us know that the form has been filled out.
+     */
+
+    db_update('vss_drupal_flags') -> fields(array('premed' => 1, )) -> condition('uid', $user -> uid) -> execute();
+
+    /* Save the form values to the med table in
+     * the database and set the flag in the drupal_flags
+     * table. If the user refills this form, we need to
+     * unset and then reset the premed status flag in
+     * the drupal_flags table.
+     */
+
+    db_update('vss_drupal_flags') -> fields(array('medschool' => 0, )) -> condition('uid', $user -> uid) -> execute();
+
+    /*Overwrite any existing values in the med table.*/
+    db_delete('vss_medschool') -> condition('uid', $user -> uid) -> execute();
+
+    /*Insert the form_state values into the med table.
+     * @TODO remember to add the dynamic fields to the form
+     * and also to the db_query.
+     */
+
+    $med = new stdClass();
+    unset($form_state['values']['med']['add_another'], $form_state['values']['med']['remove_school']);
+    foreach ($form_state['values']['med'] AS $key => $value) {
+      $form_state['values']['med'][$key]['date_from' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['med'][$key]['date_from' . $key]));
+      $form_state['values']['med'][$key]['date_to' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['med'][$key]['date_to' . $key]));
+      $med -> uid = $user -> uid;
+      $med -> school = $form_state['values']['med'][$key]['school' . $key];
+      $med -> degree = $form_state['values']['med'][$key]['degree' . $key];
+      $med -> city = $form_state['values']['med'][$key]['city' . $key];
+      $med -> state = $form_state['values']['med'][$key]['state' . $key];
+      $med -> country = $form_state['values']['med'][$key]['country' . $key];
+      $med -> date_from = $form_state['values']['med'][$key]['date_from' . $key];
+      $med -> date_to = $form_state['values']['med'][$key]['date_to' . $key];
+      $med -> ecfmg = $form_state['values']['med'][$key]['ecfmg' . $key];
+
+      watchdog('errors', $key);
+      db_insert('vss_medschool') -> fields(array(
+        'uid' => $med -> uid,
+        'school' => $med -> school,
+        'degree' => $med -> degree,
+        'city' => $med -> city,
+        'state' => $med -> state,
+        'country' => $med -> country,
+        'date_from' => $med -> date_from,
+        'date_to' => $med -> date_to,
+        'ecfmg' => $med -> ecfmg,
+      )) -> execute();
+    }
+
+    /*
+     * Update the drupal_flags table by setting the premed
+     * status flag, letting us know that the form has been filled out.
+     */
+
+    db_update('vss_drupal_flags') -> fields(array('medschool' => 1, )) -> condition('uid', $user -> uid) -> execute();
+
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/internship' . $user -> uid);
+
+    /*
+     * @TODO add error checking
+     */
+
+  }
+
+  /*
+   * Ajax callback for the premed form
+   */
+
+  function vistaportal_premed_form_add_school_callback($form, $form_state) {
+    return $form['premed'];
+  }
+
+  /*
+   * Ajax callback for the med form
+   */
+
+  function vistaportal_med_form_add_school_callback($form, $form_state) {
+    return $form['med'];
+  }
+
+  /*
+   * Increment the premed counter when the button is pressed
+   */
+
+  function vistaportal_form_premed_add($form, &$form_state) {
+    $form_state['p_num_schools']++;
+    $form_state['rebuild'] = TRUE;
+  }
+
+  /*
    * Decrement the premed counter when the button is pressed
    */
+
   function vistaportal_form_premed_remove($form, &$form_state) {
     if ($form_state['p_num_schools'] > 1) {
       $form_state['p_num_schools']--;
@@ -404,6 +572,7 @@
   /*
    * Increment the med counter when the button is pressed
    */
+
   function vistaportal_form_med_add($form, &$form_state) {
     $form_state['m_num_schools']++;
     $form_state['rebuild'] = TRUE;
@@ -412,6 +581,7 @@
   /*
    * Decrement the med counter when the button is pressed
    */
+
   function vistaportal_form_med_remove($form, &$form_state) {
     if ($form_state['m_num_schools'] > 1) {
       $form_state['m_num_schools']--;
@@ -422,6 +592,7 @@
   /*
    * This implements the afterbuild
    */
+
   function vistaportal_education_form_afterbuild($form, &$form_state) {
     if ($form_state['values']['med'][0]['valid-indef0'] === 'Yes') {
       unset($form['med'][0]['exp_date0']['#required']);
@@ -432,6 +603,7 @@
   /*
    *This allows the user to go to the previous page
    */
+
   function vistaportal_education_previous($form, &$form_state) {
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/identity' . $user -> uid);

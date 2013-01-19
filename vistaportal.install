@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Author: Tejdeep Addula
  * Company: Aner Group
@@ -937,3 +936,4 @@ function vistaportal_schema() {
     ), 
   );
 }
+

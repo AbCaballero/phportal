@@ -96,7 +96,6 @@
         ),
       );
     }
-
     //First school is mandatory
     if ($form_state['num_ints'] > 1) {
       $form['internship']['remove_school'] = array(
@@ -214,6 +213,18 @@
   }
 
   /*
+<<<<<<< HEAD
+=======
+   * Implements #afterbuild
+   */
+  function vistaportal_internship_form_afterbuild($form, &$form_state) {
+    if ($form_state['values']['internship']['na']) {
+      unset($form['internship']['type']['#required'], $form['internship']['institution']['#required'], $form['internship']['country']['#required'], $form['internship']['state']['#required'], $form['internship']['state_other']['#required'], $form['internship']['city']['#required'], $form['internship']['date_from']['#required'], $form['internship']['date_to']['#required'], $form['internship']['prog_dir']['#required']);
+    }
+  }
+
+  /*
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
    * Ajax callback for the internship form
    */
   function vistaportal_internship_form_add_internship_callback($form, $form_state) {

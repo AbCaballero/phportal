@@ -99,10 +99,18 @@
         'WI',
         'WV',
         'WY',
+<<<<<<< HEAD
       )),
       '#attributes' => array('class' => array('select_state edu-state')),
       '#rules' => array('not_none'),
       '#empty_option' => "Select",
+=======
+        'Other'
+      )),
+      '#attributes' => array('class' => array('select_state edu-state')),
+      '#rules' => array('not_none'),
+      '#empty_option' => "     ",
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     );
     return $element;
   }
@@ -117,7 +125,10 @@
       '#required' => TRUE,
       '#title' => t($title),
       '#options' => drupal_map_assoc(array(
+<<<<<<< HEAD
         'United States',
+=======
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
         'Afghanistan',
         'Aland Islands',
         'Albania',
@@ -348,6 +359,10 @@
         'Ukraine',
         'United Arab Emirates',
         'United Kingdom',
+<<<<<<< HEAD
+=======
+        'United States',
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
         'United States Minor Outlying Islands',
         'Uruguay',
         'Uzbekistan',
@@ -364,7 +379,11 @@
       )),
       '#attributes' => array('class' => array('select_country edu-country ')),
       '#rules' => array('not_none'),
+<<<<<<< HEAD
       '#default_value' => "United States",
+=======
+      '#empty_option' => "     ",
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     );
     return $element;
   }
@@ -590,7 +609,11 @@
       )),
       '#attributes' => array('class' => array('select_education')),
       '#rules' => array('not_none'),
+<<<<<<< HEAD
       '#empty_option' => "Select",
+=======
+      '#empty_option' => "     ",
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     );
     return $element;
   }
@@ -627,12 +650,22 @@
   /*
    * marital field function
    */
+<<<<<<< HEAD
   /*function marital_status($title) {
+=======
+
+  /*function marital_status($title) {
+  function marital_status($title) {
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     $element = array(
       '#type' => 'select',
       '#required' => TRUE,
       '#title' => t($title),
       '#options' => drupal_map_assoc(array(
+<<<<<<< HEAD
+=======
+        '-Select-',
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
         'Single',
         'Married',
         'Divorced',
@@ -643,6 +676,12 @@
       '#empty_option' => "Select",
     );
     return $element;
+<<<<<<< HEAD
+=======
+  }
+    );
+    return $element;
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
   }*/
 
   /*
@@ -877,7 +916,10 @@
       )),
       '#attributes' => array('class' => array('select-specialty row_end percent_90')),
       '#rules' => array('not_none'),
+<<<<<<< HEAD
       '#empty_option' => "Select a specialty",
+=======
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     );
     return $element;
   }
@@ -945,7 +987,11 @@
       '#date_year_range' => '-30:+0',
       '#date_label_position' => 'within',
       '#required' => TRUE,
+<<<<<<< HEAD
       //'#default_value' => N,
+=======
+      '#default_value' => NULL,
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     );
     return $element;
   }
@@ -994,7 +1040,11 @@
       )),
       '#attributes' => array('class' => array('select-exam')),
       '#rules' => array('not_none'),
+<<<<<<< HEAD
       '#empty_option' => "Select",
+=======
+      '#empty_option' => "     ",
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     );
     return $element;
   }
@@ -1013,7 +1063,10 @@
         'Certification',
         'Recertification' 
       )),
+<<<<<<< HEAD
       '#empty_option' => "Select",
+=======
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     );
     return $element;
   }
@@ -1042,6 +1095,7 @@
     );
     return $element;
   }
+<<<<<<< HEAD
 
   /*
    * Number of times an exam is taken field function
@@ -1059,3 +1113,5 @@
     );
     return $element;
   }
+=======
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5

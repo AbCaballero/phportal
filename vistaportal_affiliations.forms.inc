@@ -33,6 +33,10 @@
     $form['affiliations']['listing'] = array('#markup' => t('<p>List all present and previous affiliations with healthcare facilities and medical staff memberships for the past 10 years,
     in chronological order. Include clerkships, assistantships, and military experience. Specify all departments in which privileges were exercised
     and the nature and extent of such privileges. <strong>ALL LOCAL TENENS WORK MUST BE INCLUDED WITH LOCATIONS AND DATES</strong></p>'), );
+<<<<<<< HEAD
+=======
+
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     $form['affiliations_cntr'] = array(
       '#type' => 'fieldset',
       '#title' => t(''),
@@ -40,12 +44,17 @@
       '#prefix' => '<div id="affiliations-fieldset-wrapper">',
       '#suffix' => '</div>',
     );
+<<<<<<< HEAD
     $form['affiliations_cntr']['top-line'] = array ( '#prefix' => '<div class="line-solid">','#suffix' => '</div>',);
+=======
+
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     if (empty($form_state['affiliations_count'])) {
       $form_state['affiliations_count'] = 1;
     }
 
     for ($i = 0; $i < $form_state['affiliations_count']; $i++) {
+<<<<<<< HEAD
     	
 			
     	if ($i > 0) {
@@ -97,6 +106,57 @@
       ),
     );
 		}
+=======
+      if ($i > 0) {
+        $form['affiliations_cntr'][$i]['facility']['#prefix'] = '<h2>affiliation ' . ($i + 1) . '</h2><br/>';
+      }
+      $form['affiliations_cntr'][$i]['facility' . $i] = textfield('Facility or Practice');
+      $form['affiliations_cntr'][$i]['facility' . $i]['#prefix'] = '<div class = "affiliations-facility">';
+      $form['affiliations_cntr'][$i]['facility' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['date' . $i] = array(
+        '#markup' => 'Dates',
+        '#required' => TRUE,
+      );
+      $form['affiliations_cntr'][$i]['date_from' . $i] = date_my('From');
+      $form['affiliations_cntr'][$i]['date_from' . $i]['#prefix'] = '<div class = "affiliations-date_from">';
+      $form['affiliations_cntr'][$i]['date_from' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['date_to' . $i] = date_my('To');
+      $form['affiliations_cntr'][$i]['date_to' . $i]['#prefix'] = '<div class = "affiliations-date_to">';
+      $form['affiliations_cntr'][$i]['date_to' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['address' . $i] = textfield('Street Address');
+      $form['affiliations_cntr'][$i]['address' . $i]['#prefix'] = '<div class = "affiliations-address">';
+      $form['affiliations_cntr'][$i]['address' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['country' . $i] = country('Country');
+      $form['affiliations_cntr'][$i]['country' . $i]['#prefix'] = '<div class = "affiliations-country">';
+      $form['affiliations_cntr'][$i]['country' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['state' . $i] = state('State');
+      $form['affiliations_cntr'][$i]['state' . $i]['#prefix'] = '<div class = "affiliations-state">';
+      $form['affiliations_cntr'][$i]['state' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['city' . $i] = textfield('City');
+      $form['affiliations_cntr'][$i]['city' . $i]['#prefix'] = '<div class = "affiliations-city">';
+      $form['affiliations_cntr'][$i]['city' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['zip' . $i] = zip('Zip Code');
+      $form['affiliations_cntr'][$i]['zip' . $i]['#prefix'] = '<div class = "affiliations-zip">';
+      $form['affiliations_cntr'][$i]['zip' . $i]['#suffix'] = '</div>';
+      $form['affiliations_cntr'][$i]['capacity' . $i] = textfield('Capacity');
+      $form['affiliations_cntr'][$i]['capacity' . $i]['#prefix'] = '<div class = "affiliations-capacity">';
+      $form['affiliations_cntr'][$i]['capacity' . $i]['#suffix'] = '</div>';
+    }
+    if ($form_state['affiliations_count'] < 3) {
+      $form['affiliations_cntr']['aff_another'] = array(
+        '#type' => 'submit',
+        '#value' => t('+ Add Another Affiliation'),
+        '#submit' => array('vistaportal_affiliations_add'),
+        '#limit_validation_errors' => array(),
+        '#ajax' => array(
+          'callback' => 'vistaportal_affiliations_callback',
+          'wrapper' => 'affiliations-fieldset-wrapper',
+          'method' => 'replaceWith',
+          'speed' => 'fast',
+        ),
+      );
+    }
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     if ($form_state['affiliations_count'] > 1) {
       $form['affiliations_cntr']['aff_remove'] = array(
         '#type' => 'submit',
@@ -111,6 +171,7 @@
     }
 
     //this is a line at the bottom
+<<<<<<< HEAD
 	$form['last']['line'] = array(
 	'#prefix' => '<div class="line_left">',
 		//'#markup' => '<hr>',
@@ -150,6 +211,32 @@
     $form['prev']['#attributes'] = array('class' => array('prev'));
     $form['#after_build'][] = 'vistaportal_affiliations_form_afterbuild';
   
+=======
+    $form['last']['line'] = array(
+      '#prefix' => '<div class="line_left">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line_left')),
+      '#suffix' => '</div>',
+    );
+
+    $form['last']['required_field'] = array(
+      '#prefix' => '<div class="required_field2">',
+      '#markup' => 'Required Field',
+      '#required' => TRUE,
+      '#suffix' => '</div>',
+    );
+    $form['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save & Next'),
+      '#name' => 'next',
+      '#submit' => array('vistaportal_affiliations_form_submit'),
+      '#attributes' => array('class' => array('affiliations-submit')),
+    );
+    $form['save_logout'] = button('Save & Logout');
+    $form['prev'] = button('Previous');
+    $form['prev']['#attributes'] = array('class' => array('prev'));
+
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
     return $form;
   }
 
@@ -202,10 +289,16 @@
 
     /*Insert the form_state values into the affiliations table.*/
     $affiliations_cntr = new stdClass();
+<<<<<<< HEAD
     unset($form_state['values']['affiliations_cntr']['aff_remove'], $form_state['values']['affiliations_cntr']['aff_another']);
     foreach ($form_state['values']['affiliations_cntr'] AS $key => $value) {
       $form_state['values']['affiliations_cntr'][$key]['date_from' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['affiliations_cntr'][$key]['date_from' . $key]));
       $form_state['values']['affiliations_cntr'][$key]['date_to' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['affiliations_cntr'][$key]['date_to' . $key]));
+=======
+    foreach ($form_state['values']['affiliations_cntr'] AS $key => $value) {
+      $form_state['values']['affiliations_cntr'][$key]['date_from' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['affiliations_cntr'][$key]['date_from']));
+      $form_state['values']['affiliations_cntr'][$key]['date_to' . $key] = date('Y-m-d H:i:s', strtotime($form_state['values']['affiliations_cntr'][$key]['date_to']));
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
       $affiliations_cntr -> uid = $user -> uid;
       $affiliations_cntr -> facility = $form_state['values']['affiliations_cntr'][$key]['facility' . $key];
       $affiliations_cntr -> date_from = $form_state['values']['affiliations_cntr'][$key]['date_from' . $key];
@@ -239,6 +332,7 @@
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/certifications' . $user -> uid);
   }
+<<<<<<< HEAD
 
   /*
    * Implements the afterbuild
@@ -254,3 +348,5 @@
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/residency' . $user -> uid);
   }
+=======
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5

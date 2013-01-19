@@ -173,15 +173,6 @@
       'type' => MENU_CALLBACK,
     );
 
- /*   $items['preapp/submission'] = array(
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('vistaportal_submission_form'),
-      'access arguments' => array('authenticated user access'),
-      'file' => 'vistaportal_submit.forms.inc',
-      'type' => MENU_CALLBACK,
-      'title' => 'Submit'
-    );*/
-
     $items['preapp/exams'] = array(
       'page callback' => 'drupal_get_form',
       'page arguments' => array('vistaportal_exams_form'),
@@ -374,15 +365,12 @@
       drupal_set_message(t("Error saving user account."), 'error');
       return;
     }
-
     $register = new stdClass();
     $register -> uid = $account -> uid;
     $register -> fname = $form_state['values']['fname'];
     $register -> lname = $form_state['values']['lname'];
     $register -> phone = $form_state['values']['phone'];
     $register -> email = $form_state['values']['email'];
-    $register -> question = $form_state['values']['question'];
-    $register -> answer = $form_state['values']['answer'];
     $register -> primary_specialty = $form_state['values']['primary'];
     $register -> secondary_specialty = $form_state['values']['secondary'];
     $register -> locum_us = $form_state['values']['locum_us'];
@@ -396,8 +384,8 @@
       'last_name' => $register -> lname,
       'phone' => $register -> phone,
       'email' => $register -> email,
-      'question' => $register -> question,
-      'answer' => $register -> answer,
+     // 'question' => $register -> question,
+     // 'answer' => $register -> answer,
       'primary_specialty' => $register -> primary_specialty,
       'secondary_specialty' => $register -> secondary_specialty,
       'locum_us' => $register -> locum_us,

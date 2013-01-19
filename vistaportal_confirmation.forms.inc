@@ -21,7 +21,11 @@ function vistaportal_confirmation_form($form, &$form_state){
 		'#collapsible' => FALSE,
 	);
 	$form['confirmation']['message'] = array(
+<<<<<<< HEAD
 		'#markup' => t('<br /><p>Thank you for submitting your information, 
+=======
+		'#markup' => t('<br /><p>Thank you for submitting you information, 
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
 			you will receive an email shortly</p>'),
 	);
 	

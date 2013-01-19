@@ -46,6 +46,7 @@
     }
   };
 })(jQuery);
+<<<<<<< HEAD
 
 
 /*This restrict postal code fields to only valid input*/
@@ -68,3 +69,5 @@
     }
   };
 })(jQuery);
+=======
+>>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
