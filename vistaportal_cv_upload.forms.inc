@@ -29,6 +29,20 @@
     $form['upload']['desc'] = array('#markup' => t("<h4>CURRICULUM VITAE (OPTIONAL)</h4>
     <p>We're sure we've only scratched the surface and there is much more to know about your<br>
      career to date. Please upload a current CV.</p><br><br>"), );
+    /*$form['submit']= array(
+     '#type' => 'submit',
+     '#value' => t('Upload'),
+     '#attributes' => array('class' => array('submit-upload')),
+     );*/
+    /* $form['upload']['cv'] = array(
+     '#type' => 'file',
+     '#title' => t('Choose a file'),
+     '#title_display' => 'Upload CV:',
+     '#description' => t('Acceptable formats are .pdf, .jpg, and .doc.'),
+     //'#size' => 22,
+     '#theme_wrappers' => array(),
+     //'#weight' => -10,
+     );*/
 
     $form['upload']['cv'] = array(
       '#type' => 'file',
@@ -55,6 +69,8 @@
 
     $list = array();
 
+  $resumes[1358823614] = '1358823614_Testdoc.docx';
+	
 if(is_array($resumes)) {
   ksort($resumes);
   foreach ($resumes as $key => $value) {
@@ -67,13 +83,14 @@ if(is_array($resumes)) {
   $listarray['attributes'] = array();
 
   $form['upload']['cvlist'] = array(
-      '#prefix' => '<div class="docs-txt">',
+      '#prefix' => '<div class="upload-docs">',
       '#markup' => theme_item_list($listarray),
       '#suffix' => '</div>',
     );
 
 
 }
+
     //$form['upload']['formats'] = array('#markup' => t('Acceptable formats are .pdf, .jpg, and .doc.'), );
     //this is a line at the bottom
     $form['last']['line'] = array(
@@ -91,11 +108,21 @@ if(is_array($resumes)) {
     );
     $form['save'] = array(
       '#type' => 'submit',
-      '#value' => t('Save & Next'),
+      '#value' => t('Submit'),
       '#name' => 'next',
       '#submit' => array('vistaportal_cv_upload_form_submit'),
       '#attributes' => array('class' => array('affiliations-submit')),
     );
+		
+		$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+		
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -120,7 +147,9 @@ if(is_array($resumes)) {
    */
 
   function vistaportal_cv_upload_form_submit($form, &$form_state) {
+
     global $user;
+
     $result = db_query("SELECT entity_id FROM {vss_profile_data} WHERE uid = :uid", array(':uid' => $user -> uid));
     $entityid = null;
     foreach ($result as $entityid) {
@@ -169,4 +198,12 @@ if(is_array($resumes)) {
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/references' . $user -> uid);
   }
-
+	
+	
+	/*
+   * Go to the next page
+   */
+  function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/release' . $user -> uid);
+  }

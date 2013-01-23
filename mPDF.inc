@@ -15,7 +15,7 @@ function make_pdf_1($html_string, $formtype){
 	global $user;
 	$account = user_load($user->uid);
 	$mpdf = new mPDF('utf-8', 'A4');
-	$mpdf->setFooter("$name - {DATE m-j-Y h:i:s A}||page {PAGENO} of {nb}");
+	$mpdf->setFooter("$account->name - {DATE m-j-Y h:i:s A}||page {PAGENO} of {nb}");
   $mpdf->setBasePath("sites/all/modules/vistaportal/pdf_html_strings");
   $mpdf->allow_charset_conversion=true;  // Set by default to TRUE
   $mpdf->charset_in='windows-1252';

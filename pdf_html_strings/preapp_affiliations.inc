@@ -19,9 +19,6 @@ $affiliationsString .= "<ul>
 <li>$country</li>
 </ul>
 <ul>
-<li>Program Director: $director</li>
-</ul>
-<ul>
 <li>Capacity: $capacity</li>
 </ul>
 <ul>

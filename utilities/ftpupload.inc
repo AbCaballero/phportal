@@ -27,14 +27,14 @@
 
   }
 
-  function deletefromFTP($destination_file, $entityid) {
-    $ftpRootdocspath = variable_get('vistadocsrootpath', '/docs/Vistaportalfiles');
+function deletefromFTP($destination_file, $entityid) {
+  $ftpRootdocspath = variable_get('vistadocsrootpath', '/docs/Vistaportalfiles');
 
     $Stream = ftp_connect(variable_get("ftpserver", "oasslcftp02"));
     ftp_login($Stream, variable_get("ftpuser", "applyVista_dev"), variable_get("ftppass", "pw4drup@lFTP"));
     //Check if a directory exists for this entityid, if not create one
     $docsDirectory = $ftpRootdocspath . '/' . $entityid;
-    if (ftp_delete($Stream, $docsDirectory . '/' . $destination_file)) {
+    if(ftp_delete($Stream, $docsDirectory . '/' . $destination_file)) {
       drupal_set_message("File successfully deleted from the server");
       return TRUE;
     }
@@ -43,4 +43,4 @@
       watchdog('Error', 'Unable to delete file from the server');
       return FALSE;
     }
-  }
+}

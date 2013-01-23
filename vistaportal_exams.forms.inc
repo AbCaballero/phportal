@@ -5,7 +5,6 @@
    *
    */
 
-
   function vistaportal_exams_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     include_once ('vistaportal_functions.inc');
@@ -13,7 +12,6 @@
     drupal_add_library('system', 'jquery.form');
     /*add this css just for exams page*/
     drupal_add_css(path_to_theme() . '/css/exam-css.css', 'theme', 'all');
-
     /*Set this to tree so we can access all dynamic form values*/
 
     $form['#tree'] = TRUE;
@@ -39,7 +37,6 @@
     if (empty($form_state['exams_count'])) {
       $form_state['exams_count'] = 1;
     }
-
 
     for ($i = 0; $i < $form_state['exams_count']; $i++) {
       $j = $i + 1;
@@ -84,6 +81,7 @@
           '#attributes' => array('class' => array('scores' . $i . $j)),
         );
       }
+
     }
 
     /*To add additional Pages*/
@@ -200,11 +198,21 @@
 
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save & Next'),
+      '#value' => t('Submit'),
       '#name' => 'next',
       '#submit' => array('vistaportal_exams_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
+		
+		$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+		
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -297,7 +305,6 @@
     drupal_goto('preapp/licensure' . $user -> uid);
   }
 
-
   /*
    * Ajax callback for the exams form
    */
@@ -370,4 +377,8 @@
     }
     return $form;
   }
-
+	
+	function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/licensure' . $user -> uid);
+  }	

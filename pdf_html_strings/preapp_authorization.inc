@@ -1,26 +1,31 @@
 <?php
 
-function get_authrealeaseString(){
-  $authrelease = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+function get_authrealeaseString($releaseauth, $date){	
+	global $user;
+	if($releaseauth == 1){
+		$releaseauth = "checked='checked'";
+	}
+	
+  $authrelease = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
+<html xmlns=\"http://www.w3.org/1999/xhtml\">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />
 <title>Pdf Strings</title>
-<link rel="stylesheet" href="preapp_complete.css" type="text/css" media="screen" />
+<link rel=\"stylesheet\" href=\"../css/preapp_complete.css\" type=\"text/css\" />
 
 </head>
 
 <body>
 
-<div id="content-pdf">
-<div id="logo"><img src="logo.png"/></div>
-<div id="title">
+<div id=\"content-pdf\">
+<div id=\"logo\"><img src=\"logo.png\"/></div>
+<div id=\"title\">
 <h1>Physician Application Step 1</h1>
-<h2>Submitted July, 7 2013 7:15 PM MST</h2>
-<h2>For Megan Johnson</h2>
+<h2>Submitted $date</h2>
+<h2>For $user->name </h2>
 </div>
-<div id="auth-txt">
-<p>I, Megan Johnson, hereby authorize all medical schools, university transcript
+<div id=\"auth-txt\">
+<p>I, $user->name, hereby authorize all medical schools, university transcript
 offices, medical institutions or organizations, personal references, physicians,
 attorneys, employers, medical malpractice insurance carriers or organizations,
 business and professional associates, all government agencies and
@@ -57,15 +62,15 @@ and Authorization will terminate two years from the date on this document.</p>
 <p>The original or a copy hereof shall operate as full proof of authority and release.</p>
 
 </div>
-<p><input type="checkbox" checked class="checkbox" />By checking this box you agree that all your information is correctâ€¦.
-NEED FROM LEGAL DEPARTMENT.</p>
+<p><input type=\"checkbox\" checked class=\"checkbox\"/>By checking this box you agree that all your information is correct….
+NEED FROM LEGAL DEPARTMENT.</p> 
 
 
 
 
 </div>
 </body>
-</html>';
+</html>";
 
   return $authrelease;
 }

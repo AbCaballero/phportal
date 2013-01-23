@@ -15,6 +15,10 @@
     global $user;
     $id = $user->uid;
     $account = user_load($id);
+
+
+
+
   	$form = array();
     $form['mydocuments'] = array(
       '#type' => 'fieldset',
@@ -59,6 +63,7 @@ else {
       '#suffix' => '</div>',
     );
 }
+
 
     return $form;
   }

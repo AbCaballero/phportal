@@ -217,11 +217,21 @@
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save & Next'),
+      '#value' => t('Submit'),
       '#name' => 'next',
       '#submit' => array('vistaportal_licensure_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
+		
+		$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+		
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -351,7 +361,6 @@
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
-
     $deareg = new stdClass();
     unset($form_state['values']['deareg']['add_another'], $form_state['values']['deareg']['remove_deareg'], $form_state['values']['deareg']['lines'], $form_state['values']['deareg']['language_spoken'], $form_state['values']['deareg']['na'], $form_state['values']['deareg']['pending']);
     foreach ($form_state['values']['deareg'] AS $key => $value) {
@@ -471,3 +480,11 @@
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/certifications' . $user -> uid);
   }
+ 
+ /*
+   * Go to the next page
+   */
+  function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/disciplinary' . $user -> uid);
+  }	

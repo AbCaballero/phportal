@@ -11,7 +11,6 @@
   /*
    * This is the form callback for the premed form.
    */
-
   function vistaportal_education_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     include_once ('vistaportal_functions.inc');
@@ -166,11 +165,11 @@
       $form['med'][$i]['degree' . $i] = edu('Degree');
       $form['med'][$i]['degree' . $i]['#prefix'] = '<div class = "med-degree">';
       $form['med'][$i]['degree' . $i]['#suffix'] = '</div>';
-      /* $form['med'][$i]['ecfmg' . $i] = textfield('ECFMG CERTIFICATE #');
-       $form['med'][$i]['ecfmg' . $i]['#maxlength'] = 20;
-       $form['med'][$i]['ecfmg' . $i]['#attributes'] = array('class' => array('textfield-license'));
-       $form['med'][$i]['ecfmg' . $i]['#prefix'] = '<div class = "med-ecfmg">';
-       $form['med'][$i]['ecfmg' . $i]['#suffix'] = '</div>';*/
+     /* $form['med'][$i]['ecfmg' . $i] = textfield('ECFMG CERTIFICATE #');
+      $form['med'][$i]['ecfmg' . $i]['#maxlength'] = 20;
+      $form['med'][$i]['ecfmg' . $i]['#attributes'] = array('class' => array('textfield-license'));
+      $form['med'][$i]['ecfmg' . $i]['#prefix'] = '<div class = "med-ecfmg">';
+      $form['med'][$i]['ecfmg' . $i]['#suffix'] = '</div>';*/
 
       //added fields
       $form['med'][$i]['valid' . $i] = array(
@@ -185,6 +184,7 @@
       $form['med'][$i]['exp_date' . $i] = date_my('If no, state expiration date');
       $form['med'][$i]['exp_date' . $i]['#prefix'] = '<div class = "med-exp-date">';
       $form['med'][$i]['exp_date' . $i]['#suffix'] = '</div>';
+
     }
 
     //Only allow 3 schools for the med form
@@ -231,11 +231,21 @@
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save & Next'),
+      '#value' => t('Submit'),
       '#name' => 'next',
       '#submit' => array('vistaportal_education_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
+		
+		$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+		
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -256,7 +266,6 @@
 
     $form['#after_build'][] = 'vistaportal_education_form_afterbuild';
     return $form;
-
   }
 
   /*
@@ -282,7 +291,6 @@
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
-
     $premed = new stdClass();
     unset($form_state['values']['premed']['add_another'], $form_state['values']['premed']['remove_school']);
     foreach ($form_state['values']['premed'] AS $key => $value) {
@@ -308,7 +316,6 @@
         'date_to' => $premed -> date_to,
       )) -> execute();
     }
-
     /*
      * Update the drupal_flags table by setting the premed
      * status flag, letting us know that the form has been filled out.
@@ -321,7 +328,6 @@
      * unset and then reset the premed status flag in
      * the drupal_flags table.
      */
-
     db_update('vss_drupal_flags') -> fields(array('medschool' => 0, )) -> condition('uid', $user -> uid) -> execute();
 
     /*Overwrite any existing values in the med table.*/
@@ -331,7 +337,6 @@
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
-
     $med = new stdClass();
     unset($form_state['values']['med']['add_another'], $form_state['values']['med']['remove_school']);
     foreach ($form_state['values']['med'] AS $key => $value) {
@@ -356,14 +361,13 @@
         'country' => $med -> country,
         'date_from' => $med -> date_from,
         'date_to' => $med -> date_to,
-        // 'ecfmg' => $med -> ecfmg,
+       // 'ecfmg' => $med -> ecfmg,
       )) -> execute();
     }
     /*
      * Update the drupal_flags table by setting the premed
      * status flag, letting us know that the form has been filled out.
      */
-
     db_update('vss_drupal_flags') -> fields(array('medschool' => 1, )) -> condition('uid', $user -> uid) -> execute();
 
     $user = user_load($form_state['uid']);
@@ -385,7 +389,6 @@
   /*
    * Ajax callback for the med form
    */
-
   function vistaportal_med_form_add_school_callback($form, $form_state) {
     return $form['med'];
   }
@@ -393,7 +396,6 @@
   /*
    * Increment the premed counter when the button is pressed
    */
-
   function vistaportal_form_premed_add($form, &$form_state) {
     $form_state['p_num_schools']++;
     $form_state['rebuild'] = TRUE;
@@ -402,7 +404,6 @@
   /*
    * Decrement the premed counter when the button is pressed
    */
-
   function vistaportal_form_premed_remove($form, &$form_state) {
     if ($form_state['p_num_schools'] > 1) {
       $form_state['p_num_schools']--;
@@ -413,7 +414,6 @@
   /*
    * Increment the med counter when the button is pressed
    */
-
   function vistaportal_form_med_add($form, &$form_state) {
     $form_state['m_num_schools']++;
     $form_state['rebuild'] = TRUE;
@@ -422,7 +422,6 @@
   /*
    * Decrement the med counter when the button is pressed
    */
-
   function vistaportal_form_med_remove($form, &$form_state) {
     if ($form_state['m_num_schools'] > 1) {
       $form_state['m_num_schools']--;
@@ -433,7 +432,6 @@
   /*
    * This implements the afterbuild
    */
-
   function vistaportal_education_form_afterbuild($form, &$form_state) {
     if ($form_state['values']['med'][0]['valid-indef0'] === 'Yes') {
       unset($form['med'][0]['exp_date0']['#required']);
@@ -444,8 +442,15 @@
   /*
    *This allows the user to go to the previous page
    */
-
   function vistaportal_education_previous($form, &$form_state) {
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/identity' . $user -> uid);
   }
+
+/*
+   * Go to the next page
+   */
+  function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/internship' . $user -> uid);
+  }	

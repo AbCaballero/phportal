@@ -127,14 +127,24 @@
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save & Next'),
+      '#value' => t('Submit'),
       '#name' => 'next',
       '#submit' => array('vistaportal_internship_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
+		
+		$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+		
     $form['save_logout'] = array(
       '#type' => 'submit',
-      '#value' => t('Save & Logout'),
+      '#value' => t('Save & logout'),
       '#limit_validation_errors' => array(),
       '#attributes' => array('class' => array('button')),
       '#submit' => array('vistaportal_save_logout'),
@@ -215,21 +225,6 @@
   }
 
   /*
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-   * Implements #afterbuild
-   */
-  function vistaportal_internship_form_afterbuild($form, &$form_state) {
-    if ($form_state['values']['internship']['na']) {
-      unset($form['internship']['type']['#required'], $form['internship']['institution']['#required'], $form['internship']['country']['#required'], $form['internship']['state']['#required'], $form['internship']['state_other']['#required'], $form['internship']['city']['#required'], $form['internship']['date_from']['#required'], $form['internship']['date_to']['#required'], $form['internship']['prog_dir']['#required']);
-    }
-  }
-
-  /*
->>>>>>> fca29b309f4c68500be076725e1d93310cf929a5
->>>>>>> 7375f4bacef708a2cfa4c0f1d4e46f530c54a730
    * Ajax callback for the internship form
    */
   function vistaportal_internship_form_add_internship_callback($form, $form_state) {
@@ -268,3 +263,11 @@
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/education' . $user -> uid);
   }
+	
+	/*
+   * Go to the next page
+   */
+  function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/residency' . $user -> uid);
+  }	

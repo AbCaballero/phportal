@@ -92,7 +92,8 @@ $html_string = $identitystring . $premedstring . $medstring . $internstring . $r
 
     $getRealaseauthstring = get_Releaseauth_info($id);
 
-    uploadtoFTP(make_pdf_1($getRealaseauthstring), "AuthorizationRelease.pdf", $id);
+
+   uploadtoFTP(make_pdf_1($getRealaseauthstring), "AuthorizationRelease.pdf", $id);
 
     drupal_goto('preapp/submitted');
   }
@@ -165,8 +166,10 @@ return $personalinfo;
       $city = $result -> city;
       $country = $result -> country;
       $state = $result->state;
-      $date_from = $result -> date_from;
-      $date_to = $result -> date_to;
+      //$date_from = $result -> date_from;
+      $date_from = date('F Y', strtotime($result -> date_from));
+      //$date_to = $result -> date_to;
+      $date_to = date('F Y', strtotime($result -> date_to));
 
       $premedinfo .= get_premedString($counter, $school, $city, $state, $country, $date_from, $date_to, $degree);
       $counter++;
@@ -190,8 +193,10 @@ include_once 'pdf_html_strings/preapp_medical.inc';
       $degree = $result -> degree;
       $city = $result -> city;
       $country = $result -> country;
-      $date_from = $result -> date_from;
-      $date_to = $result -> date_to;
+      //$date_from = $result -> date_from;
+      $date_from = date('F Y', strtotime($result -> date_from));
+      //$date_to = $result -> date_to;
+     $date_to = date('F Y', strtotime($result -> date_to));
       $ecfmg = $result -> ecfmg;
       $state = $result->state;
 
@@ -218,11 +223,11 @@ return $medinfo;
       $city = $result -> city;
       $state = $result -> state;
       $country = $result -> country;
-      $date_from = $result -> date_from;
-      $date_to = $result -> date_to;
+      $date_from = date('F Y', strtotime($result -> date_from));
+      $date_to = date('F Y', strtotime($result -> date_to));
       $prog_dir = $result -> prog_dir;
 
-      $interninfo .= get_internshipString($counter, $type, $institution, $City, $state, $country, $from, $to, $director);
+      $interninfo .= get_internshipString($counter, $type, $institution, $city, $state, $country, $date_from, $date_to, $prog_dir);
       $counter++;
     }
 return $interninfo;
@@ -243,11 +248,13 @@ include_once 'pdf_html_strings/preapp_residency.inc';
       $City = $result -> city;
       $state = $result -> state;
       $country = $result -> country;
-      $date_from = $result -> date_from;
-      $date_to = $result -> date_to;
+      //$date_from = $result -> date_from;
+      $date_from = date('F Y', strtotime($result -> date_from));
+      //$date_to = $result -> date_to;
+      $date_to = date('F Y', strtotime($result -> date_to));
       $prog_dir = $result -> prog_dir;
 
-       $residencyinfo .= get_residencyString($counter, $type, $institution, $City, $state, $country, $date_from, $date_to, $director);
+       $residencyinfo .= get_residencyString($counter, $type, $institution, $City, $state, $country, $date_from, $date_to, $prog_dir);
       $counter++;
     }
 
@@ -271,8 +278,10 @@ $query = db_select('vss_affiliations', 'a');
       $city = $result -> city;
       $state = $result -> state;
       $zip = $result -> zip;
-      $date_from = $result -> date_from;
-      $date_to = $result -> date_to;
+      //$date_from = $result -> date_from;
+     $date_from = date('F Y', strtotime($result -> date_from));
+      //$date_to = $result -> date_to;
+     $date_to = date('F Y', strtotime($result -> date_to));
       $country = $result -> country;
       $capacity = $result -> capacity;
 
@@ -284,6 +293,8 @@ return $affiliationsinfo;
   }
 
   function get_certifications_info($userid) {
+  	include_once 'pdf_html_strings/preapp_certifications.inc';
+		$certificationsinfo = '';
     $query = db_select('vss_certifications', 'c');
     $query -> condition('c.uid', $userid, '=');
     $query -> fields('c');
@@ -295,7 +306,7 @@ return $affiliationsinfo;
       $board_exp_date = $result -> board_exp_date;
       $cert_num = $result -> cert_num;
       $cert_recert = $result -> cert_recert;
-      $certificationsinfo .= get_certificationsString($counter, $board_status, $board, $board_exp_date, $certnum, $cert_recert);
+      $certificationsinfo .= get_certificationsString($counter, $board_status, $board, $board_exp_date, $cert_num, $cert_recert);
       $counter++;
     }
     return $certificationsinfo;
@@ -314,10 +325,12 @@ return $affiliationsinfo;
       $country = $result -> country;
       $state = $result -> state;
       $lic_number = $result -> lic_number;
-      $date_issued = $result -> date_issued;
-      $date_expired = $result -> date_expired;
+      //$date_issued = $result -> date_issued;
+      $date_issued = date('F Y', strtotime($result -> date_issued));
+      //$date_expired = $result -> date_expired;
+      $date_expired = date('F Y', strtotime($result -> date_expired));
       $original_state_license = $result -> original_state_license;
-      $licenseinfo .= get_licensureString($counter, $lic_type, $country, $state, $lic_number, $date_issued, $date_expired, $original_state_license);
+      $licenseinfo .= get_licenseString($counter, $lic_type, $country, $state, $lic_number, $date_issued, $date_expired, $original_state_license);
       $counter++;
     }
     return $licenseinfo;
@@ -387,7 +400,7 @@ return $affiliationsinfo;
     foreach ($results AS $result) {
       $fcvs = $result -> fcvs;
       $language_spoken = $result -> language_spoken;
-      $licensureinfo = get_addcertificationsString($fcvs, $language_spoken);
+      $licensureinfo = get_licensureString($fcvs, $language_spoken);
     }
     return $licensureinfo;
   }
@@ -405,15 +418,17 @@ return $affiliationsinfo;
       $country = $result -> country;
       $lic_number = $result -> lic_number;
       $date_issued = $result -> date_issued;
-      $date_expired = $result -> date_expired;
+      //$date_expired = $result -> date_expired;
+      $date_expired = date('F Y', strtotime($result -> date_expired));
+
       $schedule_2 = $result -> schedule_2;
       $schedule_3 = $result -> schedule_3;
       $schedule_4 = $result -> schedule_4;
       $schedule_5 = $result -> schedule_5;
       $schedule_2n = $result -> schedule_2n;
       $schedule_3n = $result -> schedule_3n;
-      $language = $result -> language;
-      $deareginfo .= get_dearegString($counter, $pending, $country, $lic_num, $date_issued, $date_expired, $schedule_2, $schedule_3, $schedule_4, $schedule_5, $schedule_2n, $schedule_3n, $language);
+      //$language = $result -> language;
+      $deareginfo .= get_dearegString($counter, $pending, $country, $lic_number, $date_issued, $date_expired, $schedule_2, $schedule_3, $schedule_4, $schedule_5, $schedule_2n, $schedule_3n);
       $counter++;
     }
     return $deareginfo;
@@ -430,11 +445,10 @@ return $affiliationsinfo;
     foreach ($results AS $result) {
       $type = $result -> type;
       $cert_name = $result -> cert_name;
-      $exp_date = $result -> exp_date;
+      //$exp_date = $result -> exp_date;
+      $exp_date = date('F Y', strtotime($result -> exp_date));
       $cert_num = $result -> cert_num;
-      $ecfmg = $result -> ecfmg;
-      $ecfmg_ecp_date = $result -> ecfmg_exp_date;
-      $addcertificationsinfo .= get_addcertificationsString($counter, $board_status, $board, $board_exp_date, $certnum, $cert_recert);
+      $addcertificationsinfo .= get_addcertificationsString($counter, $type, $cert_name, $exp_date, $cert_num);
       $counter++;
     }
     return $addcertificationsinfo;
@@ -457,7 +471,8 @@ scores for each exam. You must complete steps or parts in the right sequence.</p
     foreach ($results AS $result) {
       $title = $result -> title;
       $times = $result -> times;
-      $taken = $result -> date_taken;
+      //$taken = $result -> date_taken; 
+      $taken = date('F Y', strtotime($result -> date_taken));
       $score = $result -> result;
 
       if ((strcasecmp($previousexam, $title) != 0)) {
@@ -482,11 +497,11 @@ scores for each exam. You must complete steps or parts in the right sequence.</p
       }
 
     }
+}
 
   function get_Releaseauth_info($userid) {
 include_once 'pdf_html_strings/preapp_authorization.inc';
-
-return get_authrealeaseString();
+   
+		return get_authrealeaseString(" ", date('F j, Y g:i A T'));
 
   }
-}

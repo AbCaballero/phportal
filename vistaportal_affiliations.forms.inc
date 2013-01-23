@@ -42,13 +42,13 @@
       '#suffix' => '</div>',
     );
     $form['affiliations_cntr']['top-line'] = array ( '#prefix' => '<div class="line-solid">','#suffix' => '</div>',);
-
     if (empty($form_state['affiliations_count'])) {
       $form_state['affiliations_count'] = 1;
     }
 
     for ($i = 0; $i < $form_state['affiliations_count']; $i++) {
-    				
+    	
+			
     	if ($i > 0) {
         $form['affiliations_cntr'][$i]['title-txt' . $i]['#prefix'] = '<h2> AFFILIATIONS ' . ($i + 1) . '</h2><br/>';
       }
@@ -56,8 +56,10 @@
 			$form['affiliations_cntr'][$i]['facility' . $i]['#prefix'] = '<div class = "affiliations-facility">' ;
 			$form['affiliations_cntr'][$i]['facility' . $i]['#suffix'] = '</div>' ;
 			$form['affiliations_cntr'][$i]['date'. $i] = array(
-			'#markup' => 'Dates',
+			'#prefix' => '<div class="date-title">',
+			'#markup' => 'Dates Attended',
 			'#required' => TRUE,
+			'#suffix' => '</div>',
 			);
       $form['affiliations_cntr'][$i]['date_from'. $i] = date_my('From');
 			$form['affiliations_cntr'][$i]['date_from' . $i]['#prefix'] = '<div class = "affiliations-date_from">' ;
@@ -78,12 +80,9 @@
 			$form['affiliations_cntr'][$i]['city' . $i]['#prefix'] = '<div class = "affiliations-city">' ;
 			$form['affiliations_cntr'][$i]['city' . $i]['#suffix'] = '</div>' ;
 			$form['affiliations_cntr'][$i]['zip'. $i] = zip('Zip Code');
-		  $form['affiliations_cntr'][$i]['zip'. $i]['#attributes'] = array('class' => array('textfield-postal'));
 			$form['affiliations_cntr'][$i]['zip' . $i]['#prefix'] = '<div class = "affiliations-zip">' ;
 			$form['affiliations_cntr'][$i]['zip' . $i]['#suffix'] = '</div>' ;
       $form['affiliations_cntr'][$i]['capacity'. $i] = textfield('Capacity');
-      $form['affiliations_cntr'][$i]['capacity'. $i]['#maxlength'] = 3;
-      $form['affiliations_cntr'][$i]['capacity'. $i]['#attributes'] = array('class' => array('textfield-license'));
 			$form['affiliations_cntr'][$i]['capacity' . $i]['#prefix'] = '<div class = "affiliations-capacity">' ;
 			$form['affiliations_cntr'][$i]['capacity' . $i]['#suffix'] = '</div>' ;
     }
@@ -115,7 +114,6 @@
     }
 
     //this is a line at the bottom
-
 	$form['last']['line'] = array(
 	'#prefix' => '<div class="line_left">',
 		//'#markup' => '<hr>',
@@ -131,11 +129,21 @@
 		);
 	$form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save & Next'),
+		'#value' => t('Submit'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_affiliations_form_submit'),
 		'#attributes' => array('class' => array('affiliations-submit')),
 	);
+	
+	$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+	
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -259,4 +267,11 @@
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/residency' . $user -> uid);
   }
-
+	
+	/*
+   * Go to the next page
+   */
+  function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/certifications' . $user -> uid);
+  }

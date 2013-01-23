@@ -27,7 +27,6 @@ function vistaportal_disciplinary_form($form, &$form_state){
   $form['disc']['line'] = array('#prefix' => '<div class="line-solid">','#suffix' => '</div>',);
 	$form['disc']['med_lic'] = array(
       '#type' => 'radios','#title' => t('Medical license in any jurisdication?'),
-
       '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
       '#options' => drupal_map_assoc(array('Yes','No' )),
   );
@@ -180,11 +179,21 @@ function vistaportal_disciplinary_form($form, &$form_state){
 		);
 	  $form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save & Next'),
+		'#value' => t('Submit'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_disciplinary_form_submit'),
 		'#attributes' => array('class' => array('affiliations-submit')),
 	  );
+		
+		$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+		
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -204,6 +213,14 @@ function vistaportal_disciplinary_form($form, &$form_state){
 
 return $form;
 }
+
+/*
+   * Go to the next page
+   */
+  function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/references' . $user -> uid);
+  }
 
 /*
  * This is the form submission callback for the disciplinary form.

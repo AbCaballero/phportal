@@ -124,11 +124,21 @@
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save & Next>'),
+      '#value' => t('Submit'),
       '#name' => 'next',
       '#submit' => array('vistaportal_references_form_submit'),
       '#attributes' => array('class' => array('education-submit')),
     );
+		
+		$form['next'] = array(
+      '#type' => 'submit',
+      '#value' => t('Next'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit' => array('vistaportal_next'),
+    );
+		$form['next']['#attributes'] = array('class' => array('next'));
+		
     $form['save_logout'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Logout'),
@@ -228,3 +238,11 @@
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/disciplinary' . $user -> uid);
   }
+
+  /*
+   * Go to the next page
+   */
+  function vistaportal_next($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/upload' . $user -> uid);
+  }	

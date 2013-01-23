@@ -1,5 +1,5 @@
  <?php
- function get_licenseseString($counter, $lic_type, $country, $state, $lic_number, $date_issued, $date_expired, $original_state_license) {
+ function get_licenseString($counter, $lic_type, $country, $state, $lic_number, $date_issued, $date_expired, $original_state_license) {
 $licensesString = "<div id=\"licenses1\">
 <ul>
 <li id=\"bold\">License $counter</li>
