@@ -351,6 +351,7 @@
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
+
     $deareg = new stdClass();
     unset($form_state['values']['deareg']['add_another'], $form_state['values']['deareg']['remove_deareg'], $form_state['values']['deareg']['lines'], $form_state['values']['deareg']['language_spoken'], $form_state['values']['deareg']['na'], $form_state['values']['deareg']['pending']);
     foreach ($form_state['values']['deareg'] AS $key => $value) {

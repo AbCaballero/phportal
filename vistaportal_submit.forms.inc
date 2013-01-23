@@ -284,8 +284,6 @@ return $affiliationsinfo;
   }
 
   function get_certifications_info($userid) {
-  	include_once 'pdf_html_strings/preapp_certifications.inc';
-		$certificationsinfo = '';
     $query = db_select('vss_certifications', 'c');
     $query -> condition('c.uid', $userid, '=');
     $query -> fields('c');

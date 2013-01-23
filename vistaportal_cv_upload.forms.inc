@@ -29,20 +29,6 @@
     $form['upload']['desc'] = array('#markup' => t("<h4>CURRICULUM VITAE (OPTIONAL)</h4>
     <p>We're sure we've only scratched the surface and there is much more to know about your<br>
      career to date. Please upload a current CV.</p><br><br>"), );
-    /*$form['submit']= array(
-     '#type' => 'submit',
-     '#value' => t('Upload'),
-     '#attributes' => array('class' => array('submit-upload')),
-     );*/
-    /* $form['upload']['cv'] = array(
-     '#type' => 'file',
-     '#title' => t('Choose a file'),
-     '#title_display' => 'Upload CV:',
-     '#description' => t('Acceptable formats are .pdf, .jpg, and .doc.'),
-     //'#size' => 22,
-     '#theme_wrappers' => array(),
-     //'#weight' => -10,
-     );*/
 
     $form['upload']['cv'] = array(
       '#type' => 'file',
@@ -88,7 +74,6 @@ if(is_array($resumes)) {
 
 
 }
-
     //$form['upload']['formats'] = array('#markup' => t('Acceptable formats are .pdf, .jpg, and .doc.'), );
     //this is a line at the bottom
     $form['last']['line'] = array(
@@ -135,9 +120,7 @@ if(is_array($resumes)) {
    */
 
   function vistaportal_cv_upload_form_submit($form, &$form_state) {
-
     global $user;
-
     $result = db_query("SELECT entity_id FROM {vss_profile_data} WHERE uid = :uid", array(':uid' => $user -> uid));
     $entityid = null;
     foreach ($result as $entityid) {
@@ -186,3 +169,4 @@ if(is_array($resumes)) {
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/references' . $user -> uid);
   }
+

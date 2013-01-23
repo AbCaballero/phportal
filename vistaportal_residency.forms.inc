@@ -35,38 +35,38 @@
     for ($i = 0; $i < $form_state['num_res']; $i++) {
       if ($i > 0) {
         $form['residency'][$i]['title-txt' . $i]['#prefix'] = '<div class="line-solid"></div><h2> RESIDENCY ' . ($i + 1) . '</h2><br/>';
-      }	
+      }
       $form['residency'][$i]['na'] = array(
         '#type' => 'checkbox',
         '#title' => t('Not Applicable'),
         '#required' => FALSE,
       );
-			
+
       $form['residency'][$i]['type' . $i] = textfield('Type');
-			$form['residency'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">' ;
-			$form['residency'][$i]['type' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">';
+      $form['residency'][$i]['type' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['institution' . $i] = textfield('Institution');
-			$form['residency'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">' ;
-			$form['residency'][$i]['institution' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">';
+      $form['residency'][$i]['institution' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['country' . $i] = country('Country');
-			$form['residency'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">' ;
-			$form['residency'][$i]['country' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">';
+      $form['residency'][$i]['country' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['state' . $i] = state('State');
-			$form['residency'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">' ;
-			$form['residency'][$i]['state' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">';
+      $form['residency'][$i]['state' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['city' . $i] = textfield('City');
-			$form['residency'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">' ;
-			$form['residency'][$i]['city' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">';
+      $form['residency'][$i]['city' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['date_from' . $i] = date_my('From');
-			$form['residency'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">' ;
-			$form['residency'][$i]['date_from' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">';
+      $form['residency'][$i]['date_from' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['date_to' . $i] = date_my('To');
-			$form['residency'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">' ;
-			$form['residency'][$i]['date_to' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">';
+      $form['residency'][$i]['date_to' . $i]['#suffix'] = '</div>';
       $form['residency'][$i]['prog_dir' . $i] = textfield('Program Director');
-                     $form['residency'][$i]['prog_dir' . $i]['#required']=FALSE;
-			$form['residency'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">' ;
-			$form['residency'][$i]['prog_dir' . $i]['#suffix'] = '</div>' ;
+      $form['residency'][$i]['prog_dir' . $i]['#required'] = FALSE;
+      $form['residency'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">';
+      $form['residency'][$i]['prog_dir' . $i]['#suffix'] = '</div>';
     }
 
     if ($form_state['num_res'] < 3) {
@@ -96,14 +96,14 @@
         ),
       );
     }
-		
-			//This is the line separator
-      $form['p']['line3'] = array(
-	    '#prefix' => '<div class="line-solid">',
-		  //'#markup' => '<hr>',
-	  	'#attributes' => array('class' => array('line-solid')),
-		  '#suffix' => '</div>',
-	    );
+
+    //This is the line separator
+    $form['p']['line3'] = array(
+      '#prefix' => '<div class="line-solid">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line-solid')),
+      '#suffix' => '</div>',
+    );
 
     $form['fellowship'] = array(
       '#type' => 'fieldset',
@@ -121,37 +121,37 @@
       if ($i > 0) {
         $form['fellowship'][$i]['title-txt' . $i]['#prefix'] = '<div class="line-solid"></div><h2> ADDITIONAL FELLOWSHIP OR OTHER GRADUATE EDUCATION ' . ($i + 1) . '</h2><br/>';
       }
-		  $form['fellowship'][$i]['na'] = array(
+      $form['fellowship'][$i]['na'] = array(
         '#type' => 'checkbox',
         '#title' => t('Not Applicable'),
         '#required' => FALSE,
       );
-			
+
       $form['fellowship'][$i]['type' . $i] = textfield('Type');
-			$form['fellowship'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">' ;
-			$form['fellowship'][$i]['type' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['type' . $i]['#prefix'] = '<div class = "residency-type">';
+      $form['fellowship'][$i]['type' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['institution' . $i] = textfield('Institution');
-			$form['fellowship'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">' ;
-			$form['fellowship'][$i]['institution' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['institution' . $i]['#prefix'] = '<div class = "residency-institution">';
+      $form['fellowship'][$i]['institution' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['country' . $i] = country('Country');
-			$form['fellowship'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">' ;
-			$form['fellowship'][$i]['country' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['country' . $i]['#prefix'] = '<div class = "residency-country">';
+      $form['fellowship'][$i]['country' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['state' . $i] = state('State');
-			$form['fellowship'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">' ;
-			$form['fellowship'][$i]['state' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['state' . $i]['#prefix'] = '<div class = "residency-state">';
+      $form['fellowship'][$i]['state' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['city' . $i] = textfield('City');
-			$form['fellowship'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">' ;
-			$form['fellowship'][$i]['city' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['city' . $i]['#prefix'] = '<div class = "residency-city">';
+      $form['fellowship'][$i]['city' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['date_from' . $i] = date_my('From');
-			$form['fellowship'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">' ;
-			$form['fellowship'][$i]['date_from' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['date_from' . $i]['#prefix'] = '<div class = "residency-date_from">';
+      $form['fellowship'][$i]['date_from' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['date_to' . $i] = date_my('To');
-			$form['fellowship'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">' ;
-			$form['fellowship'][$i]['date_to' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['date_to' . $i]['#prefix'] = '<div class = "residency-date_to">';
+      $form['fellowship'][$i]['date_to' . $i]['#suffix'] = '</div>';
       $form['fellowship'][$i]['prog_dir' . $i] = textfield('Program Director');
-                     $form['fellowship'][$i]['prog_dir' . $i]['#required']=FALSE;
-			$form['fellowship'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">' ;
-			$form['fellowship'][$i]['prog_dir' . $i]['#suffix'] = '</div>' ;
+      $form['fellowship'][$i]['prog_dir' . $i]['#required'] = FALSE;
+      $form['fellowship'][$i]['prog_dir' . $i]['#prefix'] = '<div class = "residency-prog_dir">';
+      $form['fellowship'][$i]['prog_dir' . $i]['#suffix'] = '</div>';
     }
 
     if ($form_state['num_fellow'] < 3) {
@@ -183,20 +183,20 @@
     }
 
     //this is a line at the bottom
-	$form['last']['line'] = array(
-	'#prefix' => '<div class="line_left">',
-		//'#markup' => '<hr>',
-		'#attributes' => array('class' => array('line_left')),
-		'#suffix' => '</div>',
-		);
-		
-		$form['last']['required_field'] = array(
-	'#prefix' => '<div class="required_field2">',
-		'#markup' => 'Required Field',
-		'#required' => TRUE,
-		'#suffix' => '</div>',
-		);
-		$form['submit'] = array(
+    $form['last']['line'] = array(
+      '#prefix' => '<div class="line_left">',
+      //'#markup' => '<hr>',
+      '#attributes' => array('class' => array('line_left')),
+      '#suffix' => '</div>',
+    );
+
+    $form['last']['required_field'] = array(
+      '#prefix' => '<div class="required_field2">',
+      '#markup' => 'Required Field',
+      '#required' => TRUE,
+      '#suffix' => '</div>',
+    );
+    $form['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save & Next'),
       '#name' => 'next',
@@ -208,7 +208,7 @@
       '#value' => t('Save & Logout'),
       '#limit_validation_errors' => array(),
       '#attributes' => array('class' => array('button')),
-      '#submit'=> array('vistaportal_save_logout'),
+      '#submit' => array('vistaportal_save_logout'),
     );
 
     $form['prev'] = array(
@@ -216,15 +216,15 @@
       '#value' => t('Previous'),
       '#limit_validation_errors' => array(),
       '#attributes' => array('class' => array('button prev prev')),
-      '#submit'=> array('vistaportal_residency_previous'),
+      '#submit' => array('vistaportal_residency_previous'),
     );
-    $form['prev']['#attributes'] = array('class' => array('prev'));		
+    $form['prev']['#attributes'] = array('class' => array('prev'));
 
     $form['#after_build'][] = 'vistaportal_residency_form_afterbuild';
     return $form;
   }
 
-   /*
+  /*
    * This is the form submission callback for the residency form.
    */
 
@@ -366,33 +366,21 @@
     $form_state['rebuild'] = TRUE;
   }
 
-	/*
-	 * Implements the afterbuild
-	 */
-	  function vistaportal_residency_form_afterbuild($form, &$form_state) {
+  /*
+   * Implements the afterbuild
+   */
+  function vistaportal_residency_form_afterbuild($form, &$form_state) {
     if ($form_state['values']['residency'][0]['na']) {
-      unset($form['residency'][0]['type0']['#required'], 
-      $form['residency'][0]['institution0']['#required'], 
-      $form['residency'][0]['state0']['#required'], 
-      $form['residency'][0]['city0']['#required'], 
-      $form['residency'][0]['date_from0']['#required'],  
-      $form['residency'][0]['date_to0']['#required'],  
-      $form['residency'][0]['prog_dir0']['#required']);
+      unset($form['residency'][0]['type0']['#required'], $form['residency'][0]['institution0']['#required'], $form['residency'][0]['state0']['#required'], $form['residency'][0]['city0']['#required'], $form['residency'][0]['date_from0']['#required'], $form['residency'][0]['date_to0']['#required'], $form['residency'][0]['prog_dir0']['#required']);
     }
-		if ($form_state['values']['fellowship'][0]['na']) {
-      unset($form['fellowship'][0]['type0']['#required'], 
-      $form['fellowship'][0]['institution0']['#required'], 
-      $form['fellowship'][0]['state0']['#required'], 
-      $form['fellowship'][0]['city0']['#required'], 
-      $form['fellowship'][0]['date_from0']['#required'],  
-      $form['fellowship'][0]['date_to0']['#required'],  
-      $form['fellowship'][0]['prog_dir0']['#required']);
+    if ($form_state['values']['fellowship'][0]['na']) {
+      unset($form['fellowship'][0]['type0']['#required'], $form['fellowship'][0]['institution0']['#required'], $form['fellowship'][0]['state0']['#required'], $form['fellowship'][0]['city0']['#required'], $form['fellowship'][0]['date_from0']['#required'], $form['fellowship'][0]['date_to0']['#required'], $form['fellowship'][0]['prog_dir0']['#required']);
     }
-		
+
     return $form;
   }
 
-  function vistaportal_residency_previous($form, &$form_state){
-	$user = user_load($form_state['uid']);
-	drupal_goto('preapp/internship' . $user -> uid);
-}	
+  function vistaportal_residency_previous($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/internship' . $user -> uid);
+  }

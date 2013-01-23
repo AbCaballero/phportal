@@ -33,6 +33,7 @@
     $form['affiliations']['listing'] = array('#markup' => t('<p>List all present and previous affiliations with healthcare facilities and medical staff memberships for the past 10 years,
     in chronological order. Include clerkships, assistantships, and military experience. Specify all departments in which privileges were exercised
     and the nature and extent of such privileges. <strong>ALL LOCUM TENENS WORK MUST BE INCLUDED WITH LOCATIONS AND DATES.</strong></p>'), );
+
     $form['affiliations_cntr'] = array(
       '#type' => 'fieldset',
       '#title' => t(''),
@@ -41,13 +42,13 @@
       '#suffix' => '</div>',
     );
     $form['affiliations_cntr']['top-line'] = array ( '#prefix' => '<div class="line-solid">','#suffix' => '</div>',);
+
     if (empty($form_state['affiliations_count'])) {
       $form_state['affiliations_count'] = 1;
     }
 
     for ($i = 0; $i < $form_state['affiliations_count']; $i++) {
-    	
-			
+    				
     	if ($i > 0) {
         $form['affiliations_cntr'][$i]['title-txt' . $i]['#prefix'] = '<h2> AFFILIATIONS ' . ($i + 1) . '</h2><br/>';
       }
@@ -77,13 +78,12 @@
 			$form['affiliations_cntr'][$i]['city' . $i]['#prefix'] = '<div class = "affiliations-city">' ;
 			$form['affiliations_cntr'][$i]['city' . $i]['#suffix'] = '</div>' ;
 			$form['affiliations_cntr'][$i]['zip'. $i] = zip('Zip Code');
-		       $form['affiliations_cntr'][$i]['zip'. $i]['#attributes'] = array('class' => array('textfield-postal'));
+		  $form['affiliations_cntr'][$i]['zip'. $i]['#attributes'] = array('class' => array('textfield-postal'));
 			$form['affiliations_cntr'][$i]['zip' . $i]['#prefix'] = '<div class = "affiliations-zip">' ;
 			$form['affiliations_cntr'][$i]['zip' . $i]['#suffix'] = '</div>' ;
       $form['affiliations_cntr'][$i]['capacity'. $i] = textfield('Capacity');
       $form['affiliations_cntr'][$i]['capacity'. $i]['#maxlength'] = 3;
       $form['affiliations_cntr'][$i]['capacity'. $i]['#attributes'] = array('class' => array('textfield-license'));
-	
 			$form['affiliations_cntr'][$i]['capacity' . $i]['#prefix'] = '<div class = "affiliations-capacity">' ;
 			$form['affiliations_cntr'][$i]['capacity' . $i]['#suffix'] = '</div>' ;
     }
@@ -115,6 +115,7 @@
     }
 
     //this is a line at the bottom
+
 	$form['last']['line'] = array(
 	'#prefix' => '<div class="line_left">',
 		//'#markup' => '<hr>',
@@ -258,3 +259,4 @@
     $user = user_load($form_state['uid']);
     drupal_goto('preapp/residency' . $user -> uid);
   }
+

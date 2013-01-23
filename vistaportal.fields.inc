@@ -188,7 +188,6 @@
         'Estonia',
         'Ethiopia',
         'Falkland Islands (Malvinas)',
-
         'Faroe Islands',
         'Fiji',
         'Finland',
@@ -629,6 +628,7 @@
    * marital field function
    */
   /*function marital_status($title) {
+   <<<<<<< HEAD
    $element = array(
    '#type' => 'select',
    '#required' => TRUE,

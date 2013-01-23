@@ -5,6 +5,7 @@
    *
    */
 
+
   function vistaportal_exams_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     include_once ('vistaportal_functions.inc');
@@ -12,6 +13,7 @@
     drupal_add_library('system', 'jquery.form');
     /*add this css just for exams page*/
     drupal_add_css(path_to_theme() . '/css/exam-css.css', 'theme', 'all');
+
     /*Set this to tree so we can access all dynamic form values*/
 
     $form['#tree'] = TRUE;
@@ -37,6 +39,7 @@
     if (empty($form_state['exams_count'])) {
       $form_state['exams_count'] = 1;
     }
+
 
     for ($i = 0; $i < $form_state['exams_count']; $i++) {
       $j = $i + 1;
@@ -81,7 +84,6 @@
           '#attributes' => array('class' => array('scores' . $i . $j)),
         );
       }
-
     }
 
     /*To add additional Pages*/
@@ -295,6 +297,7 @@
     drupal_goto('preapp/licensure' . $user -> uid);
   }
 
+
   /*
    * Ajax callback for the exams form
    */
@@ -367,3 +370,4 @@
     }
     return $form;
   }
+

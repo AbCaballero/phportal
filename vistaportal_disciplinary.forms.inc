@@ -27,6 +27,7 @@ function vistaportal_disciplinary_form($form, &$form_state){
   $form['disc']['line'] = array('#prefix' => '<div class="line-solid">','#suffix' => '</div>',);
 	$form['disc']['med_lic'] = array(
       '#type' => 'radios','#title' => t('Medical license in any jurisdication?'),
+
       '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
       '#options' => drupal_map_assoc(array('Yes','No' )),
   );
