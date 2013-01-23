@@ -14,6 +14,8 @@
   function vistaportal_certifications_form($form, &$form_state) {
     include_once ('vistaportal.fields.inc');
     include_once ('vistaportal_functions.inc');
+    global $user;
+    $account = user_load($user -> uid);
     $form['#tree'] = TRUE;
     $form['certifications'] = array(
       '#type' => 'fieldset',
@@ -142,14 +144,18 @@
         ),
       );
     }
-    //This is the line separator
-    $form['certifications']['line1'] = array(
-      '#prefix' => '<div class="line-solid">',
-      '#suffix' => '</div>',
-    );
-    $form['certifications']['ecfmg_number'] = textfield('ECFMG Certificate #');
-    $form['certifications']['ecfmg_number']['#attributes'] = array('class' => array('textfield-license'));
-    $form['certifications']['ecfmg_exp_date'] = date_my('Expiration Date');
+
+    //ECFMG certificate is not required if the Physician is US trained
+    if ($account -> data['ECFMGrequired']) {
+      //This is the line separator
+      $form['certifications']['line1'] = array(
+        '#prefix' => '<div class="line-solid">',
+        '#suffix' => '</div>',
+      );
+      $form['certifications']['ecfmg_number'] = textfield('ECFMG Certificate #');
+      $form['certifications']['ecfmg_number']['#attributes'] = array('class' => array('textfield-license'));
+      $form['certifications']['ecfmg_exp_date'] = date_my('Expiration Date');
+    }
 
     //this is a line at the bottom
     $form['last']['line'] = array(

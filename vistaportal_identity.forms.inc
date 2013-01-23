@@ -13,6 +13,28 @@
  */ 
 function vistaportal_identity_form($form, &$form_state){
 	include_once('vistaportal.fields.inc');	
+
+  global $user;
+
+  //Get the user profile data to pre-populate the application
+  $query = db_select('vss_profile_data', 'pd')
+  ->condition('pd.uid', $user->uid, '=')
+  ->fields('pd', array('first_name', 'last_name', 'email', 'phone'));
+  $profiledata = $query->execute();
+
+  //initialize the candidate profile array
+    $candprofile['firstname'] = " ";
+    $candprofile['lastname'] = " ";
+    $candprofile['email'] = " ";
+    $candprofile['phone'] = " ";
+
+  foreach ($profiledata as $profilevalues) {
+    $candprofile['firstname'] = $profilevalues->first_name;
+    $candprofile['lastname'] = $profilevalues->last_name;
+    $candprofile['email'] = $profilevalues->email;
+    $candprofile['phone'] = $profilevalues->phone;
+  }
+
 	$form = array();
 	$form['#attributes'] = array('enctype' => array('multipart/form-data'));
 	//Identifying information
@@ -39,6 +61,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#attributes' => array('class' => array('percent_90')),
 		'#suffix' => '</div>',
               '#maxlength' => 15,
+              '#default_value' => $candprofile['firstname'],
 		);
 	$form['identity']['initial'] = array(
 	'#prefix' => '<div class="initial">',
@@ -66,6 +89,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#attributes' => array('class' => array('percent_90 textfield-phone')),
 		'#suffix' => '</div>',
               '#maxlength' => 20,
+              '#default_value' => $candprofile['phone'],
 		);
 	$form['identity']['email'] = array(
 	'#prefix' => '<div class="email">',
@@ -75,6 +99,7 @@ function vistaportal_identity_form($form, &$form_state){
 		'#attributes' => array('class' => array('percent_100')),
 		'#suffix' => '</div>',
               '#maxlength' => 60,
+              '#default_value' => $candprofile['email'],
 		);
 	$form['identity']['home_address'] = array(
 	'#prefix' => '<div class="home-address">',

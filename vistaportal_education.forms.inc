@@ -337,6 +337,9 @@
      * @TODO remember to add the dynamic fields to the form
      * and also to the db_query.
      */
+
+    $ecfmgrequired = TRUE;
+
     $med = new stdClass();
     unset($form_state['values']['med']['add_another'], $form_state['values']['med']['remove_school']);
     foreach ($form_state['values']['med'] AS $key => $value) {
@@ -348,6 +351,7 @@
       $med -> city = $form_state['values']['med'][$key]['city' . $key];
       $med -> state = $form_state['values']['med'][$key]['state' . $key];
       $med -> country = $form_state['values']['med'][$key]['country' . $key];
+      if(strcasecmp($med->country, 'United States') == 0) $ecfmgrequired = FALSE;
       $med -> date_from = $form_state['values']['med'][$key]['date_from' . $key];
       $med -> date_to = $form_state['values']['med'][$key]['date_to' . $key];
       //$med -> ecfmg = $form_state['values']['med'][$key]['ecfmg' . $key];
@@ -364,6 +368,8 @@
        // 'ecfmg' => $med -> ecfmg,
       )) -> execute();
     }
+
+$account = user_save($account, array('data' => array('ECFMGrequired' => $ecfmgrequired)));
     /*
      * Update the drupal_flags table by setting the premed
      * status flag, letting us know that the form has been filled out.
