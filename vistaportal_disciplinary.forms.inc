@@ -15,33 +15,138 @@ function vistaportal_disciplinary_form($form, &$form_state){
 	include_once('vistaportal.fields.inc');
 	include_once('vistaportal_functions.inc');	
 	$form = array();
-	$form['disc'] = fieldset('Disciplinary Actions');
-	$form['disc']['expl'] = array('#markup' => t("If you answer 'YES' to any of the following, please provide 
-		signed and dated explanations on a separate sheet"));
-  $form['disc']['desc'] = array('#markup' => t('DISCIPLINARY ACTIONS - Have any of the following ever been
+	$form['disc'] = fieldset('DISCIPLINARY ACTIONS');
+	
+  $form['disc']['desc'] = array('#markup' => t('<p>Have any of the following ever been
 		or are currently in the process of being investigated, denied, revoked, suspended, reduced,
 		limited, placed on probation, not renewed, been subject to disciplinary action or voluntarily
-		relinquished? IF yes, please provide a full explanation on a separate sheey of paper'));
-	$form['disc']['med_lic'] = radios_yesno('Medical licence in any jurisdication?');
-	$form['disc']['other_lic'] = radios_yesno('Other professional registration/licence?');
-	$form['disc']['dea_reg'] = radios_yesno('DEA registration?');
-	$form['disc']['academic_apt'] = radios_yesno('Academic discipline or appointment?');
-	$form['disc']['med_staff_apt'] = radios_yesno('Membership on any hospital medical staff?');
-	$form['disc']['clinical_priv'] = radios_yesno('Clinical privileges?');
-	$form['disc']['perogatives'] = radios_yesno('Perogatives/rights on any medical staff?');
-	$form['disc']['affiliation'] = radios_yesno('Any medical organization or other institutional 
-		affiliation or status there at?');
-	$form['disc']['board_cert'] = radios_yesno('Professional society membership or fellowship/Board 
-		Certification?');
-	$form['disc']['pro_office'] = radios_yesno('Professional Office?');
-	$form['disc']['other_sanction'] = radios_yesno('Any other type of professional sanction or 
-		discipline, including by Medicare/Medicaid or private insurance company?');
-	$form['disc']['convicted'] = radios_yesno('Have you ever been convicted of a misdemeanor
-		(other than minor traffic violation) or a felony?');
-	$form['disc']['malpractice'] = radios_yesno('Have there ever been or are there currently 
+		relinquished? <strong>IF yes, please provide a full explanation on a separate sheet of paper</strong></p>'));
+		/*$form['disc']['expl'] = array('#markup' => t("<p><strong>If you answer 'YES' to any of the following, please provide 
+		signed and dated explanations on a separate sheet</strong></p>"));*/
+				//This is the line separator
+  $form['disc']['line'] = array('#prefix' => '<div class="line-solid">','#suffix' => '</div>',);
+	$form['disc']['med_lic'] = array(
+      '#type' => 'radios','#title' => t('Medical license in any jurisdication?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+  $form['disc']['other_lic'] = array(
+      '#type' => 'radios','#title' => t('Other professional registration/licence?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+  $form['disc']['dea_reg'] = array(
+      '#type' => 'radios','#title' => t('DEA registration?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+  $form['disc']['academic_apt'] = array(
+      '#type' => 'radios','#title' => t('Academic discipline or appointment?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['med_staff_apt'] = array(
+      '#type' => 'radios','#title' => t('Membership on any hospital medical staff?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['clinical_priv'] = array(
+      '#type' => 'radios','#title' => t('Clinical privileges?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['perogatives'] = array(
+      '#type' => 'radios','#title' => t('Perogatives/rights on any medical staff?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['affiliation'] = array(
+      '#type' => 'radios','#title' => t('Any medical organization or other institutional 
+		affiliation or status there at?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['board_cert'] = array(
+      '#type' => 'radios','#title' => t('Professional society membership or fellowship/Board 
+		Certification?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['pro_office'] = array(
+      '#type' => 'radios','#title' => t('Professional Office?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['other_sanction'] = array(
+      '#type' => 'radios','#title' => t('Any other type of professional sanction or 
+		discipline, including by Medicare/Medicaid or private insurance company?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['convicted'] = array(
+      '#type' => 'radios','#title' => t('Have you ever been convicted of a misdemeanor
+		/(other than minor traffic violation) or a felony?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['malpractice'] = array(
+      '#type' => 'radios','#title' => t('Have there ever been or are there currently 
 		pending, any malpractice claims, suits, settlements or arbitration proceedings involving
-		your professional practice?');
-	$form['disc']['insurance'] = radios_yesno('Have you ever been denied, gone without, 
+		your professional practice?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['insurance'] = array(
+      '#type' => 'radios','#title' => t('Have you ever been denied, gone without, 
+		or not maintained Professional Liability Insurance?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['med_condition'] = array(
+      '#type' => 'radios','#title' => t('Do you currently have any medical condition or 
+		use any chemical substance which impairs or limits your ability to practice medicine
+		with reasonable skill and safety? If yes, provide evidence that such conditions do not 
+		currently impair or limit your ability to practice medicine in your specialty with 
+		reasonable skill and safety.'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['treatment'] = array(
+      '#type' => 'radios','#title' => t('Within the past two (2) years, have you received 
+		treatment for alcoholism, drug abuse, or for any infectious disease, mental illness or 
+		psychiatric problem which could impair or limit your ability to practice medicine in your 
+		specialty with reasonable skill and safety? If yes, provide evidence that such conditions 
+		do not currently impair or limit your ability to practice medicine in your specialty with 
+		reasonable skill and safety.'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	$form['disc']['other'] = array(
+      '#type' => 'radios','#title' => t('Other than those circumstances noted above, is there 
+		anything in your personal or professional background that may surface during our credentials 
+		verification process that may be construed as derogatory or negative?'),
+      '#attributes' => array('class' => array('dis-radio')),'#required' => TRUE,
+      '#options' => drupal_map_assoc(array('Yes','No' )),
+  );
+	
+	//$form['disc']['dea_reg'] = radios_yesno('DEA registration?');
+	//$form['disc']['academic_apt'] = radios_yesno('Academic discipline or appointment?');
+	//$form['disc']['med_staff_apt'] = radios_yesno('Membership on any hospital medical staff?');
+	//$form['disc']['clinical_priv'] = radios_yesno('Clinical privileges?');
+	//$form['disc']['perogatives'] = radios_yesno('Perogatives/rights on any medical staff?');
+	//$form['disc']['affiliation'] = radios_yesno('Any medical organization or other institutional 
+	//	affiliation or status there at?');
+	//$form['disc']['board_cert'] = radios_yesno('Professional society membership or fellowship/Board 
+	//	Certification?');
+	//$form['disc']['pro_office'] = radios_yesno('Professional Office?');
+	//$form['disc']['other_sanction'] = radios_yesno('Any other type of professional sanction or 
+		//discipline, including by Medicare/Medicaid or private insurance company?');
+	//$form['disc']['convicted'] = radios_yesno('Have you ever been convicted of a misdemeanor
+		//(other than minor traffic violation) or a felony?');
+	/*$form['disc']['malpractice'] = radios_yesno('Have there ever been or are there currently 
+		pending, any malpractice claims, suits, settlements or arbitration proceedings involving
+		your professional practice?');*/
+	/*$form['disc']['insurance'] = radios_yesno('Have you ever been denied, gone without, 
 		or not maintained Professional Liability Insurance?');
 	$form['disc']['med_condition'] = radios_yesno('Do you currently have any medical condition or 
 		use any chemical substance which impairs or limits your ability to practice medicine
@@ -56,13 +161,45 @@ function vistaportal_disciplinary_form($form, &$form_state){
 		reasonable skill and safety.');
 	$form['disc']['other'] = radios_yesno('Other than those circumstances noted above, is there 
 		anything in your personal or professional background that may surface during our credentials 
-		verification process that may be construed as derogatory or negative?');
-	$form['submit'] = array(
+		verification process that may be construed as derogatory or negative?');*/
+	
+	  //this is a line at the bottom
+	  $form['last']['line'] = array(
+	  '#prefix' => '<div class="line_left">',
+		//'#markup' => '<hr>',
+		'#attributes' => array('class' => array('line_left')),
+		'#suffix' => '</div>',
+		);
+		
+	  $form['last']['required_field'] = array(
+	  '#prefix' => '<div class="required_field2">',
+		'#markup' => 'Required Field',
+		'#required' => TRUE,
+		'#suffix' => '</div>',
+		);
+	  $form['submit'] = array(
 		'#type' => 'submit',
-		'#value' => t('Save & Continue'),
+		'#value' => t('Save & Next'),
 		'#name' => 'next',
 		'#submit' => array('vistaportal_disciplinary_form_submit'),
-	);	
+		'#attributes' => array('class' => array('affiliations-submit')),
+	  );
+    $form['save_logout'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save & Logout'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button')),
+      '#submit'=> array('vistaportal_save_logout'),
+    );
+
+    $form['prev'] = array(
+      '#type' => 'submit',
+      '#value' => t('Previous'),
+      '#limit_validation_errors' => array(),
+      '#attributes' => array('class' => array('button prev prev')),
+      '#submit'=> array('vistaportal_disciplinary_previous'),
+    );
+    $form['prev']['#attributes'] = array('class' => array('prev'));
 
 return $form;
 }
@@ -151,4 +288,9 @@ function vistaportal_disciplinary_form_submit($form, &$form_state){
 		->execute();				
 	$user = user_load($form_state['uid']);
 	drupal_goto('preapp/references' . $user->uid);	
+
+} 
+ function vistaportal_disciplinary_previous($form, &$form_state) {
+    $user = user_load($form_state['uid']);
+    drupal_goto('preapp/licensure' . $user -> uid);
 }		
